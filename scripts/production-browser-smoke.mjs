@@ -1,15 +1,14 @@
-import { stat, writeFile } from 'node:fs/promises';
+import { readFile, stat, writeFile } from 'node:fs/promises';
 import { chromium } from 'file:///C:/Users/win10/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 
 const baseUrl = 'http://127.0.0.1:4321';
+const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/'];
+const newRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/'];
 const browser = await chromium.launch({
   executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
   headless: true,
 });
-const context = await browser.newContext({
-  acceptDownloads: true,
-  viewport: { width: 1280, height: 900 },
-});
+const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 } });
 const page = await context.newPage();
 const consoleErrors = [];
 const pageErrors = [];
@@ -57,115 +56,171 @@ const inspectSkipLink = async () => {
   return { normal, keyboardFocused };
 };
 
-const downloadDetails = async (button) => {
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    button.click(),
-  ]);
+const downloadArtifact = async (button) => {
+  const [download] = await Promise.all([page.waitForEvent('download'), button.click()]);
   const path = await download.path();
   const details = path ? await stat(path) : null;
-  return { filename: download.suggestedFilename(), bytes: details?.size ?? 0 };
+  return {
+    filename: download.suggestedFilename(),
+    bytes: details?.size ?? 0,
+    buffer: path ? await readFile(path) : Buffer.alloc(0),
+  };
 };
 
-const results = { chromeVersion: '', home: null, image: null, threeMf: null, mobile: null, mobileImage: null, skipLink: null, missingPhaseTwoRoutes: {}, externalRequests, consoleErrors, pageErrors };
+const publicDownload = ({ filename, bytes }) => ({ filename, bytes });
+
+const uploadImage = async (asset, expectedStyle) => {
+  const filename = asset.split('/').at(-1);
+  await page.locator('#image-upload').setInputFiles(asset);
+  await page.locator('.status-ready').filter({ hasText: filename }).waitFor({ timeout: 120_000 });
+  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+  const style = await page.getByLabel('Style').inputValue();
+  const download = await downloadArtifact(page.getByRole('button', { name: 'Download STL' }));
+  return { expectedStyle, style, download: publicDownload(download), preview: true };
+};
+
+const uploadStl = async (asset) => {
+  const filename = asset.split('/').at(-1);
+  await page.locator('#stl-upload').setInputFiles(asset);
+  await page.locator('.status-ready').filter({ hasText: filename }).waitFor({ timeout: 120_000 });
+  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+  const download = await downloadArtifact(page.getByRole('button', { name: 'Download 3MF' }));
+  return { download, preview: true };
+};
+
+const reparseThreeMf = async (artifact) => {
+  await page.goto(`${baseUrl}/3mf-to-stl/`, { waitUntil: 'networkidle' });
+  await page.locator('#three-mf-upload').setInputFiles({
+    name: artifact.filename,
+    mimeType: 'model/3mf',
+    buffer: artifact.buffer,
+  });
+  await page.locator('.status-ready').filter({ hasText: artifact.filename }).waitFor({ timeout: 120_000 });
+  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+  return { ready: true, preview: true };
+};
+
+const results = {
+  chromeVersion: '', pages: {}, sitemapRoutes: [], skipLink: null, image: null, threeMf: null,
+  png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, externalRequests, consoleErrors, pageErrors,
+};
 
 try {
   results.chromeVersion = browser.version();
 
+  for (const route of publicRoutes) {
+    const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    results.pages[route] = { status: response?.status() ?? 0, ...await inspectPage() };
+  }
+
   await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle' });
-  results.home = await inspectPage();
   results.skipLink = await inspectSkipLink();
-  await page.screenshot({ path: 'test-output/phase-1-home-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'test-output/phase-2-home-desktop.png', fullPage: true });
+
+  const sitemapIndex = await context.request.get(`${baseUrl}/sitemap-index.xml`);
+  const sitemapIndexText = await sitemapIndex.text();
+  const sitemapPath = sitemapIndexText.match(/<loc>https:\/\/intostl\.com\/(sitemap-[^<]+)<\/loc>/)?.[1];
+  if (sitemapPath) {
+    const sitemap = await context.request.get(`${baseUrl}/${sitemapPath}`);
+    const sitemapText = await sitemap.text();
+    results.sitemapRoutes = [...sitemapText.matchAll(/<loc>https:\/\/intostl\.com([^<]*)<\/loc>/g)].map((match) => match[1] || '/').sort();
+  }
 
   await page.goto(`${baseUrl}/image-to-stl/`, { waitUntil: 'networkidle' });
-  const imageBefore = await inspectPage();
-  await page.locator('#image-upload').setInputFiles('test-assets/01-photo-relief.jpg');
-  await page.locator('.status-ready').waitFor({ timeout: 120_000 });
-  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
-  const jpgInitialStyle = await page.getByLabel('Style').inputValue();
-  const reliefDownload = await downloadDetails(page.getByRole('button', { name: 'Download STL' }));
-  await page.screenshot({ path: 'test-output/phase-1-image-desktop.png', fullPage: true });
-
+  const imageJpg = await uploadImage('test-assets/01-photo-relief.jpg', 'relief');
   await page.locator('#image-upload').setInputFiles('test-assets/04-white-bg-question.png');
   await page.locator('.status-ready').filter({ hasText: '04-white-bg-question.png' }).waitFor({ timeout: 120_000 });
   const solidPngInitialStyle = await page.getByLabel('Style').inputValue();
-
   await page.locator('#image-upload').setInputFiles('test-assets/02-transparent-silhouette.png');
   await page.locator('.status-ready').filter({ hasText: '02-transparent-silhouette.png' }).waitFor({ timeout: 120_000 });
   const transparentPngInitialStyle = await page.getByLabel('Style').inputValue();
-  const extrudeDownload = await downloadDetails(page.getByRole('button', { name: 'Download STL' }));
   await page.getByLabel('Style').selectOption('relief');
   await page.locator('.status-processing').waitFor({ timeout: 30_000 });
   await page.locator('.status-ready').filter({ hasText: '02-transparent-silhouette.png' }).waitFor({ timeout: 120_000 });
   const manualStyleAfterOverride = await page.getByLabel('Style').inputValue();
-  results.image = {
-    ...imageBefore,
-    reliefDownload,
-    extrudeDownload,
-    preview: true,
-    styleDefaults: { jpgInitialStyle, solidPngInitialStyle, transparentPngInitialStyle, manualStyleAfterOverride },
-  };
+  results.image = { imageJpg, solidPngInitialStyle, transparentPngInitialStyle, manualStyleAfterOverride };
 
   await page.goto(`${baseUrl}/3mf-to-stl/`, { waitUntil: 'networkidle' });
-  const threeMfBefore = await inspectPage();
   await page.locator('#three-mf-upload').setInputFiles('test-assets/generated/multi-object-transformed.3mf');
   await page.locator('.status-ready').waitFor({ timeout: 120_000 });
   await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
-  const threeMfDownload = await downloadDetails(page.getByRole('button', { name: 'Download STL' }));
-  await page.screenshot({ path: 'test-output/phase-1-3mf-desktop.png', fullPage: true });
-  results.threeMf = { ...threeMfBefore, download: threeMfDownload, preview: true };
+  results.threeMf = { download: publicDownload(await downloadArtifact(page.getByRole('button', { name: 'Download STL' }))), preview: true };
 
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({ path: 'test-output/phase-1-3mf-mobile.png', fullPage: true });
-  results.mobile = await inspectPage();
+  await page.goto(`${baseUrl}/png-to-stl/`, { waitUntil: 'networkidle' });
+  const pngOpaque = await uploadImage('test-assets/04-white-bg-question.png', 'relief');
+  const pngTransparent = await uploadImage('test-assets/02-transparent-silhouette.png', 'extrude');
+  results.png = { opaque: pngOpaque, transparent: pngTransparent };
 
-  await page.goto(`${baseUrl}/image-to-stl/`, { waitUntil: 'networkidle' });
-  await page.locator('#image-upload').setInputFiles('test-assets/01-photo-relief.jpg');
-  await page.locator('.status-ready').waitFor({ timeout: 120_000 });
-  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
-  const reliefMobilePreview = true;
-  const reliefMobileStyle = await page.getByLabel('Style').inputValue();
-  await page.locator('#image-upload').setInputFiles('test-assets/02-transparent-silhouette.png');
-  await page.locator('.status-ready').filter({ hasText: '02-transparent-silhouette.png' }).waitFor({ timeout: 120_000 });
-  await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
-  const extrudeMobilePreview = true;
-  const extrudeMobileStyle = await page.getByLabel('Style').inputValue();
-  await page.screenshot({ path: 'test-output/phase-1-image-mobile.png', fullPage: true });
-  results.mobileImage = {
-    ...await inspectPage(),
-    reliefPreview: reliefMobilePreview,
-    extrudePreview: extrudeMobilePreview,
-    reliefStyle: reliefMobileStyle,
-    extrudeStyle: extrudeMobileStyle,
+  await page.goto(`${baseUrl}/jpg-to-stl/`, { waitUntil: 'networkidle' });
+  results.jpg = await uploadImage('test-assets/01-photo-relief.jpg', 'relief');
+
+  await page.goto(`${baseUrl}/logo-to-stl/`, { waitUntil: 'networkidle' });
+  results.logo = await uploadImage('test-assets/02-transparent-silhouette.png', 'extrude');
+
+  await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
+  const binary = await uploadStl('test-assets/generated/binary-cube.stl');
+  const binaryReparse = await reparseThreeMf(binary.download);
+  await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
+  const ascii = await uploadStl('test-assets/generated/ascii-cube.stl');
+  const asciiReparse = await reparseThreeMf(ascii.download);
+  await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
+  const disconnected = await uploadStl('test-assets/generated/disconnected-cubes.stl');
+  results.stlToThreeMf = {
+    binary: { ...binary, download: publicDownload(binary.download), reparse: binaryReparse },
+    ascii: { ...ascii, download: publicDownload(ascii.download), reparse: asciiReparse },
+    disconnected: { ...disconnected, download: publicDownload(disconnected.download) },
   };
 
-  for (const route of ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/']) {
-    const response = await context.request.get(`${baseUrl}${route}`);
-    results.missingPhaseTwoRoutes[route] = response.status();
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileFixtures = {
+    '/png-to-stl/': 'test-assets/02-transparent-silhouette.png',
+    '/jpg-to-stl/': 'test-assets/01-photo-relief.jpg',
+    '/logo-to-stl/': 'test-assets/02-transparent-silhouette.png',
+    '/stl-to-3mf/': 'test-assets/generated/binary-cube.stl',
+  };
+  for (const route of newRoutes) {
+    await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    const upload = page.locator(route === '/stl-to-3mf/' ? '#stl-upload' : '#image-upload');
+    await upload.setInputFiles(mobileFixtures[route]);
+    await page.locator('.status-ready').waitFor({ timeout: 120_000 });
+    await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+    results.mobile[route] = {
+      ...await inspectPage(),
+      preview: true,
+      downloadEnabled: await page.getByRole('button', { name: route === '/stl-to-3mf/' ? 'Download 3MF' : 'Download STL' }).isEnabled(),
+    };
   }
+  await page.screenshot({ path: 'test-output/phase-2-stl-to-3mf-mobile.png', fullPage: true });
 
+  const pageEntries = Object.values(results.pages);
+  const expectedSitemapRoutes = [...publicRoutes].sort();
+  const imageDownloads = [results.image.imageJpg.download, results.png.opaque.download, results.png.transparent.download, results.jpg.download, results.logo.download];
+  const threeMfDownloads = [results.stlToThreeMf.binary.download, results.stlToThreeMf.ascii.download, results.stlToThreeMf.disconnected.download];
   const failed = pageErrors.length > 0
     || consoleErrors.length > 0
     || externalRequests.length > 0
     || results.skipLink.normal.visibleInViewport
     || !results.skipLink.keyboardFocused.visibleInViewport
     || !results.skipLink.keyboardFocused.focusVisible
-    || [results.home, results.image, results.threeMf, results.mobile, results.mobileImage].some((entry) => !entry || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow)
-    || results.image.reliefDownload.filename !== '01-photo-relief.stl'
-    || results.image.extrudeDownload.filename !== '02-transparent-silhouette.stl'
-    || results.image.reliefDownload.bytes <= 84
-    || results.image.extrudeDownload.bytes <= 84
-    || results.image.styleDefaults.jpgInitialStyle !== 'relief'
-    || results.image.styleDefaults.solidPngInitialStyle !== 'relief'
-    || results.image.styleDefaults.transparentPngInitialStyle !== 'extrude'
-    || results.image.styleDefaults.manualStyleAfterOverride !== 'relief'
-    || results.mobileImage.reliefStyle !== 'relief'
-    || results.mobileImage.extrudeStyle !== 'extrude'
+    || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical)
+    || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
+    || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
+    || results.image.solidPngInitialStyle !== 'relief'
+    || results.image.transparentPngInitialStyle !== 'extrude'
+    || results.image.manualStyleAfterOverride !== 'relief'
+    || results.png.opaque.style !== results.png.opaque.expectedStyle
+    || results.png.transparent.style !== results.png.transparent.expectedStyle
+    || results.jpg.style !== results.jpg.expectedStyle
+    || results.logo.style !== results.logo.expectedStyle
+    || imageDownloads.some((download) => !download.filename.endsWith('.stl') || download.bytes <= 84)
     || results.threeMf.download.filename !== 'multi-object-transformed.stl'
     || results.threeMf.download.bytes <= 84
-    || Object.values(results.missingPhaseTwoRoutes).some((status) => status !== 404);
+    || threeMfDownloads.some((download) => !download.filename.endsWith('.3mf') || download.bytes <= 0)
+    || !results.stlToThreeMf.binary.reparse.ready
+    || !results.stlToThreeMf.ascii.reparse.ready
+    || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled);
 
-  await writeFile('test-output/phase-1-browser-results.json', `${JSON.stringify(results, null, 2)}\n`);
+  await writeFile('test-output/phase-2-browser-results.json', `${JSON.stringify(results, null, 2)}\n`);
   console.log(JSON.stringify(results, null, 2));
   if (failed) process.exitCode = 1;
 } finally {

@@ -10,9 +10,19 @@ const INTERNAL_RESOLUTION = 512;
 
 type Style = 'relief' | 'extrude';
 type State = 'idle' | 'processing' | 'ready' | 'error';
+type AcceptedInput = 'image' | 'png' | 'jpg';
 
-function isSupportedImage(file: File): boolean {
+interface ImageConverterProps {
+  acceptedInput?: AcceptedInput;
+  defaultStyle?: Style;
+  autoStyleFromTransparency?: boolean;
+  uploadPrompt?: string;
+}
+
+function isSupportedImage(file: File, acceptedInput: AcceptedInput): boolean {
   const extension = file.name.toLowerCase().match(/\.[^.]+$/)?.[0];
+  if (acceptedInput === 'png') return extension === '.png';
+  if (acceptedInput === 'jpg') return extension === '.jpg' || extension === '.jpeg';
   return extension === '.jpg' || extension === '.jpeg' || extension === '.png';
 }
 
@@ -55,13 +65,24 @@ function hasTransparency(data: ArrayLike<number>): boolean {
   return false;
 }
 
-export default function ImageConverter() {
+export default function ImageConverter({
+  acceptedInput = 'image',
+  defaultStyle = 'relief',
+  autoStyleFromTransparency = true,
+  uploadPrompt,
+}: ImageConverterProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [style, setStyle] = useState<Style>('relief');
+  const [style, setStyle] = useState<Style>(defaultStyle);
   const [depth, setDepth] = useState(3);
   const [size, setSize] = useState(100);
   const [state, setState] = useState<State>('idle');
-  const [message, setMessage] = useState('Choose a JPG or PNG to begin.');
+  const inputLabel = acceptedInput === 'png' ? 'PNG' : acceptedInput === 'jpg' ? 'JPG or JPEG' : 'JPG or PNG';
+  const accept = acceptedInput === 'png'
+    ? '.png,image/png'
+    : acceptedInput === 'jpg'
+      ? '.jpg,.jpeg,image/jpeg'
+      : '.jpg,.jpeg,.png,image/jpeg,image/png';
+  const [message, setMessage] = useState(`Choose a ${inputLabel} to begin.`);
   const [mesh, setMesh] = useState<IndexedMesh | null>(null);
   const [stl, setStl] = useState<Uint8Array | null>(null);
   const request = useRef(0);
@@ -72,10 +93,10 @@ export default function ImageConverter() {
     const initialStyleVersion = styleChangeVersion.current;
     setMesh(null);
     setStl(null);
-    if (!isSupportedImage(nextFile)) {
+    if (!isSupportedImage(nextFile, acceptedInput)) {
       setFile(null);
       setState('error');
-      setMessage('Choose a JPG, JPEG or PNG image.');
+      setMessage(`Choose a ${inputLabel} image.`);
       return;
     }
     if (nextFile.size > MAX_BYTES) {
@@ -94,13 +115,13 @@ export default function ImageConverter() {
         return;
       }
       if (styleChangeVersion.current === initialStyleVersion) {
-        setStyle(inspection.meaningfulTransparency ? 'extrude' : 'relief');
+        setStyle(autoStyleFromTransparency && inspection.meaningfulTransparency ? 'extrude' : defaultStyle);
       }
     } catch {
       if (currentRequest !== request.current) return;
       setFile(null);
       setState('error');
-      setMessage('We could not read this image. Try another JPG or PNG file.');
+      setMessage(`We could not read this image. Try another ${inputLabel} file.`);
       return;
     }
     setFile(nextFile);
@@ -160,8 +181,8 @@ export default function ImageConverter() {
       <div className="converter-controls">
         <UploadField
           id="image-upload"
-          accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-          prompt={file ? file.name : 'Upload a JPG or PNG image'}
+          accept={accept}
+          prompt={file ? file.name : (uploadPrompt ?? `Upload a ${inputLabel} image`)}
           detail="Choose a file or drop it here · up to 20 MB"
           onFile={(nextFile) => void receiveFile(nextFile)}
         />

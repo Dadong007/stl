@@ -1,0 +1,57 @@
+---
+import ImageConverter from '../components/converter/ImageConverter';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'JPG to STL Converter — Free Online Tool | IntoSTL';
+const description = 'Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.';
+const questions = [
+  { question: 'Why is Relief the default for JPG?', answer: 'JPG files do not contain transparency, so Relief uses image brightness to create a raised surface.' },
+  { question: 'What kind of JPG works best?', answer: 'Photos, maps and textured images with clear light and dark detail usually produce the clearest reliefs.' },
+  { question: 'Can I use Extrude with a JPG?', answer: 'Yes. You can switch to Extrude, which separates a darker foreground from a light background.' },
+];
+const structuredData = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'IntoSTL JPG to STL Converter', url: absoluteUrl('/jpg-to-stl/'), description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'JPG to STL', item: absoluteUrl('/jpg-to-stl/') },
+  ] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: questions.map(({ question, answer }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/jpg-to-stl/" structuredData={structuredData}>
+  <article class="tool-page">
+    <header class="tool-intro shell-narrow">
+      <p class="eyebrow">Free browser tool</p>
+      <h1>Convert JPG to STL</h1>
+      <p>Turn a JPG or JPEG into a printable 3D relief directly in your browser.</p>
+    </header>
+    <div class="shell converter-wrap">
+      <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your JPG is processed locally in your browser.</p>
+      <ImageConverter client:load acceptedInput="jpg" autoStyleFromTransparency={false} uploadPrompt="Upload a JPG or JPEG image" />
+    </div>
+    <div class="shell-narrow content-stack">
+      <section aria-labelledby="jpg-how">
+        <p class="eyebrow">How it works</p><h2 id="jpg-how">JPG to STL in three steps</h2>
+        <ol class="steps">
+          <li><span>1</span><div><strong>Choose a JPG</strong><p>Upload a JPG or JPEG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
+          <li><span>2</span><div><strong>Adjust the relief</strong><p>Preview the result and set its depth and overall size.</p></div></li>
+          <li><span>3</span><div><strong>Download the STL</strong><p>Save the model and open it in your slicer.</p></div></li>
+        </ol>
+      </section>
+      <section class="two-column" aria-labelledby="jpg-relief">
+        <div><p class="eyebrow">Brightness to height</p><h2 id="jpg-relief">A practical photo relief</h2></div>
+        <div class="prose"><p>JPG files start in Relief mode: lighter pixels become higher parts of the surface. Photos, maps and textured images with clear contrast generally produce the easiest models to print.</p></div>
+      </section>
+      <section aria-labelledby="jpg-faq">
+        <p class="eyebrow">Common questions</p><h2 id="jpg-faq">JPG to STL FAQ</h2>
+        <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
+      </section>
+      <aside class="related-tool">
+        <div><p class="eyebrow">Related tools</p><h2>Use another image format</h2></div>
+        <div class="related-actions"><a class="secondary-button" href="/image-to-stl/">Image to STL</a><a class="secondary-button" href="/png-to-stl/">PNG to STL</a></div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

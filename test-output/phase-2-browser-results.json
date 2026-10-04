@@ -1,0 +1,275 @@
+{
+  "chromeVersion": "154.0.8037.95",
+  "pages": {
+    "/": {
+      "status": 200,
+      "title": "IntoSTL — Free STL & 3D Printing Tools",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/",
+      "description": "Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebSite"
+      ]
+    },
+    "/image-to-stl/": {
+      "status": 200,
+      "title": "Image to STL Converter — Free Online Tool | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/image-to-stl/",
+      "description": "Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    },
+    "/png-to-stl/": {
+      "status": 200,
+      "title": "PNG to STL Converter — Free Online Tool | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/png-to-stl/",
+      "description": "Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    },
+    "/3mf-to-stl/": {
+      "status": 200,
+      "title": "3MF to STL Converter — Free, No Upload | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/3mf-to-stl/",
+      "description": "Convert 3MF files to STL directly in your browser while preserving final geometry and transforms. Free, private and no upload required.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    },
+    "/logo-to-stl/": {
+      "status": 200,
+      "title": "Logo to STL Converter — Create Printable 3D Logos | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/logo-to-stl/",
+      "description": "Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    },
+    "/jpg-to-stl/": {
+      "status": 200,
+      "title": "JPG to STL Converter — Free Online Tool | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/jpg-to-stl/",
+      "description": "Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    },
+    "/stl-to-3mf/": {
+      "status": 200,
+      "title": "STL to 3MF Converter — Free, No Upload | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/stl-to-3mf/",
+      "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ]
+    }
+  },
+  "sitemapRoutes": [
+    "/",
+    "/3mf-to-stl/",
+    "/image-to-stl/",
+    "/jpg-to-stl/",
+    "/logo-to-stl/",
+    "/png-to-stl/",
+    "/stl-to-3mf/"
+  ],
+  "skipLink": {
+    "normal": {
+      "visibleInViewport": false,
+      "focusVisible": false
+    },
+    "keyboardFocused": {
+      "visibleInViewport": true,
+      "focusVisible": true
+    }
+  },
+  "image": {
+    "imageJpg": {
+      "expectedStyle": "relief",
+      "style": "relief",
+      "download": {
+        "filename": "01-photo-relief.stl",
+        "bytes": 26161784
+      },
+      "preview": true
+    },
+    "solidPngInitialStyle": "relief",
+    "transparentPngInitialStyle": "extrude",
+    "manualStyleAfterOverride": "relief"
+  },
+  "threeMf": {
+    "download": {
+      "filename": "multi-object-transformed.stl",
+      "bytes": 1284
+    },
+    "preview": true
+  },
+  "png": {
+    "opaque": {
+      "expectedStyle": "relief",
+      "style": "relief",
+      "download": {
+        "filename": "04-white-bg-question.stl",
+        "bytes": 20918984
+      },
+      "preview": true
+    },
+    "transparent": {
+      "expectedStyle": "extrude",
+      "style": "extrude",
+      "download": {
+        "filename": "02-transparent-silhouette.stl",
+        "bytes": 12284
+      },
+      "preview": true
+    }
+  },
+  "jpg": {
+    "expectedStyle": "relief",
+    "style": "relief",
+    "download": {
+      "filename": "01-photo-relief.stl",
+      "bytes": 26161784
+    },
+    "preview": true
+  },
+  "logo": {
+    "expectedStyle": "extrude",
+    "style": "extrude",
+    "download": {
+      "filename": "02-transparent-silhouette.stl",
+      "bytes": 12284
+    },
+    "preview": true
+  },
+  "stlToThreeMf": {
+    "binary": {
+      "download": {
+        "filename": "binary-cube.3mf",
+        "bytes": 1606
+      },
+      "preview": true,
+      "reparse": {
+        "ready": true,
+        "preview": true
+      }
+    },
+    "ascii": {
+      "download": {
+        "filename": "ascii-cube.3mf",
+        "bytes": 1622
+      },
+      "preview": true,
+      "reparse": {
+        "ready": true,
+        "preview": true
+      }
+    },
+    "disconnected": {
+      "download": {
+        "filename": "disconnected-cubes.3mf",
+        "bytes": 1749
+      },
+      "preview": true
+    }
+  },
+  "mobile": {
+    "/png-to-stl/": {
+      "title": "PNG to STL Converter — Free Online Tool | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/png-to-stl/",
+      "description": "Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "preview": true,
+      "downloadEnabled": true
+    },
+    "/jpg-to-stl/": {
+      "title": "JPG to STL Converter — Free Online Tool | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/jpg-to-stl/",
+      "description": "Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "preview": true,
+      "downloadEnabled": true
+    },
+    "/logo-to-stl/": {
+      "title": "Logo to STL Converter — Create Printable 3D Logos | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/logo-to-stl/",
+      "description": "Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "preview": true,
+      "downloadEnabled": true
+    },
+    "/stl-to-3mf/": {
+      "title": "STL to 3MF Converter — Free, No Upload | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/stl-to-3mf/",
+      "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "schemaTypes": [
+        "WebApplication",
+        "BreadcrumbList",
+        "FAQPage"
+      ],
+      "preview": true,
+      "downloadEnabled": true
+    }
+  },
+  "externalRequests": [],
+  "consoleErrors": [],
+  "pageErrors": []
+}

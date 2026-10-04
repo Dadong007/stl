@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, absoluteUrl } from '../config/site';
 
 const title = 'IntoSTL — Free STL & 3D Printing Tools';
-const description = 'Free image to STL and 3MF to STL tools that work locally in your browser. No file upload and no sign-up required.';
+const description = 'Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.';
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -34,11 +34,35 @@ const websiteSchema = {
         <p>Turn a JPG or PNG into a printable relief or extruded model.</p>
         <span class="text-link">Open Image to STL</span>
       </a>
-      <a class="tool-card" href="/3mf-to-stl/">
+      <a class="tool-card" href="/png-to-stl/">
         <span class="tool-number" aria-hidden="true">02</span>
+        <h3>PNG to STL</h3>
+        <p>Make a relief or extrusion from a transparent or opaque PNG.</p>
+        <span class="text-link">Open PNG to STL</span>
+      </a>
+      <a class="tool-card" href="/3mf-to-stl/">
+        <span class="tool-number" aria-hidden="true">03</span>
         <h3>3MF to STL</h3>
         <p>Convert 3MF geometry to a widely supported binary STL file.</p>
         <span class="text-link">Open 3MF to STL</span>
+      </a>
+      <a class="tool-card" href="/logo-to-stl/">
+        <span class="tool-number" aria-hidden="true">04</span>
+        <h3>Logo to STL</h3>
+        <p>Extrude a PNG or JPG logo into a solid printable model.</p>
+        <span class="text-link">Open Logo to STL</span>
+      </a>
+      <a class="tool-card" href="/jpg-to-stl/">
+        <span class="tool-number" aria-hidden="true">05</span>
+        <h3>JPG to STL</h3>
+        <p>Turn a JPG or JPEG into a printable 3D relief.</p>
+        <span class="text-link">Open JPG to STL</span>
+      </a>
+      <a class="tool-card" href="/stl-to-3mf/">
+        <span class="tool-number" aria-hidden="true">06</span>
+        <h3>STL to 3MF</h3>
+        <p>Convert binary or ASCII STL geometry into a 3MF model.</p>
+        <span class="text-link">Open STL to 3MF</span>
       </a>
     </div>
   </section>
@@ -46,6 +70,6 @@ const websiteSchema = {
   <section class="shell trust-strip" aria-label="IntoSTL principles">
     <div><strong>Browser-local</strong><span>Files stay on your device</span></div>
     <div><strong>No account</strong><span>Start converting immediately</span></div>
-    <div><strong>Printable output</strong><span>Download standard STL files</span></div>
+    <div><strong>Printable output</strong><span>Download standard STL and 3MF files</span></div>
   </section>
 </BaseLayout>

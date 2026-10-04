@@ -1,0 +1,57 @@
+---
+import ImageConverter from '../components/converter/ImageConverter';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'PNG to STL Converter — Free Online Tool | IntoSTL';
+const description = 'Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.';
+const questions = [
+  { question: 'Does PNG transparency affect the STL?', answer: 'Yes. Meaningful transparency automatically selects Extrude, where the alpha channel defines the solid shape.' },
+  { question: 'Should I use Relief or Extrude for a PNG?', answer: 'Use Relief when brightness should control height. Use Extrude for a logo, icon or silhouette with a clear foreground.' },
+  { question: 'Are transparent pixels kept as empty space?', answer: 'In Extrude mode, transparent areas are excluded from the solid shape, so clear holes and gaps can remain open.' },
+];
+const structuredData = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'IntoSTL PNG to STL Converter', url: absoluteUrl('/png-to-stl/'), description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'PNG to STL', item: absoluteUrl('/png-to-stl/') },
+  ] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: questions.map(({ question, answer }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/png-to-stl/" structuredData={structuredData}>
+  <article class="tool-page">
+    <header class="tool-intro shell-narrow">
+      <p class="eyebrow">Free browser tool</p>
+      <h1>Convert PNG to STL</h1>
+      <p>Turn a PNG into a printable relief or extruded model without uploading it.</p>
+    </header>
+    <div class="shell converter-wrap">
+      <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your PNG is processed locally in your browser.</p>
+      <ImageConverter client:load acceptedInput="png" uploadPrompt="Upload a PNG image" />
+    </div>
+    <div class="shell-narrow content-stack">
+      <section aria-labelledby="png-how">
+        <p class="eyebrow">How it works</p><h2 id="png-how">PNG to STL in three steps</h2>
+        <ol class="steps">
+          <li><span>1</span><div><strong>Choose a PNG</strong><p>Upload a PNG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
+          <li><span>2</span><div><strong>Preview the model</strong><p>Transparent artwork starts as Extrude; opaque artwork starts as Relief.</p></div></li>
+          <li><span>3</span><div><strong>Download the STL</strong><p>Save the binary STL and check it in your slicer.</p></div></li>
+        </ol>
+      </section>
+      <section class="two-column" aria-labelledby="png-style">
+        <div><p class="eyebrow">Automatic starting style</p><h2 id="png-style">Transparency guides the default</h2></div>
+        <div class="prose"><p>Meaningful alpha transparency selects Extrude for cutout-like shapes. Fully opaque images select Relief. You can still change Style, Depth and Size before downloading.</p><p>Simple, high-contrast PNGs work well for extrusion, while images with clear light and dark detail are better suited to reliefs.</p></div>
+      </section>
+      <section aria-labelledby="png-faq">
+        <p class="eyebrow">Common questions</p><h2 id="png-faq">PNG to STL FAQ</h2>
+        <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
+      </section>
+      <aside class="related-tool">
+        <div><p class="eyebrow">Related tools</p><h2>More image options</h2></div>
+        <div class="related-actions"><a class="secondary-button" href="/image-to-stl/">Image to STL</a><a class="secondary-button" href="/logo-to-stl/">Logo to STL</a></div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
