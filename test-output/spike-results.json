@@ -1,0 +1,950 @@
+{
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32 x64",
+    "cpuCount": 12,
+    "dependencies": {
+      "@3mfconsortium/lib3mf": "2.5.0-fix.2",
+      "@astrojs/react": "7.0.0",
+      "@astrojs/sitemap": "3.7.4",
+      "astro": "7.3.5",
+      "earcut": "3.0.2",
+      "react": "19.3.0",
+      "react-dom": "19.3.0",
+      "three": "0.185.1",
+      "@astrojs/check": "0.9.10",
+      "@types/earcut": "3.0.0",
+      "@types/node": "24.10.1",
+      "@types/react": "19.3.0",
+      "@types/react-dom": "19.3.0",
+      "@types/three": "0.185.0",
+      "sharp": "0.34.4",
+      "tsx": "4.20.6",
+      "typescript": "5.9.3",
+      "vite": "7.1.12"
+    }
+  },
+  "relief": {
+    "512": {
+      "source": "01-photo-relief.jpg",
+      "pixels": "512x507",
+      "meshMs": 8.86749999999995,
+      "exportMs": 166.59339999999997,
+      "outputBytes": 26161784,
+      "output": "photo-relief-512.stl",
+      "validation": {
+        "vertexCount": 261619,
+        "triangleCount": 523234,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -50,
+            -49.51171875,
+            0
+          ],
+          "max": [
+            50,
+            49.51171875,
+            4.5
+          ],
+          "size": [
+            100,
+            99.0234375,
+            4.5
+          ]
+        }
+      },
+      "stlReparse": {
+        "vertexCount": 261619,
+        "triangleCount": 523234,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -50,
+            -49.51171875,
+            0
+          ],
+          "max": [
+            50,
+            49.51171875,
+            4.5
+          ],
+          "size": [
+            100,
+            99.0234375,
+            4.5
+          ]
+        }
+      },
+      "stlHeaderTriangles": 523234,
+      "components": 1,
+      "holes": 0,
+      "strategy": "height-field"
+    },
+    "1024": {
+      "source": "01-photo-relief.jpg",
+      "pixels": "1024x1014",
+      "meshMs": 43.09320000000025,
+      "exportMs": 448.8739999999998,
+      "outputBytes": 104240784,
+      "output": "photo-relief-1024.stl",
+      "validation": {
+        "vertexCount": 1042409,
+        "triangleCount": 2084814,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -50,
+            -49.51171875,
+            0
+          ],
+          "max": [
+            50,
+            49.51171875,
+            4.5
+          ],
+          "size": [
+            100,
+            99.0234375,
+            4.5
+          ]
+        }
+      },
+      "stlHeaderTriangles": 2084814,
+      "components": 1,
+      "holes": 0,
+      "strategy": "height-field",
+      "note": "Full edge pairing omitted at 1024; the identical generator was fully checked at 512."
+    }
+  },
+  "extrude": {
+    "transparent": {
+      "source": "02-transparent-silhouette.png",
+      "pixels": "512x512",
+      "meshMs": 31.893299999999726,
+      "exportMs": 0.517699999999877,
+      "outputBytes": 11884,
+      "output": "transparent-logo-extrude.stl",
+      "validation": {
+        "vertexCount": 120,
+        "triangleCount": 236,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -30.859375,
+            -32.2265625,
+            0
+          ],
+          "max": [
+            29.1015625,
+            41.015625,
+            3
+          ],
+          "size": [
+            59.9609375,
+            73.2421875,
+            3
+          ]
+        }
+      },
+      "stlReparse": {
+        "vertexCount": 120,
+        "triangleCount": 236,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -30.859375,
+            -32.2265625,
+            0
+          ],
+          "max": [
+            29.1015625,
+            41.015625,
+            3
+          ],
+          "size": [
+            59.9609375,
+            73.2421875,
+            3
+          ]
+        }
+      },
+      "stlHeaderTriangles": 236,
+      "components": 1,
+      "holes": 0,
+      "strategy": "contour"
+    },
+    "whiteBackground": {
+      "source": "04-white-bg-question.png",
+      "pixels": "405x512",
+      "meshMs": 25.416699999999764,
+      "exportMs": 0.5495999999998276,
+      "outputBytes": 19084,
+      "output": "white-bg-logo-extrude.stl",
+      "validation": {
+        "vertexCount": 194,
+        "triangleCount": 380,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -45.802467346191406,
+            -59.25925827026367,
+            0
+          ],
+          "max": [
+            45.30864334106445,
+            58.76543045043945,
+            3
+          ],
+          "size": [
+            91.11111068725586,
+            118.02468872070312,
+            3
+          ]
+        }
+      },
+      "stlReparse": {
+        "vertexCount": 194,
+        "triangleCount": 380,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -45.802467346191406,
+            -59.25925827026367,
+            0
+          ],
+          "max": [
+            45.30864334106445,
+            58.76543045043945,
+            3
+          ],
+          "size": [
+            91.11111068725586,
+            118.02468872070312,
+            3
+          ]
+        }
+      },
+      "stlHeaderTriangles": 380,
+      "components": 2,
+      "holes": 0,
+      "strategy": "contour"
+    },
+    "holeShape": {
+      "source": "05-transparent-room.png",
+      "pixels": "512x509",
+      "meshMs": 19.135099999999966,
+      "exportMs": 2.4492999999997664,
+      "outputBytes": 89484,
+      "output": "transparent-room-hole-extrude.stl",
+      "validation": {
+        "vertexCount": 882,
+        "triangleCount": 1788,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -47.265625,
+            -42.48046875,
+            0
+          ],
+          "max": [
+            47.4609375,
+            42.67578125,
+            3
+          ],
+          "size": [
+            94.7265625,
+            85.15625,
+            3
+          ]
+        }
+      },
+      "stlReparse": {
+        "vertexCount": 882,
+        "triangleCount": 1788,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -47.265625,
+            -42.48046875,
+            0
+          ],
+          "max": [
+            47.4609375,
+            42.67578125,
+            3
+          ],
+          "size": [
+            94.7265625,
+            85.15625,
+            3
+          ]
+        }
+      },
+      "stlHeaderTriangles": 1788,
+      "components": 2,
+      "holes": 8,
+      "strategy": "contour"
+    }
+  },
+  "threeMfToStl": {
+    "simple": {
+      "conversionMs": 14.080699999999979,
+      "inputBytes": 1608,
+      "outputBytes": 684,
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "outputValidation": {
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        }
+      },
+      "output": "simple-from-3mf.stl"
+    },
+    "multiObjectTransformed": {
+      "conversionMs": 3.0601000000001477,
+      "inputBytes": 1758,
+      "outputBytes": 1284,
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 2,
+        "buildItemCount": 2,
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            20,
+            10,
+            10
+          ],
+          "size": [
+            20,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "outputValidation": {
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            20,
+            10,
+            10
+          ],
+          "size": [
+            20,
+            10,
+            10
+          ]
+        }
+      },
+      "output": "multi-object-transformed-from-3mf.stl"
+    }
+  },
+  "stlToThreeMf": {
+    "binary": {
+      "success": true,
+      "conversionMs": 2.2015000000001237,
+      "roundTripMs": 2.461999999999989,
+      "inputBytes": 684,
+      "outputBytes": 1606,
+      "reader": "lib3mf",
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "outputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "sourceValidation": {
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        }
+      },
+      "roundTripValidation": {
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        }
+      },
+      "triangleCountPreserved": true,
+      "boundsPreserved": true,
+      "output": "simple-from-stl.3mf",
+      "roundTripOutput": "binary-roundtrip.stl"
+    },
+    "ascii": {
+      "success": true,
+      "conversionMs": 5.7608000000000175,
+      "roundTripMs": 1.7516000000000531,
+      "inputBytes": 1305,
+      "outputBytes": 1622,
+      "reader": "three-stl-loader-fallback",
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "outputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "sourceValidation": {
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        }
+      },
+      "roundTripValidation": {
+        "vertexCount": 8,
+        "triangleCount": 12,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            10
+          ],
+          "size": [
+            10,
+            10,
+            10
+          ]
+        }
+      },
+      "triangleCountPreserved": true,
+      "boundsPreserved": true,
+      "output": "ascii-from-stl.3mf",
+      "roundTripOutput": "ascii-roundtrip.stl"
+    },
+    "disconnected": {
+      "success": true,
+      "conversionMs": 1.8473999999996522,
+      "roundTripMs": 2.1071999999999207,
+      "inputBytes": 1284,
+      "outputBytes": 1750,
+      "reader": "lib3mf",
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            22,
+            10,
+            10
+          ],
+          "size": [
+            22,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "outputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            22,
+            10,
+            10
+          ],
+          "size": [
+            22,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "sourceValidation": {
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            22,
+            10,
+            10
+          ],
+          "size": [
+            22,
+            10,
+            10
+          ]
+        }
+      },
+      "roundTripValidation": {
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            22,
+            10,
+            10
+          ],
+          "size": [
+            22,
+            10,
+            10
+          ]
+        }
+      },
+      "triangleCountPreserved": true,
+      "boundsPreserved": true,
+      "output": "disconnected-from-stl.3mf",
+      "roundTripOutput": "disconnected-roundtrip.stl"
+    },
+    "moderate": {
+      "success": true,
+      "conversionMs": 63.92119999999977,
+      "roundTripMs": 53.361599999999726,
+      "inputBytes": 1273184,
+      "outputBytes": 282889,
+      "reader": "lib3mf",
+      "inputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 12733,
+        "triangleCount": 25462,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            -40,
+            -30,
+            0
+          ],
+          "max": [
+            40,
+            30,
+            3
+          ],
+          "size": [
+            80,
+            60,
+            3
+          ]
+        },
+        "warnings": 0
+      },
+      "outputInspection": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 12733,
+        "triangleCount": 25462,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            -40,
+            -30,
+            0
+          ],
+          "max": [
+            40,
+            30,
+            3
+          ],
+          "size": [
+            80,
+            60,
+            3
+          ]
+        },
+        "warnings": 0
+      },
+      "sourceValidation": {
+        "vertexCount": 12733,
+        "triangleCount": 25462,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -40,
+            -30,
+            0
+          ],
+          "max": [
+            40,
+            30,
+            3
+          ],
+          "size": [
+            80,
+            60,
+            3
+          ]
+        }
+      },
+      "roundTripValidation": {
+        "vertexCount": 12733,
+        "triangleCount": 25462,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -40,
+            -30,
+            0
+          ],
+          "max": [
+            40,
+            30,
+            3
+          ],
+          "size": [
+            80,
+            60,
+            3
+          ]
+        }
+      },
+      "triangleCountPreserved": true,
+      "boundsPreserved": true,
+      "output": "moderate-from-stl.3mf",
+      "roundTripOutput": "moderate-roundtrip.stl"
+    }
+  },
+  "lib3mfVersion": "2.5.0",
+  "generatedFixtures": {
+    "binaryCubeBytes": 684,
+    "asciiCubeBytes": 1305,
+    "disconnectedBytes": 1284,
+    "moderateBytes": 1273184,
+    "simple3mf": {
+      "unit": "millimeter",
+      "meshObjectCount": 1,
+      "buildItemCount": 1,
+      "vertexCount": 8,
+      "triangleCount": 12,
+      "allMeshesManifoldAndOriented": true,
+      "bounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          10,
+          10,
+          10
+        ],
+        "size": [
+          10,
+          10,
+          10
+        ]
+      },
+      "warnings": 0
+    },
+    "multiObjectTransformed3mf": {
+      "unit": "millimeter",
+      "meshObjectCount": 2,
+      "buildItemCount": 2,
+      "vertexCount": 16,
+      "triangleCount": 24,
+      "allMeshesManifoldAndOriented": true,
+      "bounds": {
+        "min": [
+          0,
+          0,
+          0
+        ],
+        "max": [
+          20,
+          10,
+          10
+        ],
+        "size": [
+          20,
+          10,
+          10
+        ]
+      },
+      "warnings": 0
+    }
+  }
+}

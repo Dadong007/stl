@@ -1,0 +1,37 @@
+{
+  "name": "intostl",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "spike": "tsx scripts/run-spike.ts",
+    "spike:dev": "vite --config vite.config.ts",
+    "spike:build": "tsc --noEmit && vite build --config vite.config.ts",
+    "smoke:production": "node scripts/production-browser-smoke.mjs"
+  },
+  "dependencies": {
+    "@3mfconsortium/lib3mf": "2.5.0-fix.2",
+    "@astrojs/react": "7.0.0",
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.5",
+    "earcut": "3.0.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/earcut": "3.0.0",
+    "@types/node": "24.10.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.185.0",
+    "sharp": "0.34.4",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vite": "7.1.12"
+  }
+}

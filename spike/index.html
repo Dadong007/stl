@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:," />
+    <title>IntoSTL Phase 0 Test Harness</title>
+  </head>
+  <body>
+    <main>
+      <h1>IntoSTL Phase 0 test harness</h1>
+      <p>Developer-only browser-local conversion checks. No file data is uploaded.</p>
+
+      <label>
+        Fixture
+        <select id="fixture">
+          <option value="01-photo-relief.jpg">01-photo-relief.jpg</option>
+          <option value="02-transparent-silhouette.png">02-transparent-silhouette.png</option>
+          <option value="03-transparent-info-icon.png">03-transparent-info-icon.png</option>
+          <option value="04-white-bg-question.png">04-white-bg-question.png</option>
+          <option value="05-transparent-room.png">05-transparent-room.png</option>
+          <option value="generated/simple-cube.3mf">generated/simple-cube.3mf</option>
+          <option value="generated/multi-object-transformed.3mf">generated/multi-object-transformed.3mf</option>
+          <option value="generated/binary-cube.stl">generated/binary-cube.stl</option>
+          <option value="generated/ascii-cube.stl">generated/ascii-cube.stl</option>
+          <option value="generated/disconnected-cubes.stl">generated/disconnected-cubes.stl</option>
+        </select>
+      </label>
+      <label>
+        Or local file
+        <input id="file" type="file" accept=".jpg,.jpeg,.png,.stl,.3mf" />
+      </label>
+      <label>
+        Image mesh resolution
+        <select id="resolution">
+          <option value="512">512 longest side</option>
+          <option value="1024">1024 longest side</option>
+        </select>
+      </label>
+
+      <div class="actions">
+        <button id="relief">Relief → STL</button>
+        <button id="extrude-alpha">Alpha mask → extruded STL</button>
+        <button id="extrude-white">White background → extruded STL</button>
+        <button id="to-stl">3MF → STL</button>
+        <button id="to-3mf">STL → 3MF</button>
+        <button id="smoke">Run browser smoke suite</button>
+      </div>
+
+      <pre id="status">Ready.</pre>
+    </main>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

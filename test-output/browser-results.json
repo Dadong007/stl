@@ -1,0 +1,218 @@
+{
+  "wallClockMs": 1829.4287,
+  "results": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "hardwareConcurrency": 12,
+    "relief512": {
+      "pixels": "512x507",
+      "meshMs": 19.199999928474426,
+      "exportMs": 139.80000007152557,
+      "triangleCount": 523234,
+      "stlBytes": 26161784,
+      "finiteCoordinates": true,
+      "edgeCheck": "Node-side full topology check; omitted here to avoid distorting responsiveness timing."
+    },
+    "relief1024": {
+      "pixels": "1024x1014",
+      "meshMs": 31,
+      "exportMs": 545.5,
+      "triangleCount": 2084814,
+      "stlBytes": 104240784,
+      "finiteCoordinates": true,
+      "edgeCheck": "Node-side full topology check; omitted here to avoid distorting responsiveness timing."
+    },
+    "transparent": {
+      "pixels": "512x512",
+      "meshMs": 27,
+      "triangleCount": 244,
+      "stlBytes": 12284,
+      "components": 1,
+      "holes": 0,
+      "strategy": "contour",
+      "topology": {
+        "vertexCount": 124,
+        "triangleCount": 244,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -30.859375,
+            -32.2265625,
+            0
+          ],
+          "max": [
+            29.1015625,
+            41.015625,
+            3
+          ],
+          "size": [
+            59.9609375,
+            73.2421875,
+            3
+          ]
+        }
+      }
+    },
+    "whiteBackground": {
+      "pixels": "405x512",
+      "meshMs": 22.5,
+      "triangleCount": 384,
+      "stlBytes": 19284,
+      "components": 2,
+      "holes": 0,
+      "strategy": "contour",
+      "topology": {
+        "vertexCount": 196,
+        "triangleCount": 384,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -45.802467346191406,
+            -59.25925827026367,
+            0
+          ],
+          "max": [
+            45.30864334106445,
+            58.76543045043945,
+            3
+          ],
+          "size": [
+            91.11111068725586,
+            118.02468872070312,
+            3
+          ]
+        }
+      }
+    },
+    "holeShape": {
+      "pixels": "512x509",
+      "meshMs": 37.5,
+      "triangleCount": 189948,
+      "stlBytes": 9497484,
+      "components": 2,
+      "holes": 8,
+      "strategy": "shared-raster-fallback",
+      "topology": {
+        "vertexCount": 94962,
+        "triangleCount": 189948,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            -47.265625,
+            -42.48046875,
+            0
+          ],
+          "max": [
+            47.265625,
+            42.67578125,
+            3
+          ],
+          "size": [
+            94.53125,
+            85.15625,
+            3
+          ]
+        }
+      }
+    },
+    "threeMfToStl": {
+      "conversionMs": 83.20000004768372,
+      "bytes": 1284,
+      "input": {
+        "unit": "millimeter",
+        "meshObjectCount": 2,
+        "buildItemCount": 2,
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            20,
+            10,
+            10
+          ],
+          "size": [
+            20,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      },
+      "output": {
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "finiteCoordinates": true,
+        "degenerateTriangles": 0,
+        "boundaryEdges": 0,
+        "nonManifoldEdges": 0,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            20,
+            10,
+            10
+          ],
+          "size": [
+            20,
+            10,
+            10
+          ]
+        }
+      }
+    },
+    "stlToThreeMf": {
+      "conversionMs": 6.800000071525574,
+      "bytes": 1748,
+      "output": {
+        "unit": "millimeter",
+        "meshObjectCount": 1,
+        "buildItemCount": 1,
+        "vertexCount": 16,
+        "triangleCount": 24,
+        "allMeshesManifoldAndOriented": true,
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            22,
+            10,
+            10
+          ],
+          "size": [
+            22,
+            10,
+            10
+          ]
+        },
+        "warnings": 0
+      }
+    }
+  },
+  "statusText": "{\n  \"userAgent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\",\n  \"hardwareConcurrency\": 12,\n  \"relief512\": {\n    \"pixels\": \"512x507\",\n    \"meshMs\": 19.199999928474426,\n    \"exportMs\": 139.80000007152557,\n    \"triangleCount\": 523234,\n    \"stlBytes\": 26161784,\n    \"finiteCoordinates\": true,\n    \"edgeCheck\": \"Node-side full topology check; omitted here to avoid distorting responsiveness timing.\"\n  },\n  \"relief1024\": {\n    \"pixels\": \"1024x1014\",\n    \"meshMs\": 31,\n    \"exportMs\": 545.5,\n    \"triangleCount\": 2084814,\n    \"stlBytes\": 104240784,\n    \"finiteCoordinates\": true,\n    \"edgeCheck\": \"Node-side full topology check; omitted here to avoid distorting responsiveness timing.\"\n  },\n  \"transparent\": {\n    \"pixels\": \"512x512\",\n    \"meshMs\": 27,\n    \"triangleCount\": 244,\n    \"stlBytes\": 12284,\n    \"components\": 1,\n    \"holes\": 0,\n    \"strategy\": \"contour\",\n    \"topology\": {\n      \"vertexCount\": 124,\n      \"triangleCount\": 244,\n      \"finiteCoordinates\": true,\n      \"degenerateTriangles\": 0,\n      \"boundaryEdges\": 0,\n      \"nonManifoldEdges\": 0,\n      \"bounds\": {\n        \"min\": [\n          -30.859375,\n          -32.2265625,\n          0\n        ],\n        \"max\": [\n          29.1015625,\n          41.015625,\n          3\n        ],\n        \"size\": [\n          59.9609375,\n          73.2421875,\n          3\n        ]\n      }\n    }\n  },\n  \"whiteBackground\": {\n    \"pixels\": \"405x512\",\n    \"meshMs\": 22.5,\n    \"triangleCount\": 384,\n    \"stlBytes\": 19284,\n    \"components\": 2,\n    \"holes\": 0,\n    \"strategy\": \"contour\",\n    \"topology\": {\n      \"vertexCount\": 196,\n      \"triangleCount\": 384,\n      \"finiteCoordinates\": true,\n      \"degenerateTriangles\": 0,\n      \"boundaryEdges\": 0,\n      \"nonManifoldEdges\": 0,\n      \"bounds\": {\n        \"min\": [\n          -45.802467346191406,\n          -59.25925827026367,\n          0\n        ],\n        \"max\": [\n          45.30864334106445,\n          58.76543045043945,\n          3\n        ],\n        \"size\": [\n          91.11111068725586,\n          118.02468872070312,\n          3\n        ]\n      }\n    }\n  },\n  \"holeShape\": {\n    \"pixels\": \"512x509\",\n    \"meshMs\": 37.5,\n    \"triangleCount\": 189948,\n    \"stlBytes\": 9497484,\n    \"components\": 2,\n    \"holes\": 8,\n    \"strategy\": \"shared-raster-fallback\",\n    \"topology\": {\n      \"vertexCount\": 94962,\n      \"triangleCount\": 189948,\n      \"finiteCoordinates\": true,\n      \"degenerateTriangles\": 0,\n      \"boundaryEdges\": 0,\n      \"nonManifoldEdges\": 0,\n      \"bounds\": {\n        \"min\": [\n          -47.265625,\n          -42.48046875,\n          0\n        ],\n        \"max\": [\n          47.265625,\n          42.67578125,\n          3\n        ],\n        \"size\": [\n          94.53125,\n          85.15625,\n          3\n        ]\n      }\n    }\n  },\n  \"threeMfToStl\": {\n    \"conversionMs\": 83.20000004768372,\n    \"bytes\": 1284,\n    \"input\": {\n      \"unit\": \"millimeter\",\n      \"meshObjectCount\": 2,\n      \"buildItemCount\": 2,\n      \"vertexCount\": 16,\n      \"triangleCount\": 24,\n      \"allMeshesManifoldAndOriented\": true,\n      \"bounds\": {\n        \"min\": [\n          0,\n          0,\n          0\n        ],\n        \"max\": [\n          20,\n          10,\n          10\n        ],\n        \"size\": [\n          20,\n          10,\n          10\n        ]\n      },\n      \"warnings\": 0\n    },\n    \"output\": {\n      \"vertexCount\": 16,\n      \"triangleCount\": 24,\n      \"finiteCoordinates\": true,\n      \"degenerateTriangles\": 0,\n      \"boundaryEdges\": 0,\n      \"nonManifoldEdges\": 0,\n      \"bounds\": {\n        \"min\": [\n          0,\n          0,\n          0\n        ],\n        \"max\": [\n          20,\n          10,\n          10\n        ],\n        \"size\": [\n          20,\n          10,\n          10\n        ]\n      }\n    }\n  },\n  \"stlToThreeMf\": {\n    \"conversionMs\": 6.800000071525574,\n    \"bytes\": 1748,\n    \"output\": {\n      \"unit\": \"millimeter\",\n      \"meshObjectCount\": 1,\n      \"buildItemCount\": 1,\n      \"vertexCount\": 16,\n      \"triangleCount\": 24,\n      \"allMeshesManifoldAndOriented\": true,\n      \"bounds\": {\n        \"min\": [\n          0,\n          0,\n          0\n        ],\n        \"max\": [\n          22,\n          10,\n          10\n        ],\n        \"size\": [\n          22,\n          10,\n          10\n        ]\n      },\n      \"warnings\": 0\n    }\n  }\n}",
+  "consoleMessages": [
+    "debug: [vite] connecting...",
+    "debug: [vite] connected."
+  ],
+  "pageErrors": []
+}

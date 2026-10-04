@@ -1,0 +1,63 @@
+---
+import { SITE, absoluteUrl } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const { title, description, canonicalPath, structuredData } = Astro.props;
+const canonical = absoluteUrl(canonicalPath);
+const schemas = structuredData
+  ? (Array.isArray(structuredData) ? structuredData : [structuredData])
+  : [];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {schemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/" aria-label="IntoSTL home">
+          <span class="brand-mark" aria-hidden="true">I</span>
+          <span>IntoSTL</span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="/image-to-stl/">Image to STL</a>
+          <a href="/3mf-to-stl/">3MF to STL</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <p><strong>IntoSTL</strong> — simple browser tools for printable models.</p>
+        <p>Your files stay on your device.</p>
+      </div>
+    </footer>
+  </body>
+</html>

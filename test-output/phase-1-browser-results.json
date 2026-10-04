@@ -1,0 +1,109 @@
+{
+  "chromeVersion": "154.0.8037.95",
+  "home": {
+    "title": "IntoSTL — Free STL & 3D Printing Tools",
+    "h1Count": 1,
+    "canonical": "https://intostl.com/",
+    "description": "Free image to STL and 3MF to STL tools that work locally in your browser. No file upload and no sign-up required.",
+    "hasContent": true,
+    "hasOverflow": false,
+    "schemaTypes": [
+      "WebSite"
+    ]
+  },
+  "image": {
+    "title": "Image to STL Converter — Free Online Tool | IntoSTL",
+    "h1Count": 1,
+    "canonical": "https://intostl.com/image-to-stl/",
+    "description": "Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.",
+    "hasContent": true,
+    "hasOverflow": false,
+    "schemaTypes": [
+      "WebApplication",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "reliefDownload": {
+      "filename": "01-photo-relief.stl",
+      "bytes": 26161784
+    },
+    "extrudeDownload": {
+      "filename": "02-transparent-silhouette.stl",
+      "bytes": 12284
+    },
+    "preview": true,
+    "styleDefaults": {
+      "jpgInitialStyle": "relief",
+      "solidPngInitialStyle": "relief",
+      "transparentPngInitialStyle": "extrude",
+      "manualStyleAfterOverride": "relief"
+    }
+  },
+  "threeMf": {
+    "title": "3MF to STL Converter — Free & Private | IntoSTL",
+    "h1Count": 1,
+    "canonical": "https://intostl.com/3mf-to-stl/",
+    "description": "Convert 3MF files to STL directly in your browser. Free, private and fast, with no file upload or account required.",
+    "hasContent": true,
+    "hasOverflow": false,
+    "schemaTypes": [
+      "WebApplication",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "download": {
+      "filename": "multi-object-transformed.stl",
+      "bytes": 1284
+    },
+    "preview": true
+  },
+  "mobile": {
+    "title": "3MF to STL Converter — Free & Private | IntoSTL",
+    "h1Count": 1,
+    "canonical": "https://intostl.com/3mf-to-stl/",
+    "description": "Convert 3MF files to STL directly in your browser. Free, private and fast, with no file upload or account required.",
+    "hasContent": true,
+    "hasOverflow": false,
+    "schemaTypes": [
+      "WebApplication",
+      "BreadcrumbList",
+      "FAQPage"
+    ]
+  },
+  "mobileImage": {
+    "title": "Image to STL Converter — Free Online Tool | IntoSTL",
+    "h1Count": 1,
+    "canonical": "https://intostl.com/image-to-stl/",
+    "description": "Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.",
+    "hasContent": true,
+    "hasOverflow": false,
+    "schemaTypes": [
+      "WebApplication",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "reliefPreview": true,
+    "extrudePreview": true,
+    "reliefStyle": "relief",
+    "extrudeStyle": "extrude"
+  },
+  "skipLink": {
+    "normal": {
+      "visibleInViewport": false,
+      "focusVisible": false
+    },
+    "keyboardFocused": {
+      "visibleInViewport": true,
+      "focusVisible": true
+    }
+  },
+  "missingPhaseTwoRoutes": {
+    "/png-to-stl/": 404,
+    "/jpg-to-stl/": 404,
+    "/logo-to-stl/": 404,
+    "/stl-to-3mf/": 404
+  },
+  "externalRequests": [],
+  "consoleErrors": [],
+  "pageErrors": []
+}

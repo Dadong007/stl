@@ -1,0 +1,45 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #202124;
+  background: #f4f4f4;
+}
+
+main {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 24px;
+  background: white;
+  border: 1px solid #bbb;
+}
+
+label {
+  display: block;
+  margin: 12px 0;
+}
+
+select,
+input,
+button {
+  margin-left: 8px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.actions button {
+  margin: 0;
+  padding: 7px 10px;
+}
+
+pre {
+  overflow: auto;
+  max-height: 60vh;
+  padding: 12px;
+  color: #e8e8e8;
+  background: #202124;
+  white-space: pre-wrap;
+}

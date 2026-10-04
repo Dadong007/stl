@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, absoluteUrl } from '../config/site';
+
+const title = 'IntoSTL — Free STL & 3D Printing Tools';
+const description = 'Free image to STL and 3MF to STL tools that work locally in your browser. No file upload and no sign-up required.';
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: absoluteUrl('/'),
+  description: SITE.description,
+};
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/" structuredData={websiteSchema}>
+  <section class="home-hero shell">
+    <p class="eyebrow">Free · Private · No sign-up</p>
+    <h1>Turn images and 3D files into STL — right in your browser.</h1>
+    <p class="hero-copy">
+      Simple tools for creating printable STL files. Your files are processed locally and never uploaded.
+    </p>
+  </section>
+
+  <section class="shell tool-section" aria-labelledby="available-tools">
+    <div class="section-heading">
+      <p class="eyebrow">Available now</p>
+      <h2 id="available-tools">Choose a tool</h2>
+    </div>
+    <div class="tool-grid">
+      <a class="tool-card" href="/image-to-stl/">
+        <span class="tool-number" aria-hidden="true">01</span>
+        <h3>Image to STL</h3>
+        <p>Turn a JPG or PNG into a printable relief or extruded model.</p>
+        <span class="text-link">Open Image to STL</span>
+      </a>
+      <a class="tool-card" href="/3mf-to-stl/">
+        <span class="tool-number" aria-hidden="true">02</span>
+        <h3>3MF to STL</h3>
+        <p>Convert 3MF geometry to a widely supported binary STL file.</p>
+        <span class="text-link">Open 3MF to STL</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="shell trust-strip" aria-label="IntoSTL principles">
+    <div><strong>Browser-local</strong><span>Files stay on your device</span></div>
+    <div><strong>No account</strong><span>Start converting immediately</span></div>
+    <div><strong>Printable output</strong><span>Download standard STL files</span></div>
+  </section>
+</BaseLayout>

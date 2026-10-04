@@ -1,0 +1,118 @@
+---
+import ImageConverter from '../components/converter/ImageConverter';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'Image to STL Converter — Free Online Tool | IntoSTL';
+const description = 'Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.';
+const questions = [
+  {
+    question: 'What is the difference between Relief and Extrude?',
+    answer: 'Relief uses image brightness to create a raised surface. Extrude turns a clear foreground shape into a solid model with a uniform depth.',
+  },
+  {
+    question: 'Which images work best?',
+    answer: 'Photos with clear light and dark detail work well for reliefs. Transparent PNG logos or high-contrast graphics work best for extruded models.',
+  },
+  {
+    question: 'Are my images uploaded?',
+    answer: 'No. The image is decoded and converted locally by your browser and is not sent to an IntoSTL server.',
+  },
+];
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'IntoSTL Image to STL Converter',
+    url: absoluteUrl('/image-to-stl/'),
+    description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    isAccessibleForFree: true,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+      { '@type': 'ListItem', position: 2, name: 'Image to STL', item: absoluteUrl('/image-to-stl/') },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: questions.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  },
+];
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/image-to-stl/" structuredData={structuredData}>
+  <article class="tool-page">
+    <header class="tool-intro shell-narrow">
+      <p class="eyebrow">Free browser tool</p>
+      <h1>Convert an Image to STL</h1>
+      <p>Upload a JPG or PNG and create a printable relief or extruded model with a useful default size.</p>
+    </header>
+
+    <div class="shell converter-wrap">
+      <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your files are processed locally in your browser and are not uploaded to our servers.</p>
+      <ImageConverter client:load />
+    </div>
+
+    <div class="shell-narrow content-stack">
+      <section aria-labelledby="image-how">
+        <p class="eyebrow">How it works</p>
+        <h2 id="image-how">From image to printable model in three steps</h2>
+        <ol class="steps">
+          <li><span>1</span><div><strong>Upload an image</strong><p>Choose a JPG or PNG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
+          <li><span>2</span><div><strong>Check the 3D preview</strong><p>Use the default Relief style or switch to Extrude, then adjust depth and size.</p></div></li>
+          <li><span>3</span><div><strong>Download the STL</strong><p>Save the binary STL and open it in your slicer to choose print settings.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="two-column" aria-labelledby="styles-heading">
+        <div>
+          <p class="eyebrow">Choose a style</p>
+          <h2 id="styles-heading">Relief or Extrude</h2>
+        </div>
+        <div class="prose">
+          <p><strong>Relief</strong> turns brightness into height. It is useful for photos, maps and textured plaques, and includes a flat base and closed side walls.</p>
+          <p><strong>Extrude</strong> turns a foreground shape into a solid of uniform depth. Transparent PNG logos work best; solid-background graphics use a simple light-background threshold.</p>
+        </div>
+      </section>
+
+      <section class="two-column" aria-labelledby="printing-heading">
+        <div>
+          <p class="eyebrow">Better source images</p>
+          <h2 id="printing-heading">Prepare for 3D printing</h2>
+        </div>
+        <div class="prose">
+          <p>Use clear, high-contrast images without tiny isolated details. The model keeps the image aspect ratio and is generated at a fixed internal resolution chosen for reliable browser performance.</p>
+          <p>Before printing, inspect the downloaded STL in your slicer. Orientation, supports, layer height and printer tolerances still depend on the model and your machine.</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="image-faq">
+        <p class="eyebrow">Common questions</p>
+        <h2 id="image-faq">Image to STL FAQ</h2>
+        <div class="faq-list">
+          {questions.map(({ question, answer }) => (
+            <details>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <aside class="related-tool">
+        <div><p class="eyebrow">Related tool</p><h2>Already have a 3MF file?</h2></div>
+        <a class="secondary-button" href="/3mf-to-stl/">Convert 3MF to STL</a>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
