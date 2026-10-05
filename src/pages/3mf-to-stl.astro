@@ -7,6 +7,10 @@ const title = '3MF to STL Converter — Free, No Upload | IntoSTL';
 const description = 'Convert 3MF files to STL directly in your browser while preserving final geometry and transforms. Free, private and no upload required.';
 const questions = [
   {
+    question: 'Are 3MF build transforms preserved in the STL?',
+    answer: 'Yes. The validated conversion applies supported build-item transforms so the STL contains the final positioned geometry.',
+  },
+  {
     question: 'Will the converted STL keep colors and materials?',
     answer: 'No. STL stores surface geometry only, so colors, materials, textures and other 3MF metadata are not included.',
   },
@@ -15,8 +19,8 @@ const questions = [
     answer: 'No. The file is read and converted locally in your browser and is not sent to an IntoSTL server.',
   },
   {
-    question: 'Why convert 3MF to STL?',
-    answer: 'STL is widely supported by slicers and older 3D-printing software. Conversion can help when another tool cannot open 3MF files.',
+    question: 'When is STL useful for compatibility?',
+    answer: 'STL is useful when a slicer, viewer or older 3D-printing application expects surface geometry in STL format.',
   },
 ];
 const structuredData = [
@@ -63,10 +67,22 @@ const structuredData = [
       <ThreeMfConverter client:load />
     </div>
 
+    <nav class="on-this-page shell-narrow" aria-labelledby="three-mf-page-nav">
+      <p id="three-mf-page-nav">On this page</p>
+      <ul>
+        <li><a href="#three-mf-how">How to convert 3MF to STL</a></li>
+        <li><a href="#three-mf-preserved">What is preserved</a></li>
+        <li><a href="#three-mf-lost">What is lost</a></li>
+        <li><a href="#three-mf-why">Why convert</a></li>
+        <li><a href="#three-mf-faq">FAQ</a></li>
+      </ul>
+    </nav>
+
     <div class="shell-narrow content-stack">
       <section aria-labelledby="three-mf-how">
         <p class="eyebrow">How it works</p>
-        <h2 id="three-mf-how">Convert a 3MF model in three steps</h2>
+        <h2 id="three-mf-how">How to convert 3MF to STL</h2>
+        <p class="section-intro">Use the 3MF to STL converter when you need the model's final surface geometry in a simpler format. The file stays on your device throughout the conversion.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Upload a 3MF file</strong><p>Choose a model up to 50 MB from your device.</p></div></li>
           <li><span>2</span><div><strong>Inspect the geometry</strong><p>IntoSTL combines the model's build items and transforms, then shows the STL geometry in 3D.</p></div></li>
@@ -74,25 +90,36 @@ const structuredData = [
         </ol>
       </section>
 
-      <section class="two-column" aria-labelledby="preserved-heading">
+      <section class="two-column" aria-labelledby="three-mf-preserved">
         <div>
           <p class="eyebrow">Conversion details</p>
-          <h2 id="preserved-heading">What the STL preserves</h2>
+          <h2 id="three-mf-preserved">What is preserved when converting 3MF to STL?</h2>
         </div>
         <div class="prose">
-          <p>The converter preserves the final mesh geometry, including multiple build items and their positions. This matches what you see in the 3MF build.</p>
-          <p>STL cannot carry 3MF colors, materials, textures or document metadata. Those details are intentionally omitted rather than represented inaccurately.</p>
+          <p>The validated conversion path preserves the final mesh geometry. Multiple build items are included, and their supported transforms are applied to the output vertices so their final positions are represented in the STL.</p>
+          <p>The preview shows this combined, transformed geometry before download. The binary STL then stores the resulting triangles as one geometry file.</p>
         </div>
       </section>
 
-      <section class="two-column" aria-labelledby="why-heading">
+      <section class="two-column" aria-labelledby="three-mf-lost">
         <div>
-          <p class="eyebrow">Compatibility</p>
-          <h2 id="why-heading">Why convert 3MF to STL?</h2>
+          <p class="eyebrow">Format limits</p>
+          <h2 id="three-mf-lost">What 3MF data STL cannot keep</h2>
         </div>
         <div class="prose">
-          <p>3MF can store richer printing information, while STL is a simpler geometry format supported by a broad range of slicers, viewers and older workflows.</p>
-          <p>Use this converter when your next tool expects STL and you only need the model's surface geometry.</p>
+          <p>STL stores surface triangles, so it cannot preserve 3MF colors, materials, textures or document metadata. These details are omitted rather than approximated or reconstructed.</p>
+          <p>If those richer properties matter to the next stage of your workflow, keep the original 3MF alongside the converted STL.</p>
+        </div>
+      </section>
+
+      <section class="two-column" aria-labelledby="three-mf-why">
+        <div>
+          <p class="eyebrow">Compatibility</p>
+          <h2 id="three-mf-why">Why convert 3MF to STL?</h2>
+        </div>
+        <div class="prose">
+          <p>3MF can store richer printing information, while STL is a simpler geometry format supported by a broad range of slicers, viewers and older workflows. That can be useful when the next application accepts STL but not 3MF.</p>
+          <p>Current slicer workflows such as OrcaSlicer, PrusaSlicer and Bambu Studio can work with modern formats, but a particular exchange step or older tool may still require STL. Convert only when surface geometry is what the destination needs.</p>
         </div>
       </section>
 
@@ -110,7 +137,7 @@ const structuredData = [
       </section>
 
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tool</p><h2>Starting from an STL?</h2></div>
+        <div><p class="eyebrow">Related tool</p><p class="related-heading">Starting from an STL?</p></div>
         <a class="secondary-button" href="/stl-to-3mf/">Convert STL to 3MF</a>
       </aside>
     </div>

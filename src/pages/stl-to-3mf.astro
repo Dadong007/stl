@@ -9,6 +9,7 @@ const questions = [
   { question: 'Can IntoSTL read both binary and ASCII STL?', answer: 'Yes. Binary STL is supported directly, and the existing Three.js STLLoader fallback handles valid ASCII STL when required.' },
   { question: 'What units does the converter use?', answer: 'STL files do not include unit metadata, so IntoSTL treats STL units as millimeters when creating the 3MF file.' },
   { question: 'Are disconnected shells kept?', answer: 'Yes. Separate shells in the source mesh remain part of the converted 3MF geometry.' },
+  { question: 'Does conversion restore colors or print settings?', answer: 'No. Converting STL to 3MF does not recreate colors, materials, textures or print settings that are missing from the source STL.' },
 ];
 const structuredData = [
   { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'IntoSTL STL to 3MF Converter', url: absoluteUrl('/stl-to-3mf/'), description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true },
@@ -31,25 +32,59 @@ const structuredData = [
       <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your STL is processed locally in your browser.</p>
       <StlToThreeMfConverter client:load />
     </div>
+
+    <nav class="on-this-page shell-narrow" aria-labelledby="stl-page-nav">
+      <p id="stl-page-nav">On this page</p>
+      <ul>
+        <li><a href="#stl-how">How to convert STL to 3MF</a></li>
+        <li><a href="#stl-changes">What changes</a></li>
+        <li><a href="#stl-units">Units</a></li>
+        <li><a href="#stl-why">Why convert</a></li>
+        <li><a href="#stl-faq">FAQ</a></li>
+      </ul>
+    </nav>
+
     <div class="shell-narrow content-stack">
       <section aria-labelledby="stl-how">
-        <p class="eyebrow">How it works</p><h2 id="stl-how">STL to 3MF in three steps</h2>
+        <p class="eyebrow">How it works</p><h2 id="stl-how">How to convert STL to 3MF</h2>
+        <p class="section-intro">The STL to 3MF converter supports binary STL and valid ASCII STL, then packages the parsed geometry as a 3MF model without uploading the source file.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Upload an STL</strong><p>Choose a binary or ASCII STL up to 50 MB.</p></div></li>
           <li><span>2</span><div><strong>Inspect the geometry</strong><p>Preview the parsed mesh, including disconnected shells.</p></div></li>
           <li><span>3</span><div><strong>Download the 3MF</strong><p>Save the converted model as a standard 3MF file.</p></div></li>
         </ol>
       </section>
-      <section class="two-column" aria-labelledby="stl-units">
-        <div><p class="eyebrow">Conversion details</p><h2 id="stl-units">Geometry and units</h2></div>
-        <div class="prose"><p>The conversion carries mesh geometry into 3MF and keeps separate shells. STL files do not include unit metadata, so the source values are treated as millimeters.</p><p>3MF is useful when the next application prefers a modern container format. The new file does not invent colors, materials or print settings that were not present in the STL.</p></div>
+
+      <section class="two-column" aria-labelledby="stl-changes">
+        <div><p class="eyebrow">Conversion details</p><h2 id="stl-changes">What changes when STL becomes 3MF?</h2></div>
+        <div class="prose">
+          <p>The source triangles are carried into a 3MF mesh, preserving the geometry represented by the STL. Separate, disconnected shells can remain disconnected within that converted geometry.</p>
+          <p>The container changes, but missing information does not return. The new 3MF does not recreate colors, materials, textures or print settings that STL never contained.</p>
+        </div>
       </section>
+
+      <section class="two-column" aria-labelledby="stl-units">
+        <div><p class="eyebrow">Scale handling</p><h2 id="stl-units">STL units and millimeter handling</h2></div>
+        <div class="prose">
+          <p>STL files do not include unit metadata. IntoSTL treats the numeric values in the source STL as millimeters and writes the 3MF using millimeter units.</p>
+          <p>For example, a source dimension of 20 is handled as 20 mm. Check the preview and the dimensions in your next application if the STL originated in software that assumed a different unit.</p>
+        </div>
+      </section>
+
+      <section class="two-column" aria-labelledby="stl-why">
+        <div><p class="eyebrow">Modern workflows</p><h2 id="stl-why">Why convert STL to 3MF?</h2></div>
+        <div class="prose">
+          <p>3MF is a modern container widely supported by current slicers and 3D-printing workflows. Converting can be useful when another application prefers 3MF for import, organization or later processing.</p>
+          <p>This conversion modernizes the file container while keeping the source geometry; it does not enrich the model with information the STL did not provide. If you later need an STL again, use the related <a href="/3mf-to-stl/">3MF to STL converter</a>.</p>
+        </div>
+      </section>
+
       <section aria-labelledby="stl-faq">
         <p class="eyebrow">Common questions</p><h2 id="stl-faq">STL to 3MF FAQ</h2>
         <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
       </section>
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tool</p><h2>Need STL again?</h2></div>
+        <div><p class="eyebrow">Related tool</p><p class="related-heading">Need STL again?</p></div>
         <a class="secondary-button" href="/3mf-to-stl/">Convert 3MF to STL</a>
       </aside>
     </div>

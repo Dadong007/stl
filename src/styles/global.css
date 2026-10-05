@@ -150,12 +150,12 @@ h3 {
   font-size: 1rem;
 }
 
-nav {
+.site-header nav {
   display: flex;
   gap: 1.4rem;
 }
 
-nav a {
+.site-header nav a {
   color: var(--ink);
   font-size: 0.95rem;
   font-weight: 650;
@@ -275,7 +275,37 @@ nav a {
 }
 
 .converter-wrap {
-  margin-bottom: 5.5rem;
+  margin-bottom: 2.25rem;
+}
+
+.on-this-page {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  margin-bottom: clamp(4rem, 8vw, 6rem);
+  padding-block: 0.9rem;
+  border-block: 1px solid var(--line);
+}
+
+.on-this-page p {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 760;
+}
+
+.on-this-page ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.on-this-page a {
+  font-size: 0.9rem;
+  font-weight: 620;
 }
 
 .privacy-note {
@@ -548,6 +578,13 @@ nav a {
   gap: clamp(4.5rem, 9vw, 7rem);
 }
 
+.section-intro {
+  max-width: 70ch;
+  margin-bottom: 1.5rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -626,9 +663,12 @@ nav a {
   background: var(--canvas);
 }
 
-.related-tool h2 {
+.related-heading {
   margin: 0;
   font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
 }
 
 .related-actions {
@@ -721,11 +761,11 @@ nav a {
     min-height: 4rem;
   }
 
-  nav {
+  .site-header nav {
     gap: 0.8rem;
   }
 
-  nav a {
+  .site-header nav a {
     font-size: 0.8rem;
   }
 
@@ -757,7 +797,15 @@ nav a {
   }
 
   .converter-wrap {
-    margin-bottom: 4.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .on-this-page {
+    grid-template-columns: 1fr;
+  }
+
+  .on-this-page ul {
+    gap: 0.5rem 1rem;
   }
 
   .converter-controls {

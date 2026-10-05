@@ -9,6 +9,7 @@ const questions = [
   { question: 'Why is Relief the default for JPG?', answer: 'JPG files do not contain transparency, so Relief uses image brightness to create a raised surface.' },
   { question: 'What kind of JPG works best?', answer: 'Photos, maps and textured images with clear light and dark detail usually produce the clearest reliefs.' },
   { question: 'Can I use Extrude with a JPG?', answer: 'Yes. You can switch to Extrude, which separates a darker foreground from a light background.' },
+  { question: 'Does JPG support transparency?', answer: 'No. JPG and JPEG files have no alpha channel, so every pixel is part of the image.' },
 ];
 const structuredData = [
   { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'IntoSTL JPG to STL Converter', url: absoluteUrl('/jpg-to-stl/'), description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true },
@@ -31,25 +32,51 @@ const structuredData = [
       <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your JPG is processed locally in your browser.</p>
       <ImageConverter client:load acceptedInput="jpg" autoStyleFromTransparency={false} uploadPrompt="Upload a JPG or JPEG image" />
     </div>
+
+    <nav class="on-this-page shell-narrow" aria-labelledby="jpg-page-nav">
+      <p id="jpg-page-nav">On this page</p>
+      <ul>
+        <li><a href="#jpg-how">How to convert JPG to STL</a></li>
+        <li><a href="#jpg-relief">How photo relief works</a></li>
+        <li><a href="#jpg-best">Best JPG images</a></li>
+        <li><a href="#jpg-faq">FAQ</a></li>
+      </ul>
+    </nav>
+
     <div class="shell-narrow content-stack">
       <section aria-labelledby="jpg-how">
-        <p class="eyebrow">How it works</p><h2 id="jpg-how">JPG to STL in three steps</h2>
+        <p class="eyebrow">How it works</p><h2 id="jpg-how">How to convert JPG or JPEG to STL</h2>
+        <p class="section-intro">Use the JPG to STL converter to turn a photograph or other JPEG image into a raised model. Processing stays in your browser, so the source image is not uploaded.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Choose a JPG</strong><p>Upload a JPG or JPEG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
           <li><span>2</span><div><strong>Adjust the relief</strong><p>Preview the result and set its depth and overall size.</p></div></li>
           <li><span>3</span><div><strong>Download the STL</strong><p>Save the model and open it in your slicer.</p></div></li>
         </ol>
       </section>
+
       <section class="two-column" aria-labelledby="jpg-relief">
-        <div><p class="eyebrow">Brightness to height</p><h2 id="jpg-relief">A practical photo relief</h2></div>
-        <div class="prose"><p>JPG files start in Relief mode: lighter pixels become higher parts of the surface. Photos, maps and textured images with clear contrast generally produce the easiest models to print.</p></div>
+        <div><p class="eyebrow">Brightness to height</p><h2 id="jpg-relief">How a JPG photo becomes a 3D relief</h2></div>
+        <div class="prose">
+          <p>JPG files start in Relief mode. The converter samples image brightness and maps lighter pixels to higher parts of the surface, while darker pixels form lower areas above a flat base. The result is a height-based relief, not a complete reconstruction of the objects in a photo.</p>
+          <p>Depth controls how strongly that brightness range is expressed. Use the 3D preview to check whether important shapes remain readable before downloading the STL.</p>
+        </div>
       </section>
+
+      <section class="two-column" aria-labelledby="jpg-best">
+        <div><p class="eyebrow">Source quality</p><h2 id="jpg-best">What JPG images work best?</h2></div>
+        <div class="prose">
+          <p>Photos, maps and textured images with clear light and dark separation usually make the clearest photo reliefs. Stronger contrast can make the height changes easier to see and print.</p>
+          <p>JPEG compression artifacts and image noise may appear as small surface details, while very tiny features may not print clearly. JPG has no transparency; use the <a href="/png-to-stl/">PNG to STL tool</a> when an alpha channel should define empty space.</p>
+          <p>For a broader choice between height-based relief and shape extrusion, see the general <a href="/image-to-stl/">Image to STL guide</a>.</p>
+        </div>
+      </section>
+
       <section aria-labelledby="jpg-faq">
         <p class="eyebrow">Common questions</p><h2 id="jpg-faq">JPG to STL FAQ</h2>
         <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
       </section>
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tools</p><h2>Use another image format</h2></div>
+        <div><p class="eyebrow">Related tools</p><p class="related-heading">Use another image format</p></div>
         <div class="related-actions"><a class="secondary-button" href="/image-to-stl/">Image to STL</a><a class="secondary-button" href="/png-to-stl/">PNG to STL</a></div>
       </aside>
     </div>

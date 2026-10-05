@@ -63,10 +63,21 @@ const structuredData = [
       <ImageConverter client:load />
     </div>
 
+    <nav class="on-this-page shell-narrow" aria-labelledby="image-page-nav">
+      <p id="image-page-nav">On this page</p>
+      <ul>
+        <li><a href="#image-how">How to convert an image to STL</a></li>
+        <li><a href="#image-styles">Relief vs Extrude</a></li>
+        <li><a href="#image-printing">Best images for STL conversion</a></li>
+        <li><a href="#image-faq">FAQ</a></li>
+      </ul>
+    </nav>
+
     <div class="shell-narrow content-stack">
       <section aria-labelledby="image-how">
         <p class="eyebrow">How it works</p>
-        <h2 id="image-how">From image to printable model in three steps</h2>
+        <h2 id="image-how">How to convert an image to STL</h2>
+        <p class="section-intro">Use the image to STL converter to create either a raised relief or a solid extruded shape. The image is decoded and converted on your device, with no upload required.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Upload an image</strong><p>Choose a JPG or PNG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
           <li><span>2</span><div><strong>Check the 3D preview</strong><p>Use the default Relief style or switch to Extrude, then adjust depth and size.</p></div></li>
@@ -74,24 +85,25 @@ const structuredData = [
         </ol>
       </section>
 
-      <section class="two-column" aria-labelledby="styles-heading">
+      <section class="two-column" aria-labelledby="image-styles">
         <div>
           <p class="eyebrow">Choose a style</p>
-          <h2 id="styles-heading">Relief or Extrude</h2>
+          <h2 id="image-styles">Relief vs Extrude: two ways to turn an image into STL</h2>
         </div>
         <div class="prose">
-          <p><strong>Relief</strong> turns brightness into height. It is useful for photos, maps and textured plaques, and includes a flat base and closed side walls.</p>
-          <p><strong>Extrude</strong> turns a foreground shape into a solid of uniform depth. Transparent PNG logos work best; solid-background graphics use a simple light-background threshold.</p>
+          <p><strong>Relief</strong> turns image brightness into height. It is useful for photos, maps, textured plaques and other picture-to-STL projects where shades should form the raised surface. The result includes a flat base and closed side walls.</p>
+          <p><strong>Extrude</strong> turns a clearly separated foreground shape into a solid with uniform depth. Use it for simple artwork, icons or silhouettes rather than photographs. For format-specific guidance, see the <a href="/png-to-stl/">PNG converter</a> or the dedicated <a href="/logo-to-stl/">logo converter</a>.</p>
         </div>
       </section>
 
-      <section class="two-column" aria-labelledby="printing-heading">
+      <section class="two-column" aria-labelledby="image-printing">
         <div>
           <p class="eyebrow">Better source images</p>
-          <h2 id="printing-heading">Prepare for 3D printing</h2>
+          <h2 id="image-printing">What images work best for 3D printing?</h2>
         </div>
         <div class="prose">
-          <p>Use clear, high-contrast images without tiny isolated details. The model keeps the image aspect ratio and is generated at a fixed internal resolution chosen for reliable browser performance.</p>
+          <p>Start with a clear subject and visible tonal or shape separation. Strong contrast usually produces a more readable image relief STL, while tiny isolated marks, very thin lines and noisy backgrounds can become fragile or unclear geometry.</p>
+          <p>The model keeps the image aspect ratio and is generated at a fixed internal resolution chosen for reliable browser performance. If the source is a photograph or JPEG, the <a href="/jpg-to-stl/">JPG to STL guide</a> explains how brightness becomes relief height.</p>
           <p>Before printing, inspect the downloaded STL in your slicer. Orientation, supports, layer height and printer tolerances still depend on the model and your machine.</p>
         </div>
       </section>
@@ -110,7 +122,7 @@ const structuredData = [
       </section>
 
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tools</p><h2>Choose a focused image converter</h2></div>
+        <div><p class="eyebrow">Related tools</p><p class="related-heading">Choose a focused image converter</p></div>
         <div class="related-actions">
           <a class="secondary-button" href="/png-to-stl/">PNG to STL</a>
           <a class="secondary-button" href="/jpg-to-stl/">JPG to STL</a>
