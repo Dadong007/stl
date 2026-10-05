@@ -144,13 +144,13 @@ h3 {
 
 .site-header nav {
   display: flex;
-  gap: 1.4rem;
+  gap: 1.75rem;
 }
 
 .site-header nav a {
   color: var(--ink);
-  font-size: 0.95rem;
-  font-weight: 650;
+  font-size: 0.875rem;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -214,13 +214,14 @@ h3 {
 }
 
 .tool-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.125rem;
 }
 
 .tool-card p {
   max-width: 35ch;
   color: var(--muted);
-  font-size: 0.96rem;
+  font-size: 0.94rem;
+  line-height: 1.6;
 }
 
 .tool-number {
@@ -234,7 +235,8 @@ h3 {
 }
 
 .text-link {
-  font-weight: 720;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 0.25rem;
 }
@@ -873,6 +875,15 @@ h3 {
 
   .privacy-note {
     margin-bottom: 0.5rem;
+  }
+
+  .info-stack h2[id^="about-"] {
+    max-width: 32ch;
+    font-size: 1.75rem;
+  }
+
+  #about-simple-tools {
+    max-width: 36ch;
   }
 }
 
