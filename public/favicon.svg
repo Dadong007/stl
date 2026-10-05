@@ -1,6 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img" aria-labelledby="title">
   <title id="title">IntoSTL</title>
-  <path d="M17 2h2l14 4v1L19 11h-2L3 7V6z" fill="#2aa987"/>
-  <path d="M17 13h2l14 4v1l-14 4h-2L3 18v-1z" fill="#167b65"/>
-  <path d="M17 24h2l14 4v1l-14 4h-2L3 29v-1z" fill="#102e35"/>
+  <defs>
+    <path id="layer" d="M18 2.2c.9 0 1.7.2 2.5.6l11.8 5.9c1.9.9 1.9 2.4 0 3.4L20.5 18c-1.6.8-3.4.8-5 0L3.7 12.1c-1.9-1-1.9-2.5 0-3.4l11.8-5.9c.8-.4 1.6-.6 2.5-.6Z"/>
+    <mask id="bottom-reveal" x="0" y="0" width="36" height="36" maskUnits="userSpaceOnUse">
+      <rect width="36" height="36" fill="#000"/>
+      <use href="#layer" transform="translate(0 15.2)" fill="#fff"/>
+      <use href="#layer" transform="translate(0 7.6)" fill="#000" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>
+    </mask>
+    <mask id="middle-reveal" x="0" y="0" width="36" height="36" maskUnits="userSpaceOnUse">
+      <rect width="36" height="36" fill="#000"/>
+      <use href="#layer" transform="translate(0 7.6)" fill="#fff"/>
+      <use href="#layer" fill="#000" stroke="#000" stroke-width="2.8" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+  <g>
+    <g mask="url(#bottom-reveal)"><use href="#layer" transform="translate(0 15.2)" fill="#073f43"/></g>
+    <g mask="url(#middle-reveal)"><use href="#layer" transform="translate(0 7.6)" fill="#1aa889"/></g>
+    <use href="#layer" fill="#08a77d"/>
+  </g>
 </svg>
