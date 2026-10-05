@@ -6,11 +6,17 @@ const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/l
 const newRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/'];
 const trustRoutes = ['/about/', '/privacy/', '/contact/'];
 const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
+const googleTagScriptUrl = 'https://www.googletagmanager.com/gtag/js?id=G-GKTV9KDNXL';
 const browser = await chromium.launch({
   executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
   headless: true,
 });
 const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1280, height: 900 } });
+await context.route(googleTagScriptUrl, (route) => route.fulfill({
+  status: 200,
+  contentType: 'application/javascript',
+  body: '',
+}));
 const page = await context.newPage();
 const consoleErrors = [];
 const pageErrors = [];
@@ -22,7 +28,9 @@ page.on('console', (message) => {
 page.on('pageerror', (error) => pageErrors.push(error.message));
 page.on('request', (request) => {
   const url = new URL(request.url());
-  if ((url.protocol === 'http:' || url.protocol === 'https:') && !['127.0.0.1', 'localhost'].includes(url.hostname)) {
+  if ((url.protocol === 'http:' || url.protocol === 'https:')
+    && !['127.0.0.1', 'localhost'].includes(url.hostname)
+    && request.url() !== googleTagScriptUrl) {
     externalRequests.push(request.url());
   }
 });
@@ -36,6 +44,8 @@ const inspectPage = () => page.evaluate(() => ({
   hasOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
   brandLogoLoaded: document.querySelector('.brand-logo')?.complete && document.querySelector('.brand-logo')?.naturalWidth > 0,
   footerLogoLoaded: document.querySelector('.footer-logo')?.complete && document.querySelector('.footer-logo')?.naturalWidth > 0,
+  googleTagLoaderCount: document.querySelectorAll('script[src="https://www.googletagmanager.com/gtag/js?id=G-GKTV9KDNXL"]').length,
+  googleTagConfigCount: Array.from(document.scripts).filter((script) => !script.src && script.textContent?.includes("gtag('config', 'G-GKTV9KDNXL')")).length,
   schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
     .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
 }));
@@ -296,7 +306,7 @@ try {
     || results.skipLink.normal.visibleInViewport
     || !results.skipLink.keyboardFocused.visibleInViewport
     || !results.skipLink.keyboardFocused.focusVisible
-    || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical || !entry.brandLogoLoaded || !entry.footerLogoLoaded)
+    || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical || !entry.brandLogoLoaded || !entry.footerLogoLoaded || entry.googleTagLoaderCount !== 1 || entry.googleTagConfigCount !== 1)
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
