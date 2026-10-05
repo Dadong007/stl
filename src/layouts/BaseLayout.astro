@@ -54,9 +54,30 @@ const schemas = structuredData
       <slot />
     </main>
     <footer class="site-footer">
-      <div class="shell footer-inner">
-        <p><strong>IntoSTL</strong> — simple browser tools for printable models.</p>
-        <p>Your files stay on your device.</p>
+      <div class="shell footer-grid">
+        <div class="footer-brand">
+          <p class="footer-title">IntoSTL</p>
+          <p>Simple browser-based tools for 3D printing files and images.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer tools">
+          <p class="footer-heading">Tools</p>
+          <ul>
+            <li><a href="/image-to-stl/">Image to STL</a></li>
+            <li><a href="/png-to-stl/">PNG to STL</a></li>
+            <li><a href="/jpg-to-stl/">JPG to STL</a></li>
+            <li><a href="/logo-to-stl/">Logo to STL</a></li>
+            <li><a href="/3mf-to-stl/">3MF to STL</a></li>
+            <li><a href="/stl-to-3mf/">STL to 3MF</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="Footer site information">
+          <p class="footer-heading">Site</p>
+          <ul>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
       </div>
     </footer>
   </body>

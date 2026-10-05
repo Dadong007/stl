@@ -2,8 +2,10 @@ import { readFile, stat, writeFile } from 'node:fs/promises';
 import { chromium } from 'file:///C:/Users/win10/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 
 const baseUrl = 'http://127.0.0.1:4321';
-const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/'];
+const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
 const newRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/'];
+const trustRoutes = ['/about/', '/privacy/', '/contact/'];
+const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
 const browser = await chromium.launch({
   executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
   headless: true,
@@ -102,7 +104,8 @@ const reparseThreeMf = async (artifact) => {
 
 const results = {
   chromeVersion: '', pages: {}, sitemapRoutes: [], skipLink: null, image: null, threeMf: null,
-  png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, externalRequests, consoleErrors, pageErrors,
+  png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, trustMobile: {}, contact: null,
+  footerRoutes: [], externalRequests, consoleErrors, pageErrors,
 };
 
 try {
@@ -115,7 +118,21 @@ try {
 
   await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle' });
   results.skipLink = await inspectSkipLink();
+  results.footerRoutes = await page.locator('.footer-nav a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
   await page.screenshot({ path: 'test-output/phase-2-home-desktop.png', fullPage: true });
+
+  await page.goto(`${baseUrl}/contact/`, { waitUntil: 'networkidle' });
+  results.contact = await page.locator('.contact-form').evaluate((form) => ({
+    hasAction: form.hasAttribute('action'),
+    hasMethod: form.hasAttribute('method'),
+    fields: Array.from(form.querySelectorAll('select, input, textarea')).map((field) => ({
+      id: field.id,
+      name: field.getAttribute('name'),
+      label: form.querySelector(`label[for="${field.id}"]`)?.textContent?.trim() ?? null,
+    })),
+    fileInputCount: form.querySelectorAll('input[type="file"]').length,
+    submitDisabled: form.querySelector('button[type="submit"]')?.disabled ?? false,
+  }));
 
   const sitemapIndex = await context.request.get(`${baseUrl}/sitemap-index.xml`);
   const sitemapIndexText = await sitemapIndex.text();
@@ -190,6 +207,10 @@ try {
       downloadEnabled: await page.getByRole('button', { name: route === '/stl-to-3mf/' ? 'Download 3MF' : 'Download STL' }).isEnabled(),
     };
   }
+  for (const route of trustRoutes) {
+    await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
+    results.trustMobile[route] = await inspectPage();
+  }
   await page.screenshot({ path: 'test-output/phase-2-stl-to-3mf-mobile.png', fullPage: true });
 
   const pageEntries = Object.values(results.pages);
@@ -204,7 +225,14 @@ try {
     || !results.skipLink.keyboardFocused.focusVisible
     || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical)
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
+    || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
+    || JSON.stringify(results.footerRoutes) !== JSON.stringify(expectedFooterRoutes)
+    || results.contact.hasAction
+    || results.contact.hasMethod
+    || results.contact.fileInputCount !== 0
+    || !results.contact.submitDisabled
+    || results.contact.fields.length !== 3
     || results.image.solidPngInitialStyle !== 'relief'
     || results.image.transparentPngInitialStyle !== 'extrude'
     || results.image.manualStyleAfterOverride !== 'relief'
@@ -218,7 +246,8 @@ try {
     || threeMfDownloads.some((download) => !download.filename.endsWith('.3mf') || download.bytes <= 0)
     || !results.stlToThreeMf.binary.reparse.ready
     || !results.stlToThreeMf.ascii.reparse.ready
-    || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled);
+    || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled)
+    || Object.values(results.trustMobile).some((entry) => entry.hasOverflow || entry.h1Count !== 1);
 
   await writeFile('test-output/phase-2-browser-results.json', `${JSON.stringify(results, null, 2)}\n`);
   console.log(JSON.stringify(results, null, 2));

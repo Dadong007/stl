@@ -6,7 +6,7 @@ import { absoluteUrl } from '../config/site';
 const title = 'STL to 3MF Converter — Free, No Upload | IntoSTL';
 const description = 'Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.';
 const questions = [
-  { question: 'Can IntoSTL read both binary and ASCII STL?', answer: 'Yes. Binary STL is supported directly, and the existing Three.js STLLoader fallback handles valid ASCII STL when required.' },
+  { question: 'Can IntoSTL read both binary and ASCII STL?', answer: 'Yes. IntoSTL supports both binary STL and valid ASCII STL files.' },
   { question: 'What units does the converter use?', answer: 'STL files do not include unit metadata, so IntoSTL treats STL units as millimeters when creating the 3MF file.' },
   { question: 'Are disconnected shells kept?', answer: 'Yes. Separate shells in the source mesh remain part of the converted 3MF geometry.' },
   { question: 'Does conversion restore colors or print settings?', answer: 'No. Converting STL to 3MF does not recreate colors, materials, textures or print settings that are missing from the source STL.' },
@@ -58,7 +58,7 @@ const structuredData = [
       <section class="two-column" aria-labelledby="stl-changes">
         <div><p class="eyebrow">Conversion details</p><h2 id="stl-changes">What changes when STL becomes 3MF?</h2></div>
         <div class="prose">
-          <p>The source triangles are carried into a 3MF mesh, preserving the geometry represented by the STL. Separate, disconnected shells can remain disconnected within that converted geometry.</p>
+          <p>The STL geometry is carried into a 3MF mesh, preserving the geometry represented by the source file. Separate, disconnected shells can remain disconnected within that converted geometry.</p>
           <p>The container changes, but missing information does not return. The new 3MF does not recreate colors, materials, textures or print settings that STL never contained.</p>
         </div>
       </section>

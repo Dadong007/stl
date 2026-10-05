@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'Contact IntoSTL — Feedback & Tool Issues';
+const description = "Send feedback, report a conversion issue or suggest an improvement for IntoSTL's browser-based 3D printing tools.";
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: absoluteUrl('/contact/') },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/contact/" structuredData={structuredData}>
+  <article class="info-page">
+    <header class="info-intro shell-narrow">
+      <p class="eyebrow">Feedback</p>
+      <h1>Contact IntoSTL</h1>
+      <p>Found a problem with a conversion, have a suggestion, or want to report a bug? Feedback helps improve IntoSTL.</p>
+    </header>
+
+    <div class="info-stack shell-narrow">
+      <section aria-labelledby="contact-feedback">
+        <h2 id="contact-feedback">Send feedback</h2>
+        <p id="contact-privacy" class="contact-privacy">Please do not include sensitive information. Converter files are not automatically uploaded or attached. Read the <a href="/privacy/">Privacy Policy</a> for details.</p>
+
+        <form class="contact-form" aria-describedby="contact-privacy contact-availability">
+          <div class="form-field">
+            <label for="feedback-category">Category</label>
+            <select id="feedback-category" name="category" required>
+              <option value="conversion-issue">Conversion issue</option>
+              <option value="bug">Bug</option>
+              <option value="suggestion">Suggestion</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="feedback-email">Email (optional)</label>
+            <input id="feedback-email" name="email" type="email" autocomplete="email" />
+          </div>
+
+          <div class="form-field">
+            <label for="feedback-message">Message</label>
+            <textarea id="feedback-message" name="message" rows="8" required></textarea>
+          </div>
+
+          <div class="form-submit">
+            <p id="contact-availability">Feedback submission will be enabled when the custom domain goes live. This form does not send information yet.</p>
+            <button class="primary-button" type="submit" disabled aria-describedby="contact-availability">Submit feedback</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

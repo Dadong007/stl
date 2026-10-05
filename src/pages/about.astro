@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'About IntoSTL — Free Browser-Based 3D Printing Tools';
+const description = 'Learn how IntoSTL provides simple, browser-based tools for converting images and 3D files into printable STL and 3MF models.';
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'About', item: absoluteUrl('/about/') },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/about/" structuredData={structuredData}>
+  <article class="info-page">
+    <header class="info-intro shell-narrow">
+      <p class="eyebrow">About</p>
+      <h1>About IntoSTL</h1>
+      <p>IntoSTL provides focused, browser-based utilities for turning images and common 3D files into practical STL and 3MF models.</p>
+    </header>
+
+    <div class="info-stack shell-narrow">
+      <section aria-labelledby="about-simple-tools">
+        <h2 id="about-simple-tools">Simple tools for everyday 3D printing tasks</h2>
+        <p>IntoSTL is a collection of small 3D-printing utilities designed to make common conversions understandable without requiring CAD expertise. You can create a model from an image or move geometry between STL and 3MF when a workflow needs a different file format.</p>
+        <p>Start with the general <a href="/image-to-stl/">Image to STL tool</a>, or use focused pages for <a href="/png-to-stl/">PNG</a>, <a href="/jpg-to-stl/">JPG</a> and <a href="/logo-to-stl/">logo extrusion</a>.</p>
+      </section>
+
+      <section aria-labelledby="about-local">
+        <h2 id="about-local">Browser-local by design</h2>
+        <p>Image, STL and 3MF conversion runs in your browser. The converter files you select are not uploaded to IntoSTL servers, and generated models are created and downloaded through the browser.</p>
+        <p>Keeping conversion on the device avoids an upload-and-wait step and means IntoSTL does not need to store your source or generated conversion files.</p>
+      </section>
+
+      <section aria-labelledby="about-workflows">
+        <h2 id="about-workflows">Built for simple, reliable workflows</h2>
+        <p>Each tool has a narrow purpose, a direct preview and a predictable download. There is no account, credit system or unnecessary project setup between selecting a file and checking the result.</p>
+        <p>Alongside the image tools, IntoSTL can <a href="/3mf-to-stl/">convert 3MF to STL</a> for geometry compatibility and <a href="/stl-to-3mf/">convert STL to 3MF</a> for modern file workflows.</p>
+      </section>
+
+      <section aria-labelledby="about-limits">
+        <h2 id="about-limits">What IntoSTL is not</h2>
+        <p>IntoSTL is not full CAD software or a complete AI image-to-3D reconstruction service. Its tools perform specific, documented conversions. Always inspect a generated model in the 3D preview and in your slicer before printing.</p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

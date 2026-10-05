@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl } from '../config/site';
+
+const title = 'Privacy Policy | IntoSTL';
+const description = 'Learn how IntoSTL handles local file processing, website data and feedback while using its browser-based 3D printing tools.';
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'IntoSTL', item: absoluteUrl('/') },
+    { '@type': 'ListItem', position: 2, name: 'Privacy Policy', item: absoluteUrl('/privacy/') },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/privacy/" structuredData={structuredData}>
+  <article class="info-page">
+    <header class="info-intro shell-narrow">
+      <p class="eyebrow">Privacy</p>
+      <h1>Privacy Policy</h1>
+      <p>This page explains how the current IntoSTL website handles converter files, website data and feedback.</p>
+    </header>
+
+    <div class="info-stack shell-narrow">
+      <section aria-labelledby="privacy-files">
+        <h2 id="privacy-files">File processing</h2>
+        <p>Images, STL files and 3MF files selected in the converter tools are processed locally in your browser. Their contents are not uploaded to IntoSTL servers. Generated STL and 3MF files are created and downloaded through the browser.</p>
+        <p>IntoSTL does not provide server-side storage for source files or generated conversion files.</p>
+      </section>
+
+      <section aria-labelledby="privacy-information">
+        <h2 id="privacy-information">Information we may receive</h2>
+        <p>The current site has no account system, conversion file storage, analytics or payment collection. The application code does not currently set cookies.</p>
+        <p>The feedback form is not yet enabled, so information entered on the current <a href="/contact/">Contact page</a> is not transmitted to IntoSTL.</p>
+      </section>
+
+      <section aria-labelledby="privacy-feedback">
+        <h2 id="privacy-feedback">Contact and feedback</h2>
+        <p>When feedback delivery is enabled later, information you intentionally submit—such as a category, optional email address, message and any basic technical context explicitly requested by the form—may be sent for the purpose of reviewing or responding to that feedback.</p>
+        <p>Converter files are not automatically attached to or sent with feedback. Do not include sensitive information in a feedback message.</p>
+      </section>
+
+      <section aria-labelledby="privacy-services">
+        <h2 id="privacy-services">Third-party services</h2>
+        <p>IntoSTL is hosted through Cloudflare Pages, which provides website hosting and content delivery. Cloudflare may process ordinary network request information needed to deliver the site.</p>
+        <p>IntoSTL does not currently include third-party analytics, advertising networks, payment processors or third-party conversion services.</p>
+      </section>
+
+      <section aria-labelledby="privacy-changes">
+        <h2 id="privacy-changes">Changes to this policy</h2>
+        <p>This page may be updated when IntoSTL functionality changes. The wording will be revised when a feedback delivery system, analytics or another data-handling feature is actually introduced.</p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
