@@ -897,7 +897,7 @@ h3 {
     margin-bottom: 0.5rem;
   }
 
-  .info-stack h2[id^="about-"] {
+  .info-stack h2 {
     max-width: 32ch;
     font-size: 1.75rem;
   }
