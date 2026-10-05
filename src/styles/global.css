@@ -794,6 +794,16 @@ h3 {
   resize: vertical;
 }
 
+.contact-verification {
+  min-height: 4.1rem;
+}
+
+.contact-verification-unavailable {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .form-submit {
   display: grid;
   justify-items: start;
@@ -808,6 +818,16 @@ h3 {
   margin: 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.form-submit .contact-status[data-state="success"] {
+  color: var(--accent-dark);
+  font-weight: 650;
+}
+
+.form-submit .contact-status[data-state="error"] {
+  color: var(--danger);
+  font-weight: 650;
 }
 
 .site-footer {

@@ -137,17 +137,75 @@ try {
   }
 
   await page.goto(`${baseUrl}/contact/`, { waitUntil: 'networkidle' });
-  results.contact = await page.locator('.contact-form').evaluate((form) => ({
+  const contactStructure = await page.locator('.contact-form').evaluate((form) => ({
     hasAction: form.hasAttribute('action'),
     hasMethod: form.hasAttribute('method'),
-    fields: Array.from(form.querySelectorAll('select, input, textarea')).map((field) => ({
+    fields: Array.from(form.querySelectorAll('select, input:not([type="hidden"]), textarea')).map((field) => ({
       id: field.id,
       name: field.getAttribute('name'),
       label: form.querySelector(`label[for="${field.id}"]`)?.textContent?.trim() ?? null,
     })),
+    hasTokenField: Boolean(form.querySelector('#contact-turnstile-token[type="hidden"]')),
     fileInputCount: form.querySelectorAll('input[type="file"]').length,
-    submitDisabled: form.querySelector('button[type="submit"]')?.disabled ?? false,
+    initialSubmitDisabled: form.querySelector('button[type="submit"]')?.disabled ?? false,
   }));
+  const contactSubmit = page.getByRole('button', { name: 'Submit feedback' });
+  const setContactToken = (value) => page.locator('#contact-turnstile-token').evaluate((input, nextValue) => {
+    input.value = nextValue;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }, value);
+
+  await page.locator('#feedback-message').fill('short');
+  await setContactToken('test-token');
+  const shortMessageDisabled = await contactSubmit.isDisabled();
+
+  await page.locator('#feedback-message').fill('This message is long enough for feedback.');
+  await page.locator('#feedback-email').fill('not-an-email');
+  const invalidEmailDisabled = await contactSubmit.isDisabled();
+
+  await page.locator('#feedback-email').fill('person@example.com');
+  const validSubmitEnabled = await contactSubmit.isEnabled();
+
+  await page.route('**/api/contact', async (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: 'verification_failed', message: 'Please complete the verification and try again.' }),
+  }), { times: 1 });
+  await contactSubmit.click();
+  await page.locator('#contact-status[data-state="error"]').waitFor();
+  const turnstileFailureMessage = await page.locator('#contact-status').textContent();
+
+  await setContactToken('test-token');
+  await page.route('**/api/contact', async (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ success: true, message: 'Thanks — your feedback was sent.' }),
+  }), { times: 1 });
+  await contactSubmit.click();
+  await page.locator('#contact-status[data-state="success"]').waitFor();
+  const successMessage = await page.locator('#contact-status').textContent();
+
+  await page.locator('#feedback-message').fill('This delivery should return a mocked failure.');
+  await page.locator('#feedback-email').fill('person@example.com');
+  await setContactToken('test-token');
+  await page.route('**/api/contact', async (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ error: 'delivery_failed', message: 'Your feedback could not be sent. Please try again.' }),
+  }), { times: 1 });
+  await contactSubmit.click();
+  await page.locator('#contact-status[data-state="error"]').waitFor();
+  const emailFailureMessage = await page.locator('#contact-status').textContent();
+
+  results.contact = {
+    ...contactStructure,
+    shortMessageDisabled,
+    invalidEmailDisabled,
+    validSubmitEnabled,
+    turnstileFailureMessage,
+    successMessage,
+    emailFailureMessage,
+  };
 
   const sitemapIndex = await context.request.get(`${baseUrl}/sitemap-index.xml`);
   const sitemapIndexText = await sitemapIndex.text();
@@ -249,7 +307,14 @@ try {
     || results.contact.hasAction
     || results.contact.hasMethod
     || results.contact.fileInputCount !== 0
-    || !results.contact.submitDisabled
+    || !results.contact.hasTokenField
+    || !results.contact.initialSubmitDisabled
+    || !results.contact.shortMessageDisabled
+    || !results.contact.invalidEmailDisabled
+    || !results.contact.validSubmitEnabled
+    || results.contact.turnstileFailureMessage !== 'Please complete the verification and try again.'
+    || results.contact.successMessage !== 'Thanks — your feedback was sent.'
+    || results.contact.emailFailureMessage !== 'Your feedback could not be sent. Please try again.'
     || results.contact.fields.length !== 3
     || results.image.solidPngInitialStyle !== 'relief'
     || results.image.transparentPngInitialStyle !== 'extrude'

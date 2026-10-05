@@ -10,7 +10,8 @@
     "spike": "tsx scripts/run-spike.ts",
     "spike:dev": "vite --config vite.config.ts",
     "spike:build": "tsc --noEmit && vite build --config vite.config.ts",
-    "smoke:production": "node scripts/production-browser-smoke.mjs"
+    "test:contact": "tsx scripts/test-contact-function.ts",
+    "smoke:production": "npm run test:contact && node scripts/production-browser-smoke.mjs"
   },
   "dependencies": {
     "@3mfconsortium/lib3mf": "2.5.0-fix.2",

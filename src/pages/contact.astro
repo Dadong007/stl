@@ -4,6 +4,7 @@ import { absoluteUrl } from '../config/site';
 
 const title = 'Contact IntoSTL — Feedback & Tool Issues';
 const description = "Send feedback, report a conversion issue or suggest an improvement for IntoSTL's browser-based 3D printing tools.";
+const turnstileSiteKey = String(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -25,35 +26,155 @@ const structuredData = {
     <div class="info-stack shell-narrow">
       <section aria-labelledby="contact-feedback">
         <h2 id="contact-feedback">Send feedback</h2>
-        <p id="contact-privacy" class="contact-privacy">Please do not include sensitive information. Converter files are not automatically uploaded or attached. Read the <a href="/privacy/">Privacy Policy</a> for details.</p>
+        <p id="contact-privacy" class="contact-privacy">Feedback is sent when you click Submit feedback. Email is optional, and converter files are never attached or uploaded with this form. Please do not include sensitive information. Read the <a href="/privacy/">Privacy Policy</a> for details.</p>
 
-        <form class="contact-form" aria-describedby="contact-privacy contact-availability">
+        <form class="contact-form" aria-describedby="contact-privacy contact-status">
           <div class="form-field">
             <label for="feedback-category">Category</label>
             <select id="feedback-category" name="category" required>
-              <option value="conversion-issue">Conversion issue</option>
-              <option value="bug">Bug</option>
-              <option value="suggestion">Suggestion</option>
-              <option value="other">Other</option>
+              <option value="Conversion issue">Conversion issue</option>
+              <option value="Bug">Bug</option>
+              <option value="Suggestion">Suggestion</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
           <div class="form-field">
             <label for="feedback-email">Email (optional)</label>
-            <input id="feedback-email" name="email" type="email" autocomplete="email" />
+            <input id="feedback-email" name="email" type="email" autocomplete="email" maxlength="254" />
           </div>
 
           <div class="form-field">
             <label for="feedback-message">Message</label>
-            <textarea id="feedback-message" name="message" rows="8" required></textarea>
+            <textarea id="feedback-message" name="message" rows="8" minlength="10" maxlength="4000" required></textarea>
+          </div>
+
+          <div class="contact-verification">
+            {turnstileSiteKey ? (
+              <div
+                class="cf-turnstile"
+                data-sitekey={turnstileSiteKey}
+                data-callback="onContactTurnstileSuccess"
+                data-expired-callback="onContactTurnstileExpired"
+                data-error-callback="onContactTurnstileError"
+                data-response-field="false"
+                data-size="flexible"
+              ></div>
+            ) : (
+              <p class="contact-verification-unavailable">Verification is unavailable until the Cloudflare site key is configured.</p>
+            )}
+            <input id="contact-turnstile-token" name="turnstileToken" type="hidden" />
           </div>
 
           <div class="form-submit">
-            <p id="contact-availability">Feedback submission will be enabled when the custom domain goes live. This form does not send information yet.</p>
-            <button class="primary-button" type="submit" disabled aria-describedby="contact-availability">Submit feedback</button>
+            <p id="contact-status" class="contact-status" role="status" aria-live="polite" data-state="idle">Complete the form and verification, then submit your feedback.</p>
+            <button class="primary-button" type="submit" disabled aria-describedby="contact-status">Submit feedback</button>
           </div>
         </form>
       </section>
     </div>
   </article>
+
+  <script is:inline>
+    (() => {
+      const form = document.querySelector('.contact-form');
+      if (!(form instanceof HTMLFormElement)) return;
+
+      const category = form.querySelector('#feedback-category');
+      const email = form.querySelector('#feedback-email');
+      const message = form.querySelector('#feedback-message');
+      const token = form.querySelector('#contact-turnstile-token');
+      const status = form.querySelector('#contact-status');
+      const submit = form.querySelector('button[type="submit"]');
+      const allowedCategories = new Set(['Conversion issue', 'Bug', 'Suggestion', 'Other']);
+      let submitting = false;
+
+      if (!(category instanceof HTMLSelectElement)
+        || !(email instanceof HTMLInputElement)
+        || !(message instanceof HTMLTextAreaElement)
+        || !(token instanceof HTMLInputElement)
+        || !(status instanceof HTMLElement)
+        || !(submit instanceof HTMLButtonElement)) return;
+
+      const setStatus = (state, text) => {
+        status.dataset.state = state;
+        status.textContent = text;
+      };
+
+      const updateSubmitState = () => {
+        const messageLength = message.value.trim().length;
+        submit.disabled = submitting
+          || !allowedCategories.has(category.value)
+          || messageLength < 10
+          || messageLength > 4000
+          || email.value.length > 254
+          || !email.checkValidity()
+          || !token.value;
+      };
+
+      window.onContactTurnstileSuccess = (value) => {
+        token.value = typeof value === 'string' ? value : '';
+        updateSubmitState();
+      };
+      window.onContactTurnstileExpired = () => {
+        token.value = '';
+        setStatus('error', 'Please complete the verification and try again.');
+        updateSubmitState();
+      };
+      window.onContactTurnstileError = () => {
+        token.value = '';
+        setStatus('error', 'Verification is temporarily unavailable. Please try again.');
+        updateSubmitState();
+      };
+
+      form.addEventListener('input', updateSubmitState);
+      form.addEventListener('change', updateSubmitState);
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (submitting || !form.reportValidity() || submit.disabled) return;
+
+        submitting = true;
+        submit.textContent = 'Sending…';
+        setStatus('submitting', 'Sending your feedback…');
+        updateSubmitState();
+
+        try {
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              category: category.value,
+              email: email.value.trim(),
+              message: message.value.trim(),
+              turnstileToken: token.value,
+              sourcePage: window.location.pathname,
+            }),
+          });
+          const result = await response.json().catch(() => null);
+
+          if (!response.ok || result?.success !== true) {
+            const fallback = response.status === 400 && result?.error === 'verification_failed'
+              ? 'Please complete the verification and try again.'
+              : 'Your feedback could not be sent. Please try again.';
+            setStatus('error', typeof result?.message === 'string' ? result.message : fallback);
+            return;
+          }
+
+          form.reset();
+          setStatus('success', 'Thanks — your feedback was sent.');
+        } catch {
+          setStatus('error', 'Your feedback could not be sent. Please try again.');
+        } finally {
+          submitting = false;
+          token.value = '';
+          submit.textContent = 'Submit feedback';
+          if (window.turnstile && typeof window.turnstile.reset === 'function') window.turnstile.reset();
+          updateSubmitState();
+        }
+      });
+
+      updateSubmitState();
+    })();
+  </script>
+  {turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 </BaseLayout>
