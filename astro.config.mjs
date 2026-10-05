@@ -6,5 +6,8 @@ export default defineConfig({
   site: 'https://intostl.com',
   output: 'static',
   trailingSlash: 'always',
+  build: {
+    inlineStylesheets: 'always',
+  },
   integrations: [react(), sitemap()],
 });
