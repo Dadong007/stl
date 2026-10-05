@@ -24,9 +24,9 @@ The Function accepts JSON only and caps the complete request body at 16 KiB. It 
 
 The browser renders Turnstile from `PUBLIC_TURNSTILE_SITE_KEY` and submits the resulting token with the form. The Pages Function sends the token and `TURNSTILE_SECRET_KEY` directly to Cloudflare Siteverify. `CF-Connecting-IP` is included as `remoteip` only when available. Email delivery starts only when Siteverify returns `success: true`; verification failures return concise user-facing errors.
 
-## 5. Email Service flow
+## 5. Email delivery flow
 
-After validation, the Function calls the Cloudflare Email Service REST endpoint for `CF_ACCOUNT_ID` with the bearer token in `CF_EMAIL_API_TOKEN`. The fixed sender and recipient come from `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL`. The subject includes the validated category; both plain-text and escaped HTML bodies include the category, submitted email or `Not provided`, message, optional source page and UTC timestamp. A validated user email is set only as `reply_to`, never as `from`. IP addresses and raw headers are not placed in the email.
+After validation, the Function calls the Resend REST API with the bearer token in `RESEND_API_KEY`. The fixed sender and recipient come from `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL`. The subject includes the validated category; both plain-text and escaped HTML bodies include the category, submitted email or `Not provided`, message, optional source page and UTC timestamp. A validated user email is set only as `reply_to`, never as `from`. IP addresses and raw headers are not placed in the email.
 
 ## 6. Privacy page update
 
@@ -34,20 +34,20 @@ The inaccurate statement that feedback was disabled was replaced. The page now i
 
 ## 7. Required Cloudflare environment variables
 
-The deployment requires `TURNSTILE_SECRET_KEY`, `PUBLIC_TURNSTILE_SITE_KEY`, `CF_ACCOUNT_ID`, `CF_EMAIL_API_TOKEN`, `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL`. Secret and deployment setup instructions are in `CONTACT-FORM-SETUP.md`; no real credentials were added to the repository.
+The deployment requires exactly `TURNSTILE_SECRET_KEY`, `PUBLIC_TURNSTILE_SITE_KEY`, `RESEND_API_KEY`, `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL`. Secret and deployment setup instructions are in `CONTACT-FORM-SETUP.md`; no real credentials were added to the repository.
 
 ## 8. Tests performed
 
-- `npm run test:contact` — passed with mocked Turnstile and Email Service responses.
+- `npm run test:contact` — passed with mocked Turnstile and Resend responses.
 - `npm exec tsc -- --noEmit` — passed.
 - `npm run build` — passed; Astro check reported 0 errors, 0 warnings and 0 hints, and 10 static pages were built.
 - `npm run smoke:production` — passed; all contact submissions were intercepted, all public and mobile checks passed, and no real mailbox or external request was used.
 - `npm run spike` — passed; existing image, STL and 3MF conversion and round-trip checks remained successful.
 
-Coverage includes unsupported methods, non-JSON/malformed/oversized bodies, unexpected fields, invalid categories, empty/short messages, malformed/overlong email, missing or failed Turnstile verification, successful UI submission and simulated Email Service failure.
+Coverage includes unsupported methods, non-JSON/malformed/oversized bodies, unexpected fields, invalid categories, empty/short messages, malformed/overlong email, missing or failed Turnstile verification, successful UI submission and simulated Resend failure.
 
 ## 9. Scope confirmation
 
-No database, KV, D1, R2, file upload, attachment, analytics, account system, third-party email service or conversion behavior was added. Image, STL and 3MF processing remains browser-local and unchanged.
+No database, KV, D1, R2, file upload, attachment, analytics, account system or conversion behavior was added. Image, STL and 3MF processing remains browser-local and unchanged.
 
 CONTACT FEEDBACK B2 — READY FOR CLOUDFLARE CONFIGURATION

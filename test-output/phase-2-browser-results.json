@@ -9,6 +9,8 @@
       "description": "Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebSite"
       ]
@@ -21,6 +23,8 @@
       "description": "Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -35,6 +39,8 @@
       "description": "Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -49,6 +55,8 @@
       "description": "Convert 3MF files to STL directly in your browser while preserving final geometry and transforms. Free, private and no upload required.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -63,6 +71,8 @@
       "description": "Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -77,6 +87,8 @@
       "description": "Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -91,20 +103,67 @@
       "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
         "FAQPage"
+      ]
+    },
+    "/about/": {
+      "status": 200,
+      "title": "About IntoSTL — Free Browser-Based 3D Printing Tools",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/about/",
+      "description": "Learn how IntoSTL provides simple, browser-based tools for converting images and 3D files into printable STL and 3MF models.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
+      ]
+    },
+    "/privacy/": {
+      "status": 200,
+      "title": "Privacy Policy | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/privacy/",
+      "description": "Learn how IntoSTL handles local file processing, website data and feedback while using its browser-based 3D printing tools.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
+      ]
+    },
+    "/contact/": {
+      "status": 200,
+      "title": "Contact IntoSTL — Feedback & Tool Issues",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/contact/",
+      "description": "Send feedback, report a conversion issue or suggest an improvement for IntoSTL's browser-based 3D printing tools.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
       ]
     }
   },
   "sitemapRoutes": [
     "/",
     "/3mf-to-stl/",
+    "/about/",
+    "/contact/",
     "/image-to-stl/",
     "/jpg-to-stl/",
     "/logo-to-stl/",
     "/png-to-stl/",
+    "/privacy/",
     "/stl-to-3mf/"
   ],
   "skipLink": {
@@ -180,7 +239,7 @@
     "binary": {
       "download": {
         "filename": "binary-cube.3mf",
-        "bytes": 1606
+        "bytes": 1605
       },
       "preview": true,
       "reparse": {
@@ -215,6 +274,8 @@
       "description": "Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -230,6 +291,8 @@
       "description": "Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -245,6 +308,8 @@
       "description": "Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -260,6 +325,8 @@
       "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
       "hasContent": true,
       "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -267,6 +334,118 @@
       ],
       "preview": true,
       "downloadEnabled": true
+    }
+  },
+  "trustMobile": {
+    "/about/": {
+      "title": "About IntoSTL — Free Browser-Based 3D Printing Tools",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/about/",
+      "description": "Learn how IntoSTL provides simple, browser-based tools for converting images and 3D files into printable STL and 3MF models.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
+      ]
+    },
+    "/privacy/": {
+      "title": "Privacy Policy | IntoSTL",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/privacy/",
+      "description": "Learn how IntoSTL handles local file processing, website data and feedback while using its browser-based 3D printing tools.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
+      ]
+    },
+    "/contact/": {
+      "title": "Contact IntoSTL — Feedback & Tool Issues",
+      "h1Count": 1,
+      "canonical": "https://intostl.com/contact/",
+      "description": "Send feedback, report a conversion issue or suggest an improvement for IntoSTL's browser-based 3D printing tools.",
+      "hasContent": true,
+      "hasOverflow": false,
+      "brandLogoLoaded": true,
+      "footerLogoLoaded": true,
+      "schemaTypes": [
+        "BreadcrumbList"
+      ]
+    }
+  },
+  "contact": {
+    "hasAction": false,
+    "hasMethod": false,
+    "fields": [
+      {
+        "id": "feedback-category",
+        "name": "category",
+        "label": "Category"
+      },
+      {
+        "id": "feedback-email",
+        "name": "email",
+        "label": "Email (optional)"
+      },
+      {
+        "id": "feedback-message",
+        "name": "message",
+        "label": "Message"
+      }
+    ],
+    "hasTokenField": true,
+    "fileInputCount": 0,
+    "initialSubmitDisabled": true,
+    "shortMessageDisabled": true,
+    "invalidEmailDisabled": true,
+    "validSubmitEnabled": true,
+    "turnstileFailureMessage": "Please complete the verification and try again.",
+    "successMessage": "Thanks — your feedback was sent.",
+    "emailFailureMessage": "Your feedback could not be sent. Please try again."
+  },
+  "footerRoutes": [
+    "/image-to-stl/",
+    "/png-to-stl/",
+    "/jpg-to-stl/",
+    "/logo-to-stl/",
+    "/3mf-to-stl/",
+    "/stl-to-3mf/",
+    "/about/",
+    "/privacy/",
+    "/contact/"
+  ],
+  "brand": {
+    "iconLinks": [
+      "/favicon.svg",
+      "/favicon-32x32.png",
+      "/apple-touch-icon.png"
+    ],
+    "trustIconCount": 3
+  },
+  "brandAssets": {
+    "/logo.svg": {
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1475
+    },
+    "/favicon.svg": {
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "bytes": 1248
+    },
+    "/favicon-32x32.png": {
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 702
+    },
+    "/apple-touch-icon.png": {
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 2734
     }
   },
   "externalRequests": [],

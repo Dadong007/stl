@@ -1,7 +1,6 @@
 interface ContactEnv {
   TURNSTILE_SECRET_KEY?: string;
-  CF_ACCOUNT_ID?: string;
-  CF_EMAIL_API_TOKEN?: string;
+  RESEND_API_KEY?: string;
   CONTACT_FROM_EMAIL?: string;
   CONTACT_TO_EMAIL?: string;
 }
@@ -12,10 +11,6 @@ interface ContactContext {
 }
 
 interface TurnstileResult {
-  success?: boolean;
-}
-
-interface EmailApiResult {
   success?: boolean;
 }
 
@@ -112,8 +107,7 @@ export const handleContactPost = async ({ request, env }: ContactContext): Promi
 
   const requiredConfiguration = [
     env.TURNSTILE_SECRET_KEY,
-    env.CF_ACCOUNT_ID,
-    env.CF_EMAIL_API_TOKEN,
+    env.RESEND_API_KEY,
     env.CONTACT_FROM_EMAIL,
     env.CONTACT_TO_EMAIL,
   ];
@@ -161,19 +155,15 @@ export const handleContactPost = async ({ request, env }: ContactContext): Promi
   if (email) emailPayload.reply_to = email;
 
   try {
-    const emailResponse = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(env.CF_ACCOUNT_ID!)}/email/sending/send`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${env.CF_EMAIL_API_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(emailPayload),
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
       },
-    );
-    const emailResult = await emailResponse.json().catch(() => null) as EmailApiResult | null;
-    if (!emailResponse.ok || emailResult?.success !== true) {
+      body: JSON.stringify(emailPayload),
+    });
+    if (!emailResponse.ok) {
       return jsonResponse(502, { error: 'delivery_failed', message: 'Your feedback could not be sent. Please try again.' });
     }
   } catch {

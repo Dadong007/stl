@@ -28,8 +28,8 @@
     "512": {
       "source": "01-photo-relief.jpg",
       "pixels": "512x507",
-      "meshMs": 8.86749999999995,
-      "exportMs": 166.59339999999997,
+      "meshMs": 9.02600000000001,
+      "exportMs": 129.45659999999998,
       "outputBytes": 26161784,
       "output": "photo-relief-512.stl",
       "validation": {
@@ -90,8 +90,8 @@
     "1024": {
       "source": "01-photo-relief.jpg",
       "pixels": "1024x1014",
-      "meshMs": 43.09320000000025,
-      "exportMs": 448.8739999999998,
+      "meshMs": 42.99440000000004,
+      "exportMs": 459.21799999999985,
       "outputBytes": 104240784,
       "output": "photo-relief-1024.stl",
       "validation": {
@@ -130,8 +130,8 @@
     "transparent": {
       "source": "02-transparent-silhouette.png",
       "pixels": "512x512",
-      "meshMs": 31.893299999999726,
-      "exportMs": 0.517699999999877,
+      "meshMs": 32.460999999999785,
+      "exportMs": 0.5098000000002685,
       "outputBytes": 11884,
       "output": "transparent-logo-extrude.stl",
       "validation": {
@@ -192,8 +192,8 @@
     "whiteBackground": {
       "source": "04-white-bg-question.png",
       "pixels": "405x512",
-      "meshMs": 25.416699999999764,
-      "exportMs": 0.5495999999998276,
+      "meshMs": 23.928100000000086,
+      "exportMs": 0.6517000000003463,
       "outputBytes": 19084,
       "output": "white-bg-logo-extrude.stl",
       "validation": {
@@ -254,8 +254,8 @@
     "holeShape": {
       "source": "05-transparent-room.png",
       "pixels": "512x509",
-      "meshMs": 19.135099999999966,
-      "exportMs": 2.4492999999997664,
+      "meshMs": 18.422700000000077,
+      "exportMs": 2.3814000000002125,
       "outputBytes": 89484,
       "output": "transparent-room-hole-extrude.stl",
       "validation": {
@@ -316,7 +316,7 @@
   },
   "threeMfToStl": {
     "simple": {
-      "conversionMs": 14.080699999999979,
+      "conversionMs": 14.757900000000063,
       "inputBytes": 1608,
       "outputBytes": 684,
       "inputInspection": {
@@ -373,7 +373,7 @@
       "output": "simple-from-3mf.stl"
     },
     "multiObjectTransformed": {
-      "conversionMs": 3.0601000000001477,
+      "conversionMs": 3.1340000000000146,
       "inputBytes": 1758,
       "outputBytes": 1284,
       "inputInspection": {
@@ -433,10 +433,10 @@
   "stlToThreeMf": {
     "binary": {
       "success": true,
-      "conversionMs": 2.2015000000001237,
-      "roundTripMs": 2.461999999999989,
+      "conversionMs": 2.073899999999867,
+      "roundTripMs": 2.1603000000000065,
       "inputBytes": 684,
-      "outputBytes": 1606,
+      "outputBytes": 1605,
       "reader": "lib3mf",
       "inputInspection": {
         "unit": "millimeter",
@@ -547,10 +547,10 @@
     },
     "ascii": {
       "success": true,
-      "conversionMs": 5.7608000000000175,
-      "roundTripMs": 1.7516000000000531,
+      "conversionMs": 6.086299999999937,
+      "roundTripMs": 1.66399999999976,
       "inputBytes": 1305,
-      "outputBytes": 1622,
+      "outputBytes": 1623,
       "reader": "three-stl-loader-fallback",
       "inputInspection": {
         "unit": "millimeter",
@@ -661,8 +661,8 @@
     },
     "disconnected": {
       "success": true,
-      "conversionMs": 1.8473999999996522,
-      "roundTripMs": 2.1071999999999207,
+      "conversionMs": 1.7222000000001572,
+      "roundTripMs": 2.222200000000157,
       "inputBytes": 1284,
       "outputBytes": 1750,
       "reader": "lib3mf",
@@ -775,10 +775,10 @@
     },
     "moderate": {
       "success": true,
-      "conversionMs": 63.92119999999977,
-      "roundTripMs": 53.361599999999726,
+      "conversionMs": 63.791499999999814,
+      "roundTripMs": 53.958299999999326,
       "inputBytes": 1273184,
-      "outputBytes": 282889,
+      "outputBytes": 282909,
       "reader": "lib3mf",
       "inputInspection": {
         "unit": "millimeter",

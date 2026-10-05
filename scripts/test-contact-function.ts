@@ -3,8 +3,7 @@ import { onRequest } from '../functions/api/contact.ts';
 
 const env = {
   TURNSTILE_SECRET_KEY: 'test-secret',
-  CF_ACCOUNT_ID: 'test-account',
-  CF_EMAIL_API_TOKEN: 'test-token',
+  RESEND_API_KEY: 'test-resend-key',
   CONTACT_FROM_EMAIL: 'feedback@example.com',
   CONTACT_TO_EMAIL: 'inbox@example.com',
 };
@@ -34,11 +33,15 @@ await expectError(await submit({ category: 'Bug', email: '', message: 'A suffici
 await expectError(await submit({ category: 'Bug', email: '', message: 'x'.repeat(17_000), turnstileToken: 'token' }), 413, 'payload_too_large');
 
 const originalFetch = globalThis.fetch;
-let calls: Array<{ url: string; body: unknown }> = [];
+let calls: Array<{ url: string; authorization: string | null; body: unknown }> = [];
 
 try {
   globalThis.fetch = async (input, init) => {
-    calls.push({ url: String(input), body: JSON.parse(String(init?.body ?? '{}')) });
+    calls.push({
+      url: String(input),
+      authorization: new Headers(init?.headers).get('Authorization'),
+      body: JSON.parse(String(init?.body ?? '{}')),
+    });
     return Response.json({ success: false, 'error-codes': ['invalid-input-response'] });
   };
   await expectError(await submit({ category: 'Suggestion', email: '', message: 'A sufficiently long message.', turnstileToken: 'bad-token' }), 400, 'verification_failed');
@@ -48,9 +51,9 @@ try {
   globalThis.fetch = async (input, init) => {
     const url = String(input);
     const body = JSON.parse(String(init?.body ?? '{}')) as Record<string, unknown>;
-    calls.push({ url, body });
+    calls.push({ url, authorization: new Headers(init?.headers).get('Authorization'), body });
     if (url.includes('/siteverify')) return Response.json({ success: true });
-    return Response.json({ success: true, errors: [], messages: [], result: { delivered: ['inbox@example.com'] } });
+    return Response.json({ id: 'test-email-id' });
   };
   const success = await submit({
     category: 'Conversion issue',
@@ -64,6 +67,10 @@ try {
   assert.equal(calls.length, 2);
   const emailCall = calls[1];
   const emailBody = emailCall.body as Record<string, unknown>;
+  assert.equal(emailCall.url, 'https://api.resend.com/emails');
+  assert.equal(emailCall.authorization, 'Bearer test-resend-key');
+  assert.equal(emailBody.from, 'feedback@example.com');
+  assert.deepEqual(emailBody.to, ['inbox@example.com']);
   assert.equal(emailBody.reply_to, 'person@example.com');
   assert.match(String(emailBody.subject), /^\[IntoSTL Feedback\] Conversion issue$/);
   assert.match(String(emailBody.html), /&lt;script&gt;/);
@@ -72,12 +79,19 @@ try {
   calls = [];
   globalThis.fetch = async (input, init) => {
     const url = String(input);
-    calls.push({ url, body: JSON.parse(String(init?.body ?? '{}')) });
+    calls.push({
+      url,
+      authorization: new Headers(init?.headers).get('Authorization'),
+      body: JSON.parse(String(init?.body ?? '{}')),
+    });
     if (url.includes('/siteverify')) return Response.json({ success: true });
-    return Response.json({ success: false, errors: [{ code: 10002, message: 'internal' }] }, { status: 500 });
+    return Response.json({ message: 'provider failure' }, { status: 500 });
   };
   await expectError(await submit({ category: 'Other', email: '', message: 'A sufficiently long message.', turnstileToken: 'valid-token' }), 502, 'delivery_failed');
   assert.equal(calls.length, 2);
+  assert.equal(calls[1].url, 'https://api.resend.com/emails');
+  assert.equal(calls[1].authorization, 'Bearer test-resend-key');
+  assert.equal(Object.hasOwn(calls[1].body as object, 'reply_to'), false);
 } finally {
   globalThis.fetch = originalFetch;
 }
