@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 40" role="img" aria-labelledby="title">
+  <title id="title">IntoSTL</title>
+  <g transform="translate(2 2)">
+    <path d="M17 2h2l14 4v1L19 11h-2L3 7V6z" fill="#2aa987"/>
+    <path d="M17 13h2l14 4v1l-14 4h-2L3 18v-1z" fill="#167b65"/>
+    <path d="M17 24h2l14 4v1l-14 4h-2L3 29v-1z" fill="#102e35"/>
+  </g>
+  <text x="45" y="27" fill="#102e35" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="-.4"><tspan>Into</tspan><tspan fill="#167b65">STL</tspan></text>
+</svg>

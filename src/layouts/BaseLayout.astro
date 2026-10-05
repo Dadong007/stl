@@ -27,6 +27,8 @@ const schemas = structuredData
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
@@ -41,8 +43,7 @@ const schemas = structuredData
     <header class="site-header">
       <div class="shell header-inner">
         <a class="brand" href="/" aria-label="IntoSTL home">
-          <span class="brand-mark" aria-hidden="true">I</span>
-          <span>IntoSTL</span>
+          <img class="brand-logo" src="/logo.svg" alt="" aria-hidden="true" width="132" height="40" />
         </a>
         <nav aria-label="Main navigation">
           <a href="/image-to-stl/">Image to STL</a>
@@ -56,7 +57,7 @@ const schemas = structuredData
     <footer class="site-footer">
       <div class="shell footer-grid">
         <div class="footer-brand">
-          <p class="footer-title">IntoSTL</p>
+          <img class="footer-logo" src="/logo.svg" alt="IntoSTL" width="132" height="40" />
           <p>Simple browser-based tools for 3D printing files and images.</p>
         </div>
         <nav class="footer-nav" aria-label="Footer tools">

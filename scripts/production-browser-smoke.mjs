@@ -34,6 +34,8 @@ const inspectPage = () => page.evaluate(() => ({
   description: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? null,
   hasContent: document.body.innerText.trim().length > 0,
   hasOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  brandLogoLoaded: document.querySelector('.brand-logo')?.complete && document.querySelector('.brand-logo')?.naturalWidth > 0,
+  footerLogoLoaded: document.querySelector('.footer-logo')?.complete && document.querySelector('.footer-logo')?.naturalWidth > 0,
   schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
     .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
 }));
@@ -105,7 +107,7 @@ const reparseThreeMf = async (artifact) => {
 const results = {
   chromeVersion: '', pages: {}, sitemapRoutes: [], skipLink: null, image: null, threeMf: null,
   png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, trustMobile: {}, contact: null,
-  footerRoutes: [], externalRequests, consoleErrors, pageErrors,
+  footerRoutes: [], brand: null, brandAssets: {}, externalRequests, consoleErrors, pageErrors,
 };
 
 try {
@@ -119,7 +121,20 @@ try {
   await page.goto(`${baseUrl}/`, { waitUntil: 'networkidle' });
   results.skipLink = await inspectSkipLink();
   results.footerRoutes = await page.locator('.footer-nav a').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+  results.brand = await page.evaluate(() => ({
+    iconLinks: Array.from(document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]')).map((link) => link.getAttribute('href')),
+    trustIconCount: document.querySelectorAll('.trust-icon svg').length,
+  }));
   await page.screenshot({ path: 'test-output/phase-2-home-desktop.png', fullPage: true });
+
+  for (const asset of ['/logo.svg', '/favicon.svg', '/favicon-32x32.png', '/apple-touch-icon.png']) {
+    const response = await context.request.get(`${baseUrl}${asset}`);
+    results.brandAssets[asset] = {
+      status: response.status(),
+      contentType: response.headers()['content-type'] ?? null,
+      bytes: (await response.body()).length,
+    };
+  }
 
   await page.goto(`${baseUrl}/contact/`, { waitUntil: 'networkidle' });
   results.contact = await page.locator('.contact-form').evaluate((form) => ({
@@ -223,11 +238,14 @@ try {
     || results.skipLink.normal.visibleInViewport
     || !results.skipLink.keyboardFocused.visibleInViewport
     || !results.skipLink.keyboardFocused.focusVisible
-    || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical)
+    || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical || !entry.brandLogoLoaded || !entry.footerLogoLoaded)
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
     || JSON.stringify(results.footerRoutes) !== JSON.stringify(expectedFooterRoutes)
+    || JSON.stringify(results.brand.iconLinks) !== JSON.stringify(['/favicon.svg', '/favicon-32x32.png', '/apple-touch-icon.png'])
+    || results.brand.trustIconCount !== 3
+    || Object.values(results.brandAssets).some((asset) => asset.status !== 200 || !asset.contentType?.startsWith('image/') || asset.bytes <= 0)
     || results.contact.hasAction
     || results.contact.hasMethod
     || results.contact.fileInputCount !== 0

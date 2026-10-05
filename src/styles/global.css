@@ -132,22 +132,14 @@ h3 {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
   color: var(--ink);
-  font-size: 1.2rem;
-  font-weight: 750;
   text-decoration: none;
 }
 
-.brand-mark {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border-radius: 0.4rem;
-  color: white;
-  background: var(--ink);
-  font-size: 1rem;
+.brand-logo {
+  display: block;
+  width: 7.5rem;
+  height: auto;
 }
 
 .site-header nav {
@@ -247,17 +239,45 @@ h3 {
   border-block: 1px solid var(--line);
 }
 
-.trust-strip div {
-  display: grid;
-  gap: 0.2rem;
-  padding: 1.5rem;
+.trust-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.25rem 1.5rem;
 }
 
-.trust-strip div + div {
+.trust-strip > div + div {
   border-left: 1px solid var(--line);
 }
 
-.trust-strip span {
+.trust-icon {
+  display: grid;
+  width: 2.375rem;
+  height: 2.375rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.trust-icon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.trust-copy span {
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -799,11 +819,11 @@ h3 {
   font-size: 0.9rem;
 }
 
-.footer-title {
-  margin-bottom: 0.4rem !important;
-  color: var(--ink);
-  font-size: 1.1rem !important;
-  font-weight: 760;
+.footer-logo {
+  display: block;
+  width: 7.25rem;
+  height: auto;
+  margin-bottom: 0.45rem;
 }
 
 .footer-heading {
@@ -908,13 +928,8 @@ h3 {
     font-size: 0.8rem;
   }
 
-  .brand {
-    font-size: 1rem;
-  }
-
-  .brand-mark {
-    width: 1.75rem;
-    height: 1.75rem;
+  .brand-logo {
+    width: 7rem;
   }
 
   .home-hero {
@@ -930,7 +945,7 @@ h3 {
     min-height: 210px;
   }
 
-  .trust-strip div + div {
+  .trust-strip > div + div {
     border-top: 1px solid var(--line);
     border-left: 0;
   }

@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#113f4b"/>
-  <path d="M17 18h30v8H36v20h11v8H17v-8h11V26H17z" fill="#f4f8f6"/>
-  <path d="M21 35h22" stroke="#4fc3a1" stroke-width="5" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img" aria-labelledby="title">
+  <title id="title">IntoSTL</title>
+  <path d="M17 2h2l14 4v1L19 11h-2L3 7V6z" fill="#2aa987"/>
+  <path d="M17 13h2l14 4v1l-14 4h-2L3 18v-1z" fill="#167b65"/>
+  <path d="M17 24h2l14 4v1l-14 4h-2L3 29v-1z" fill="#102e35"/>
 </svg>
