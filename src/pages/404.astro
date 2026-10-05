@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Page not found | IntoSTL';
+const description = "The page you're looking for doesn't exist or may have moved.";
+---
+
+<BaseLayout title={title} description={description} robots="noindex, follow">
+  <article class="info-page">
+    <header class="info-intro shell-narrow">
+      <p class="eyebrow">404</p>
+      <h1>Page not found</h1>
+      <p class="section-intro">The page you're looking for doesn't exist or may have moved.</p>
+      <a class="primary-button" href="/">Back to IntoSTL</a>
+    </header>
+  </article>
+</BaseLayout>

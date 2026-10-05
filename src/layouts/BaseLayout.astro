@@ -5,12 +5,13 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  canonicalPath: string;
+  canonicalPath?: string;
+  robots?: string;
   structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description, canonicalPath, structuredData } = Astro.props;
-const canonical = absoluteUrl(canonicalPath);
+const { title, description, canonicalPath, robots = 'index, follow', structuredData } = Astro.props;
+const canonical = canonicalPath ? absoluteUrl(canonicalPath) : undefined;
 const schemas = structuredData
   ? (Array.isArray(structuredData) ? structuredData : [structuredData])
   : [];
@@ -24,8 +25,8 @@ const schemas = structuredData
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -33,7 +34,7 @@ const schemas = structuredData
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     {schemas.map((schema) => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
