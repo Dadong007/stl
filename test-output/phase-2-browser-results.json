@@ -1,5 +1,5 @@
 {
-  "chromeVersion": "154.0.8037.95",
+  "chromeVersion": "154.0.8037.98",
   "pages": {
     "/": {
       "status": 200,
@@ -11,6 +11,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebSite"
       ]
@@ -25,6 +27,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -41,6 +45,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -57,6 +63,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -73,6 +81,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -89,6 +99,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -105,6 +117,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -121,6 +135,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -135,6 +151,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -149,6 +167,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -250,7 +270,7 @@
     "ascii": {
       "download": {
         "filename": "ascii-cube.3mf",
-        "bytes": 1622
+        "bytes": 1623
       },
       "preview": true,
       "reparse": {
@@ -261,7 +281,7 @@
     "disconnected": {
       "download": {
         "filename": "disconnected-cubes.3mf",
-        "bytes": 1749
+        "bytes": 1751
       },
       "preview": true
     }
@@ -276,6 +296,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -293,6 +315,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -310,6 +334,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -327,6 +353,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "WebApplication",
         "BreadcrumbList",
@@ -346,6 +374,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -359,6 +389,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -372,6 +404,8 @@
       "hasOverflow": false,
       "brandLogoLoaded": true,
       "footerLogoLoaded": true,
+      "googleTagLoaderCount": 1,
+      "googleTagConfigCount": 1,
       "schemaTypes": [
         "BreadcrumbList"
       ]
@@ -447,6 +481,75 @@
       "contentType": "image/png",
       "bytes": 2734
     }
+  },
+  "uploadKeyboard": {
+    "visibleFocus": true,
+    "focusStopCount": 1,
+    "inputTabIndex": -1,
+    "nextFocusTag": "SELECT",
+    "nextFocusText": "ReliefExtrude",
+    "keyboardUploadReady": true
+  },
+  "numericValidation": {
+    "depthBelow": {
+      "message": "Enter a depth from 0.5 to 50 mm in 0.5 mm steps.",
+      "downloadDisabled": true,
+      "hasPreview": false,
+      "depth": "0",
+      "depthInvalid": "true",
+      "size": "100",
+      "sizeInvalid": "false"
+    },
+    "depthAbove": {
+      "message": "Enter a depth from 0.5 to 50 mm in 0.5 mm steps.",
+      "downloadDisabled": true,
+      "hasPreview": false,
+      "depth": "50.5",
+      "depthInvalid": "true",
+      "size": "100",
+      "sizeInvalid": "false"
+    },
+    "sizeBelow": {
+      "message": "Enter a whole-number size from 10 to 300 mm.",
+      "downloadDisabled": true,
+      "hasPreview": false,
+      "depth": "3",
+      "depthInvalid": "false",
+      "size": "9",
+      "sizeInvalid": "true"
+    },
+    "sizeAbove": {
+      "message": "Enter a whole-number size from 10 to 300 mm.",
+      "downloadDisabled": true,
+      "hasPreview": false,
+      "depth": "3",
+      "depthInvalid": "false",
+      "size": "301",
+      "sizeInvalid": "true"
+    },
+    "blankDepth": {
+      "message": "Enter a depth from 0.5 to 50 mm in 0.5 mm steps.",
+      "downloadDisabled": true,
+      "hasPreview": false,
+      "depth": "",
+      "depthInvalid": "true",
+      "size": "100",
+      "sizeInvalid": "false"
+    },
+    "restoredValid": {
+      "message": "01-photo-relief.jpg is ready to download.",
+      "downloadDisabled": false,
+      "hasPreview": true,
+      "depth": "3",
+      "depthInvalid": "false",
+      "size": "100",
+      "sizeInvalid": "false"
+    }
+  },
+  "malformedStl": {
+    "message": "The STL file could not be converted. Check that it is a valid binary or ASCII STL model and try again.",
+    "downloadDisabled": true,
+    "hasPreview": false
   },
   "externalRequests": [],
   "consoleErrors": [],

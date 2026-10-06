@@ -42,6 +42,7 @@ export default function UploadField({ id, accept, prompt, detail, onFile }: Uplo
         id={id}
         className="upload-input"
         type="file"
+        tabIndex={-1}
         accept={accept}
         onChange={(event) => {
           const file = event.currentTarget.files?.[0];

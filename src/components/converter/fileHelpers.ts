@@ -21,7 +21,7 @@ export function downloadBytes(bytes: Uint8Array, filename: string, type = 'model
 }
 
 export function friendlyConversionError(error: unknown, subject: 'image' | '3mf' | 'stl'): string {
-  if (error instanceof RangeError || (error instanceof Error && /memory|allocation/i.test(error.message))) {
+  if (error instanceof Error && /memory|allocation/i.test(error.message)) {
     return 'This file needs more memory than the browser can safely provide. Try a smaller file or close other tabs.';
   }
   if (subject === 'image' && error instanceof Error && /No foreground|did not produce geometry/i.test(error.message)) {

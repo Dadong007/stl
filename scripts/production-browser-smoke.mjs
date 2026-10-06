@@ -117,7 +117,8 @@ const reparseThreeMf = async (artifact) => {
 const results = {
   chromeVersion: '', pages: {}, sitemapRoutes: [], skipLink: null, image: null, threeMf: null,
   png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, trustMobile: {}, contact: null,
-  footerRoutes: [], brand: null, brandAssets: {}, externalRequests, consoleErrors, pageErrors,
+  footerRoutes: [], brand: null, brandAssets: {}, uploadKeyboard: null, numericValidation: null,
+  malformedStl: null, externalRequests, consoleErrors, pageErrors,
 };
 
 try {
@@ -227,6 +228,70 @@ try {
   }
 
   await page.goto(`${baseUrl}/image-to-stl/`, { waitUntil: 'networkidle' });
+  await page.evaluate(() => {
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  });
+  for (let index = 0; index < 5; index += 1) await page.keyboard.press('Tab');
+  const uploadField = page.locator('.upload-field');
+  const uploadFocused = await uploadField.evaluate((element) => (
+    document.activeElement === element && element.matches(':focus-visible')
+  ));
+  const chooserPromise = page.waitForEvent('filechooser');
+  await page.keyboard.press('Enter');
+  const chooser = await chooserPromise;
+  await chooser.setFiles('test-assets/01-photo-relief.jpg');
+  await page.locator('.status-ready').filter({ hasText: '01-photo-relief.jpg' }).waitFor({ timeout: 120_000 });
+  await page.keyboard.press('Tab');
+  results.uploadKeyboard = await page.evaluate((focused) => ({
+    visibleFocus: focused,
+    focusStopCount: Array.from(document.querySelectorAll('.upload-field, .upload-input'))
+      .filter((element) => element.tabIndex >= 0).length,
+    inputTabIndex: document.querySelector('.upload-input')?.tabIndex ?? null,
+    nextFocusTag: document.activeElement?.tagName ?? null,
+    nextFocusText: document.activeElement?.textContent?.trim() ?? null,
+    keyboardUploadReady: document.querySelector('.converter-status')?.classList.contains('status-ready') ?? false,
+  }), uploadFocused);
+
+  const readNumericState = () => page.evaluate(() => ({
+    message: document.querySelector('.converter-status')?.textContent?.trim() ?? null,
+    downloadDisabled: document.querySelector('.primary-button')?.disabled ?? null,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+    depth: document.querySelectorAll('input[type="number"]')[0]?.value ?? null,
+    depthInvalid: document.querySelectorAll('input[type="number"]')[0]?.getAttribute('aria-invalid') ?? null,
+    size: document.querySelectorAll('input[type="number"]')[1]?.value ?? null,
+    sizeInvalid: document.querySelectorAll('input[type="number"]')[1]?.getAttribute('aria-invalid') ?? null,
+  }));
+  const depthInput = page.getByLabel('Depth');
+  const sizeInput = page.getByLabel('Size');
+  const depthError = 'Enter a depth from 0.5 to 50 mm in 0.5 mm steps.';
+  const sizeError = 'Enter a whole-number size from 10 to 300 mm.';
+
+  await depthInput.fill('0');
+  await page.locator('.status-error').filter({ hasText: depthError }).waitFor();
+  const depthBelow = await readNumericState();
+  await depthInput.fill('50.5');
+  await page.locator('.status-error').filter({ hasText: depthError }).waitFor();
+  const depthAbove = await readNumericState();
+  await depthInput.fill('3');
+  await page.locator('.status-ready').waitFor({ timeout: 120_000 });
+
+  await sizeInput.fill('9');
+  await page.locator('.status-error').filter({ hasText: sizeError }).waitFor();
+  const sizeBelow = await readNumericState();
+  await sizeInput.fill('301');
+  await page.locator('.status-error').filter({ hasText: sizeError }).waitFor();
+  const sizeAbove = await readNumericState();
+  await sizeInput.fill('100');
+  await page.locator('.status-ready').waitFor({ timeout: 120_000 });
+
+  await depthInput.fill('');
+  await page.locator('.status-error').filter({ hasText: depthError }).waitFor();
+  const blankDepth = await readNumericState();
+  await depthInput.fill('3');
+  await page.locator('.status-ready').waitFor({ timeout: 120_000 });
+  const restoredValid = await readNumericState();
+  results.numericValidation = { depthBelow, depthAbove, sizeBelow, sizeAbove, blankDepth, restoredValid };
+
   const imageJpg = await uploadImage('test-assets/01-photo-relief.jpg', 'relief');
   await page.locator('#image-upload').setInputFiles('test-assets/04-white-bg-question.png');
   await page.locator('.status-ready').filter({ hasText: '04-white-bg-question.png' }).waitFor({ timeout: 120_000 });
@@ -256,6 +321,19 @@ try {
 
   await page.goto(`${baseUrl}/logo-to-stl/`, { waitUntil: 'networkidle' });
   results.logo = await uploadImage('test-assets/02-transparent-silhouette.png', 'extrude');
+
+  await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
+  await page.locator('#stl-upload').setInputFiles({
+    name: 'malformed.stl',
+    mimeType: 'model/stl',
+    buffer: Buffer.from('not a valid STL'),
+  });
+  await page.locator('.status-error').waitFor({ timeout: 30_000 });
+  results.malformedStl = await page.evaluate(() => ({
+    message: document.querySelector('.converter-status')?.textContent?.trim() ?? null,
+    downloadDisabled: document.querySelector('.primary-button')?.disabled ?? null,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
 
   await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
   const binary = await uploadStl('test-assets/generated/binary-cube.stl');
@@ -300,6 +378,13 @@ try {
   const expectedSitemapRoutes = [...publicRoutes].sort();
   const imageDownloads = [results.image.imageJpg.download, results.png.opaque.download, results.png.transparent.download, results.jpg.download, results.logo.download];
   const threeMfDownloads = [results.stlToThreeMf.binary.download, results.stlToThreeMf.ascii.download, results.stlToThreeMf.disconnected.download];
+  const invalidNumericStates = [
+    results.numericValidation.depthBelow,
+    results.numericValidation.depthAbove,
+    results.numericValidation.sizeBelow,
+    results.numericValidation.sizeAbove,
+    results.numericValidation.blankDepth,
+  ];
   const failed = pageErrors.length > 0
     || consoleErrors.length > 0
     || externalRequests.length > 0
@@ -329,6 +414,29 @@ try {
     || results.image.solidPngInitialStyle !== 'relief'
     || results.image.transparentPngInitialStyle !== 'extrude'
     || results.image.manualStyleAfterOverride !== 'relief'
+    || !results.uploadKeyboard.visibleFocus
+    || results.uploadKeyboard.focusStopCount !== 1
+    || results.uploadKeyboard.inputTabIndex !== -1
+    || results.uploadKeyboard.nextFocusTag !== 'SELECT'
+    || !results.uploadKeyboard.keyboardUploadReady
+    || invalidNumericStates.some((entry) => !entry.downloadDisabled || entry.hasPreview)
+    || results.numericValidation.depthBelow.depth !== '0'
+    || results.numericValidation.depthAbove.depth !== '50.5'
+    || results.numericValidation.sizeBelow.size !== '9'
+    || results.numericValidation.sizeAbove.size !== '301'
+    || results.numericValidation.blankDepth.depth !== ''
+    || results.numericValidation.depthBelow.depthInvalid !== 'true'
+    || results.numericValidation.depthAbove.depthInvalid !== 'true'
+    || results.numericValidation.sizeBelow.sizeInvalid !== 'true'
+    || results.numericValidation.sizeAbove.sizeInvalid !== 'true'
+    || results.numericValidation.blankDepth.depthInvalid !== 'true'
+    || results.numericValidation.depthBelow.message !== depthError
+    || results.numericValidation.depthAbove.message !== depthError
+    || results.numericValidation.sizeBelow.message !== sizeError
+    || results.numericValidation.sizeAbove.message !== sizeError
+    || results.numericValidation.blankDepth.message !== depthError
+    || results.numericValidation.restoredValid.downloadDisabled
+    || !results.numericValidation.restoredValid.hasPreview
     || results.png.opaque.style !== results.png.opaque.expectedStyle
     || results.png.transparent.style !== results.png.transparent.expectedStyle
     || results.jpg.style !== results.jpg.expectedStyle
@@ -339,6 +447,9 @@ try {
     || threeMfDownloads.some((download) => !download.filename.endsWith('.3mf') || download.bytes <= 0)
     || !results.stlToThreeMf.binary.reparse.ready
     || !results.stlToThreeMf.ascii.reparse.ready
+    || results.malformedStl.message !== 'The STL file could not be converted. Check that it is a valid binary or ASCII STL model and try again.'
+    || !results.malformedStl.downloadDisabled
+    || results.malformedStl.hasPreview
     || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled)
     || Object.values(results.trustMobile).some((entry) => entry.hasOverflow || entry.h1Count !== 1);
 

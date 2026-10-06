@@ -7,6 +7,12 @@ const MeshPreview = lazy(() => import('./MeshPreview'));
 const MAX_BYTES = 20 * 1024 * 1024;
 const MAX_DIMENSION = 4096;
 const INTERNAL_RESOLUTION = 512;
+const MIN_DEPTH = 0.5;
+const MAX_DEPTH = 50;
+const DEPTH_STEP = 0.5;
+const MIN_SIZE = 10;
+const MAX_SIZE = 300;
+const SIZE_STEP = 1;
 
 type Style = 'relief' | 'extrude';
 type State = 'idle' | 'processing' | 'ready' | 'error';
@@ -65,6 +71,16 @@ function hasTransparency(data: ArrayLike<number>): boolean {
   return false;
 }
 
+function validParameter(value: string, minimum: number, maximum: number, step: number): number | null {
+  if (value.trim() === '') return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < minimum || parsed > maximum) return null;
+  const stepsFromMinimum = (parsed - minimum) / step;
+  return Math.abs(stepsFromMinimum - Math.round(stepsFromMinimum)) < Number.EPSILON * 100
+    ? parsed
+    : null;
+}
+
 export default function ImageConverter({
   acceptedInput = 'image',
   defaultStyle = 'relief',
@@ -73,8 +89,8 @@ export default function ImageConverter({
 }: ImageConverterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [style, setStyle] = useState<Style>(defaultStyle);
-  const [depth, setDepth] = useState(3);
-  const [size, setSize] = useState(100);
+  const [depth, setDepth] = useState('3');
+  const [size, setSize] = useState('100');
   const [state, setState] = useState<State>('idle');
   const inputLabel = acceptedInput === 'png' ? 'PNG' : acceptedInput === 'jpg' ? 'JPG or JPEG' : 'JPG or PNG';
   const accept = acceptedInput === 'png'
@@ -87,6 +103,8 @@ export default function ImageConverter({
   const [stl, setStl] = useState<Uint8Array | null>(null);
   const request = useRef(0);
   const styleChangeVersion = useRef(0);
+  const depthValue = validParameter(depth, MIN_DEPTH, MAX_DEPTH, DEPTH_STEP);
+  const sizeValue = validParameter(size, MIN_SIZE, MAX_SIZE, SIZE_STEP);
 
   const receiveFile = async (nextFile: File) => {
     const currentRequest = ++request.current;
@@ -130,6 +148,15 @@ export default function ImageConverter({
   useEffect(() => {
     if (!file) return;
     const currentRequest = ++request.current;
+    if (depthValue === null || sizeValue === null) {
+      setState('error');
+      setMessage(depthValue === null
+        ? 'Enter a depth from 0.5 to 50 mm in 0.5 mm steps.'
+        : 'Enter a whole-number size from 10 to 300 mm.');
+      setMesh(null);
+      setStl(null);
+      return;
+    }
     let cancelled = false;
 
     const generate = async () => {
@@ -143,17 +170,15 @@ export default function ImageConverter({
         const imageEngine = await import('../../engines/image');
         const pixels = await imageEngine.decodeImage(file, INTERNAL_RESOLUTION);
         if (cancelled || currentRequest !== request.current) return;
-        const widthMm = Math.min(300, Math.max(10, size));
-        const depthMm = Math.min(50, Math.max(0.5, depth));
         const nextMesh = style === 'relief'
           ? imageEngine.createReliefMesh(pixels, {
-              widthMm,
-              reliefDepthMm: depthMm,
+              widthMm: sizeValue,
+              reliefDepthMm: depthValue,
               baseThicknessMm: 1.5,
             })
           : imageEngine.createExtrudedMesh(pixels, {
-              widthMm,
-              depthMm,
+              widthMm: sizeValue,
+              depthMm: depthValue,
               maskMode: hasTransparency(pixels.data) ? 'alpha' : 'dark-on-light',
             });
         const { exportBinaryStl } = await import('../../engines/formats/stl');
@@ -174,7 +199,7 @@ export default function ImageConverter({
     return () => {
       cancelled = true;
     };
-  }, [file, style, depth, size]);
+  }, [file, style, depthValue, sizeValue]);
 
   return (
     <section className="converter" aria-label="Image to STL converter">
@@ -210,7 +235,8 @@ export default function ImageConverter({
                 max="50"
                 step="0.5"
                 value={depth}
-                onChange={(event) => setDepth(Number(event.target.value))}
+                aria-invalid={depthValue === null}
+                onChange={(event) => setDepth(event.target.value)}
               />
               <span>mm</span>
             </span>
@@ -224,7 +250,8 @@ export default function ImageConverter({
                 max="300"
                 step="1"
                 value={size}
-                onChange={(event) => setSize(Number(event.target.value))}
+                aria-invalid={sizeValue === null}
+                onChange={(event) => setSize(event.target.value)}
               />
               <span>mm</span>
             </span>
