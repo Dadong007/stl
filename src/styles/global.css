@@ -930,6 +930,38 @@ h3 {
   }
 }
 
+@media (min-width: 801px) and (max-height: 768px) {
+  .tool-intro {
+    padding-block: 0.75rem 0;
+  }
+
+  .privacy-note {
+    margin-bottom: 0;
+  }
+
+  .converter-controls {
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+  }
+
+  .upload-field {
+    min-height: 128px;
+    padding-block: 0.75rem;
+  }
+
+  .control-grid {
+    row-gap: 0.5rem;
+  }
+
+  .control-grid label {
+    gap: 0.25rem;
+  }
+
+  .converter-status {
+    padding-block: 0.5rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
