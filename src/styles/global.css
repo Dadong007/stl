@@ -772,7 +772,7 @@ h3 {
 .info-stack {
   display: grid;
   gap: clamp(2.25rem, 5vw, 3.5rem);
-  padding-top: 12px;
+  padding-top: 20px;
 }
 
 .info-stack section {
