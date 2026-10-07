@@ -24,7 +24,6 @@ const structuredData = [
 <BaseLayout title={title} description={description} canonicalPath="/logo-to-stl/" structuredData={structuredData}>
   <article class="tool-page">
     <header class="tool-intro shell-narrow">
-      <p class="eyebrow">Free browser tool</p>
       <h1>Convert a Logo to STL</h1>
       <p>Turn a PNG or JPG logo into a solid, printable STL directly in your browser.</p>
     </header>
@@ -45,7 +44,7 @@ const structuredData = [
 
     <div class="shell-narrow content-stack">
       <section aria-labelledby="logo-how">
-        <p class="eyebrow">How it works</p><h2 id="logo-how">How to convert a logo to STL</h2>
+        <h2 id="logo-how">How to convert a logo to STL</h2>
         <p class="section-intro">The logo to STL converter gives a clear icon, silhouette or brand mark uniform depth, creating a solid model for a 3D-printing or modeling workflow. Conversion happens locally in your browser.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Choose your logo</strong><p>Upload a PNG or JPG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
@@ -55,7 +54,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="logo-background">
-        <div><p class="eyebrow">Source artwork</p><h2 id="logo-background">Transparent vs solid-background logos</h2></div>
+        <div><h2 id="logo-background">Transparent vs solid-background logos</h2></div>
         <div class="prose">
           <p>A transparent PNG is the cleanest source because its alpha channel directly defines the shape to extrude. Transparent pixels remain outside the solid rather than becoming a background plate.</p>
           <p>A high-contrast opaque PNG or JPG can also work when it has a simple light background. In that case, threshold separation identifies the darker foreground. IntoSTL does not remove backgrounds, clean artwork with AI or rebuild the logo as vector geometry.</p>
@@ -63,7 +62,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="logo-best">
-        <div><p class="eyebrow">Printable artwork</p><h2 id="logo-best">What logos work best for STL extrusion?</h2></div>
+        <div><h2 id="logo-best">What logos work best for STL extrusion?</h2></div>
         <div class="prose">
           <p>Simple, high-contrast marks with bold connected shapes usually make the most dependable 3D logo STL. Supported holes and counters may remain open when the source has clean, closed contours.</p>
           <p>Very thin strokes, small counters and isolated details can be difficult to print or may not survive at a small final size. Inspect both the browser preview and the downloaded STL in your slicer.</p>
@@ -72,11 +71,11 @@ const structuredData = [
       </section>
 
       <section aria-labelledby="logo-faq">
-        <p class="eyebrow">Common questions</p><h2 id="logo-faq">Logo to STL FAQ</h2>
+        <h2 id="logo-faq">Logo to STL FAQ</h2>
         <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
       </section>
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tools</p><p class="related-heading">More image controls</p></div>
+        <div><p class="related-heading">More image controls</p></div>
         <div class="related-actions"><a class="secondary-button" href="/png-to-stl/">PNG to STL</a><a class="secondary-button" href="/image-to-stl/">Image to STL</a></div>
       </aside>
     </div>

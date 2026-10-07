@@ -24,7 +24,6 @@ const structuredData = [
 <BaseLayout title={title} description={description} canonicalPath="/png-to-stl/" structuredData={structuredData}>
   <article class="tool-page">
     <header class="tool-intro shell-narrow">
-      <p class="eyebrow">Free browser tool</p>
       <h1>Convert PNG to STL</h1>
       <p>Turn a PNG into a printable relief or extruded model without uploading it.</p>
     </header>
@@ -46,7 +45,7 @@ const structuredData = [
 
     <div class="shell-narrow content-stack">
       <section aria-labelledby="png-how">
-        <p class="eyebrow">How it works</p><h2 id="png-how">How to convert PNG to STL</h2>
+        <h2 id="png-how">How to convert PNG to STL</h2>
         <p class="section-intro">The PNG to STL converter reads the image locally and creates a printable relief or extrusion without uploading the file.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Choose a PNG</strong><p>Upload a PNG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
@@ -56,7 +55,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="png-transparency">
-        <div><p class="eyebrow">Alpha channel</p><h2 id="png-transparency">How transparent PNGs become STL shapes</h2></div>
+        <div><h2 id="png-transparency">How transparent PNGs become STL shapes</h2></div>
         <div class="prose">
           <p>A transparent PNG contains an alpha channel that describes how visible each pixel is. When meaningful transparency is present, IntoSTL initially selects Extrude and uses that alpha-defined foreground to create a solid shape.</p>
           <p>Transparent areas are left outside the solid, so clear gaps and supported internal holes can remain open. This is direct alpha-channel handling, not background removal or vector tracing.</p>
@@ -64,7 +63,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="png-style">
-        <div><p class="eyebrow">Choose a style</p><h2 id="png-style">Relief or Extrude for PNG?</h2></div>
+        <div><h2 id="png-style">Relief or Extrude for PNG?</h2></div>
         <div class="prose">
           <p><strong>Relief</strong> is the useful starting point for an opaque or photo-like PNG: pixel brightness becomes surface height. <strong>Extrude</strong> gives a clear foreground uniform depth.</p>
           <p>A high-contrast opaque image can also use Extrude, where a simple light-background threshold separates the foreground. You can change Style, Depth and Size before downloading.</p>
@@ -72,7 +71,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="png-best">
-        <div><p class="eyebrow">Source quality</p><h2 id="png-best">What PNG images work best?</h2></div>
+        <div><h2 id="png-best">What PNG images work best?</h2></div>
         <div class="prose">
           <p>Use a clean image with a clearly defined subject. Smooth, intentional transparency works better than faint edge noise, while strong tonal contrast helps an opaque PNG produce a readable relief.</p>
           <p>For artwork whose main purpose is an extruded mark, icon or brand shape, the <a href="/logo-to-stl/">logo to STL guide</a> has more focused preparation advice. For broader image choices, see <a href="/image-to-stl/">Image to STL</a>.</p>
@@ -80,11 +79,11 @@ const structuredData = [
       </section>
 
       <section aria-labelledby="png-faq">
-        <p class="eyebrow">Common questions</p><h2 id="png-faq">PNG to STL FAQ</h2>
+        <h2 id="png-faq">PNG to STL FAQ</h2>
         <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
       </section>
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tools</p><p class="related-heading">More image options</p></div>
+        <div><p class="related-heading">More image options</p></div>
         <div class="related-actions"><a class="secondary-button" href="/image-to-stl/">Image to STL</a><a class="secondary-button" href="/logo-to-stl/">Logo to STL</a></div>
       </aside>
     </div>

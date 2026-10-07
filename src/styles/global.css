@@ -635,8 +635,10 @@ h3 {
   border-radius: 0.55rem;
   color: var(--ink);
   background: rgb(255 255 255 / 88%);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-weight: 750;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 680;
+  letter-spacing: -0.045em;
 }
 
 .preview-placeholder p {

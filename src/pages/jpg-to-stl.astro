@@ -24,7 +24,6 @@ const structuredData = [
 <BaseLayout title={title} description={description} canonicalPath="/jpg-to-stl/" structuredData={structuredData}>
   <article class="tool-page">
     <header class="tool-intro shell-narrow">
-      <p class="eyebrow">Free browser tool</p>
       <h1>Convert JPG to STL</h1>
       <p>Turn a JPG or JPEG into a printable 3D relief directly in your browser.</p>
     </header>
@@ -45,7 +44,7 @@ const structuredData = [
 
     <div class="shell-narrow content-stack">
       <section aria-labelledby="jpg-how">
-        <p class="eyebrow">How it works</p><h2 id="jpg-how">How to convert JPG or JPEG to STL</h2>
+        <h2 id="jpg-how">How to convert JPG or JPEG to STL</h2>
         <p class="section-intro">Use the JPG to STL converter to turn a photograph or other JPEG image into a raised model. Processing stays in your browser, so the source image is not uploaded.</p>
         <ol class="steps">
           <li><span>1</span><div><strong>Choose a JPG</strong><p>Upload a JPG or JPEG up to 20 MB and 4096 × 4096 pixels.</p></div></li>
@@ -55,7 +54,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="jpg-relief">
-        <div><p class="eyebrow">Brightness to height</p><h2 id="jpg-relief">How a JPG photo becomes a 3D relief</h2></div>
+        <div><h2 id="jpg-relief">How a JPG photo becomes a 3D relief</h2></div>
         <div class="prose">
           <p>JPG files start in Relief mode. The converter samples image brightness and maps lighter pixels to higher parts of the surface, while darker pixels form lower areas above a flat base. The result is a height-based relief, not a complete reconstruction of the objects in a photo.</p>
           <p>Depth controls how strongly that brightness range is expressed. Use the 3D preview to check whether important shapes remain readable before downloading the STL.</p>
@@ -63,7 +62,7 @@ const structuredData = [
       </section>
 
       <section class="two-column" aria-labelledby="jpg-best">
-        <div><p class="eyebrow">Source quality</p><h2 id="jpg-best">What JPG images work best?</h2></div>
+        <div><h2 id="jpg-best">What JPG images work best?</h2></div>
         <div class="prose">
           <p>Photos, maps and textured images with clear light and dark separation usually make the clearest photo reliefs. Stronger contrast can make the height changes easier to see and print.</p>
           <p>JPEG compression artifacts and image noise may appear as small surface details, while very tiny features may not print clearly. JPG has no transparency; use the <a href="/png-to-stl/">PNG to STL tool</a> when an alpha channel should define empty space.</p>
@@ -72,11 +71,11 @@ const structuredData = [
       </section>
 
       <section aria-labelledby="jpg-faq">
-        <p class="eyebrow">Common questions</p><h2 id="jpg-faq">JPG to STL FAQ</h2>
+        <h2 id="jpg-faq">JPG to STL FAQ</h2>
         <div class="faq-list">{questions.map(({ question, answer }) => <details><summary>{question}</summary><p>{answer}</p></details>)}</div>
       </section>
       <aside class="related-tool">
-        <div><p class="eyebrow">Related tools</p><p class="related-heading">Use another image format</p></div>
+        <div><p class="related-heading">Use another image format</p></div>
         <div class="related-actions"><a class="secondary-button" href="/image-to-stl/">Image to STL</a><a class="secondary-button" href="/png-to-stl/">PNG to STL</a></div>
       </aside>
     </div>
