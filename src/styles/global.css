@@ -357,7 +357,6 @@ h3 {
   align-items: baseline;
   margin-bottom: clamp(4rem, 8vw, 6rem);
   padding-block: 0.9rem;
-  border-block: 1px solid var(--line);
 }
 
 .on-this-page p {
@@ -706,14 +705,6 @@ h3 {
   color: var(--ink);
 }
 
-.faq-list {
-  border-top: 1px solid var(--line-strong);
-}
-
-.faq-list details {
-  border-bottom: 1px solid var(--line);
-}
-
 .faq-list summary {
   padding: 1.25rem 2.25rem 1.25rem 0;
   cursor: pointer;
@@ -731,10 +722,7 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 2rem;
-  border: 1px solid var(--line);
-  border-radius: 0.6rem;
-  background: var(--canvas);
+  padding: 0;
 }
 
 .related-heading {
