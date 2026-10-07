@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HomepageQuickConverter from '../components/converter/HomepageQuickConverter';
 import { SITE, absoluteUrl } from '../config/site';
+import '../styles/home.css';
 
 const title = 'IntoSTL — Free STL & 3D Printing Tools';
 const description = 'Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.';
@@ -15,11 +17,22 @@ const websiteSchema = {
 
 <BaseLayout title={title} description={description} canonicalPath="/" structuredData={websiteSchema}>
   <section class="home-hero shell">
-    <p class="eyebrow">Free · Private · No sign-up</p>
-    <h1>Turn images and 3D files into STL — right in your browser.</h1>
-    <p class="hero-copy">
-      Simple tools for creating printable STL files. Your files are processed locally and never uploaded.
-    </p>
+    <div class="home-hero-copy-block">
+      <h1>Convert Images and 3D Files to STL Online</h1>
+      <p class="hero-copy">
+        Create printable STL files from JPG, PNG, JPEG and 3MF.<br />
+        Images can become reliefs or solid extrusions.<br />
+        3MF models convert directly to STL.<br />
+        <span class="hero-benefits">
+          <span>Free</span>
+          <span>No sign-up</span>
+          <span>Files stay on your device</span>
+        </span>
+      </p>
+    </div>
+    <div class="home-hero-uploader">
+      <HomepageQuickConverter client:load />
+    </div>
   </section>
 
   <section class="shell tool-section" aria-labelledby="available-tools">
@@ -28,42 +41,30 @@ const websiteSchema = {
       <h2 id="available-tools">Choose a tool</h2>
     </div>
     <div class="tool-grid">
-      <a class="tool-card" href="/image-to-stl/">
-        <span class="tool-number" aria-hidden="true">01</span>
-        <h3>Image to STL</h3>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/image-to-stl/">Image to STL</a></h3>
         <p>Turn a JPG or PNG into a printable relief or extruded model.</p>
-        <span class="text-link">Open Image to STL</span>
-      </a>
-      <a class="tool-card" href="/png-to-stl/">
-        <span class="tool-number" aria-hidden="true">02</span>
-        <h3>PNG to STL</h3>
+      </article>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/png-to-stl/">PNG to STL</a></h3>
         <p>Make a relief or extrusion from a transparent or opaque PNG.</p>
-        <span class="text-link">Open PNG to STL</span>
-      </a>
-      <a class="tool-card" href="/3mf-to-stl/">
-        <span class="tool-number" aria-hidden="true">03</span>
-        <h3>3MF to STL</h3>
+      </article>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/3mf-to-stl/">3MF to STL</a></h3>
         <p>Convert 3MF geometry to a widely supported binary STL file.</p>
-        <span class="text-link">Open 3MF to STL</span>
-      </a>
-      <a class="tool-card" href="/logo-to-stl/">
-        <span class="tool-number" aria-hidden="true">04</span>
-        <h3>Logo to STL</h3>
+      </article>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/logo-to-stl/">Logo to STL</a></h3>
         <p>Extrude a PNG or JPG logo into a solid printable model.</p>
-        <span class="text-link">Open Logo to STL</span>
-      </a>
-      <a class="tool-card" href="/jpg-to-stl/">
-        <span class="tool-number" aria-hidden="true">05</span>
-        <h3>JPG to STL</h3>
+      </article>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/jpg-to-stl/">JPG to STL</a></h3>
         <p>Turn a JPG or JPEG into a printable 3D relief.</p>
-        <span class="text-link">Open JPG to STL</span>
-      </a>
-      <a class="tool-card" href="/stl-to-3mf/">
-        <span class="tool-number" aria-hidden="true">06</span>
-        <h3>STL to 3MF</h3>
+      </article>
+      <article class="tool-entry">
+        <h3><a class="tool-title-link" href="/stl-to-3mf/">STL to 3MF</a></h3>
         <p>Convert binary or ASCII STL geometry into a 3MF model.</p>
-        <span class="text-link">Open STL to 3MF</span>
-      </a>
+      </article>
     </div>
   </section>
 

@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
-  --ink: #102e35;
-  --muted: #557078;
+  --ink: #17191b;
+  --muted: #64686c;
   --surface: #ffffff;
   --canvas: #f3f7f6;
   --line: #cfdcd9;
@@ -44,12 +44,12 @@ textarea {
 }
 
 a {
-  color: var(--accent-dark);
+  color: var(--ink);
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  color: var(--accent);
+  color: #45494c;
 }
 
 :focus-visible {
@@ -156,7 +156,7 @@ h3 {
 
 .eyebrow {
   margin-bottom: 0.65rem;
-  color: var(--accent-dark);
+  color: #44484b;
   font-size: 0.78rem;
   font-weight: 760;
   letter-spacing: 0.13em;
@@ -227,7 +227,7 @@ h3 {
 .tool-number {
   display: block;
   margin-bottom: 1.5rem;
-  color: var(--accent);
+  color: #686d70;
   font-size: 0.72rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
@@ -485,13 +485,13 @@ h3 {
 
 .status-ready {
   border-left-color: var(--accent);
-  color: var(--accent-dark);
+  color: var(--ink);
   background: var(--accent-soft);
 }
 
 .status-error {
   border-left-color: var(--danger);
-  color: var(--danger);
+  color: var(--ink);
   background: var(--danger-soft);
 }
 
@@ -541,7 +541,7 @@ h3 {
 }
 
 .secondary-button {
-  color: var(--accent-dark);
+  color: var(--ink);
   background: white;
 }
 
@@ -592,7 +592,7 @@ h3 {
   place-items: center;
   border: 1px solid var(--line-strong);
   border-radius: 0.55rem;
-  color: var(--accent-dark);
+  color: var(--ink);
   background: rgb(255 255 255 / 88%);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-weight: 750;
@@ -632,7 +632,7 @@ h3 {
 }
 
 .steps li > span {
-  color: var(--accent);
+  color: #686d70;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.86rem;
 }
@@ -821,12 +821,12 @@ h3 {
 }
 
 .form-submit .contact-status[data-state="success"] {
-  color: var(--accent-dark);
+  color: var(--ink);
   font-weight: 650;
 }
 
 .form-submit .contact-status[data-state="error"] {
-  color: var(--danger);
+  color: var(--ink);
   font-weight: 650;
 }
 
