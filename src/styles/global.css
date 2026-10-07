@@ -653,7 +653,7 @@ h3 {
 
 .section-intro {
   max-width: 70ch;
-  margin-bottom: 1.25rem;
+  margin-bottom: 2rem;
   color: var(--muted);
   font-size: 1.05rem;
 }
@@ -661,28 +661,44 @@ h3 {
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
+  gap: clamp(1.5rem, 3vw, 2.25rem);
   padding: 0;
   list-style: none;
 }
 
 .steps li {
-  display: flex;
-  gap: 0.85rem;
-  padding: 1.1rem 0 0;
+  position: relative;
+  display: block;
+  padding: 1.6rem 0 0;
   border-top: 1px solid var(--line-strong);
 }
 
 .steps li > span {
-  color: #686d70;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.86rem;
+  position: absolute;
+  top: -0.7rem;
+  left: 0;
+  padding-right: 0.65rem;
+  color: #5f6669;
+  background: var(--surface);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.78rem;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.steps strong {
+  display: block;
+  line-height: 1.45;
 }
 
 .steps p {
-  margin: 0.35rem 0 0;
+  margin: 0.55rem 0 0;
   color: var(--muted);
   font-size: 0.95rem;
+  line-height: 1.65;
 }
 
 .two-column {
