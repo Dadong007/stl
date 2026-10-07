@@ -154,6 +154,47 @@ h3 {
   text-decoration: none;
 }
 
+.site-header nav a,
+.footer-nav a,
+.tool-title-link {
+  position: relative;
+  display: inline-block;
+  transition: color 180ms ease;
+}
+
+.site-header nav a::after,
+.footer-nav a::after,
+.tool-title-link::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.12em;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 200ms ease;
+}
+
+.site-header nav a:hover,
+.site-header nav a:focus-visible,
+.footer-nav a:hover,
+.footer-nav a:focus-visible,
+.tool-title-link:hover,
+.tool-title-link:focus-visible {
+  color: #50575b;
+}
+
+.site-header nav a:hover::after,
+.site-header nav a:focus-visible::after,
+.footer-nav a:hover::after,
+.footer-nav a:focus-visible::after,
+.tool-title-link:hover::after,
+.tool-title-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
 .eyebrow {
   margin-bottom: 0.65rem;
   color: #44484b;

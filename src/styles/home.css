@@ -275,6 +275,7 @@
 
 .tool-section .section-heading h2 {
   margin-bottom: 0;
+  font-size: clamp(1.6rem, 2.1vw, 1.875rem);
 }
 
 .tool-section .tool-grid {
@@ -307,9 +308,7 @@
 
 .tool-section .tool-title-link:hover,
 .tool-section .tool-title-link:focus-visible {
-  color: var(--accent-dark);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
+  color: #50575b;
 }
 
 .tool-section .tool-title-link:focus-visible {
