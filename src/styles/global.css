@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --ink: #17191b;
+  --ink: #25282a;
   --muted: #64686c;
   --surface: #ffffff;
   --canvas: #f3f7f6;
@@ -834,7 +834,7 @@ h3 {
   padding-block: 2rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  background: var(--canvas);
+  background: #fff;
 }
 
 .footer-grid {
@@ -866,7 +866,7 @@ h3 {
 
 .footer-nav ul {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.15rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -874,6 +874,8 @@ h3 {
 
 .footer-nav a {
   font-size: 0.88rem;
+  line-height: 1.4;
+  text-decoration: none;
 }
 
 @media (min-width: 801px) {

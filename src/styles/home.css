@@ -39,9 +39,10 @@
   margin-bottom: 1.25rem;
   color: var(--ink);
   font-size: clamp(3rem, 4vw, 3.25rem);
-  font-weight: 620;
+  font-weight: 650;
   letter-spacing: -0.045em;
   line-height: 1.08;
+  word-spacing: 0.025em;
 }
 
 .home-hero .hero-copy {
@@ -57,7 +58,7 @@
   flex-wrap: wrap;
   gap: 0.45rem;
   margin-top: 0.35rem;
-  transform: translateY(10px);
+  transform: translateY(16px);
 }
 
 .hero-benefits > span {
@@ -272,19 +273,16 @@
   margin-bottom: clamp(2.75rem, 4vw, 3.5rem);
 }
 
-.tool-section .section-heading .eyebrow {
-  margin-bottom: 0.55rem;
-}
-
 .tool-section .section-heading h2 {
   margin-bottom: 0;
 }
 
 .tool-section .tool-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 28.125rem));
   grid-template-rows: repeat(3, auto);
   grid-auto-flow: column;
-  column-gap: clamp(5.625rem, 10vw, 8.75rem);
+  justify-content: center;
+  column-gap: calc(clamp(6rem, 9.5vw, 8.5rem) + 100px);
   row-gap: clamp(2.75rem, 4vw, 3.5rem);
   align-items: start;
 }
@@ -321,12 +319,51 @@
 }
 
 .tool-section .tool-entry p {
-  max-width: 40ch;
+  max-width: none;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 0.94rem;
   font-weight: 400;
   line-height: 1.58;
+  white-space: nowrap;
+}
+
+.trust-strip {
+  gap: clamp(2.5rem, 6vw, 5rem);
+  border-block: 0;
+}
+
+.trust-strip > div {
+  padding: 1.25rem 0;
+}
+
+.trust-strip > div + div {
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+  .home-hero {
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1fr);
+    gap: 2.25rem;
+    overflow: hidden;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2.7rem, 5.2vw, 3.1rem);
+  }
+}
+
+@media (max-width: 1000px) {
+  .tool-section .tool-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+    gap: 2.75rem;
+  }
+
+  .tool-section .tool-entry {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 900px) {
@@ -340,8 +377,14 @@
   }
 
   .tool-section .tool-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: clamp(3rem, 8vw, 5rem);
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+    gap: 2.75rem;
+  }
+
+  .tool-section .tool-entry {
+    max-width: 100%;
   }
 }
 
@@ -409,6 +452,7 @@
 
   .tool-section .tool-entry p {
     max-width: 40ch;
+    white-space: normal;
   }
 }
 
