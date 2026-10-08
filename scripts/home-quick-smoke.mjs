@@ -232,8 +232,7 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
   assert.equal(initial.overflow, false);
   assert.equal(initial.state, 'idle');
   assert.equal(initial.downloadCount, 0);
-  assert.equal(initial.uploadAccept, '.jpg,.jpeg,.png,.3mf');
-  assert.ok(initial.uploadAccept.split(',').includes('.3mf'));
+  assert.equal(initial.uploadAccept, null);
   assert.deepEqual(forbiddenInitialResources, []);
   if (width === 1440) {
     await page.screenshot({ path: resolve(outputDirectory, 'home-1440x900-idle.png') });

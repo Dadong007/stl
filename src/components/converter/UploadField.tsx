@@ -2,7 +2,7 @@ import { useRef, type DragEvent, type KeyboardEvent } from 'react';
 
 interface UploadFieldProps {
   id: string;
-  accept: string;
+  accept?: string;
   prompt: string;
   detail: string;
   onFile: (file: File) => void;

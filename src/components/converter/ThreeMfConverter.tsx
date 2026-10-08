@@ -62,7 +62,6 @@ export default function ThreeMfConverter() {
       <div className="converter-controls">
         <UploadField
           id="three-mf-upload"
-          accept=".3mf"
           prompt={file ? file.name : 'Upload a 3MF model'}
           detail="Choose a file or drop it here · up to 50 MB"
           onFile={(nextFile) => void receiveFile(nextFile)}

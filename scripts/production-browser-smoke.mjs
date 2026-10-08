@@ -306,10 +306,27 @@ try {
   results.image = { imageJpg, solidPngInitialStyle, transparentPngInitialStyle, manualStyleAfterOverride };
 
   await page.goto(`${baseUrl}/3mf-to-stl/`, { waitUntil: 'networkidle' });
+  const threeMfAccept = await page.locator('#three-mf-upload').getAttribute('accept');
+  await page.locator('#three-mf-upload').setInputFiles({
+    name: 'unsupported.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from('not a 3MF file'),
+  });
+  await page.locator('.status-error').filter({ hasText: 'Choose a file with the .3mf extension.' }).waitFor();
+  const unsupportedThreeMf = await page.evaluate(() => ({
+    message: document.querySelector('.converter-status')?.textContent?.trim() ?? null,
+    downloadDisabled: document.querySelector('.primary-button')?.disabled ?? null,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
   await page.locator('#three-mf-upload').setInputFiles('test-assets/generated/multi-object-transformed.3mf');
   await page.locator('.status-ready').waitFor({ timeout: 120_000 });
   await page.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
-  results.threeMf = { download: publicDownload(await downloadArtifact(page.getByRole('button', { name: 'Download STL' }))), preview: true };
+  results.threeMf = {
+    accept: threeMfAccept,
+    unsupported: unsupportedThreeMf,
+    download: publicDownload(await downloadArtifact(page.getByRole('button', { name: 'Download STL' }))),
+    preview: true,
+  };
 
   await page.goto(`${baseUrl}/png-to-stl/`, { waitUntil: 'networkidle' });
   const pngOpaque = await uploadImage('test-assets/04-white-bg-question.png', 'relief');
@@ -442,6 +459,10 @@ try {
     || results.jpg.style !== results.jpg.expectedStyle
     || results.logo.style !== results.logo.expectedStyle
     || imageDownloads.some((download) => !download.filename.endsWith('.stl') || download.bytes <= 84)
+    || results.threeMf.accept !== null
+    || results.threeMf.unsupported.message !== 'Choose a file with the .3mf extension.'
+    || !results.threeMf.unsupported.downloadDisabled
+    || results.threeMf.unsupported.hasPreview
     || results.threeMf.download.filename !== 'multi-object-transformed.stl'
     || results.threeMf.download.bytes <= 84
     || threeMfDownloads.some((download) => !download.filename.endsWith('.3mf') || download.bytes <= 0)
