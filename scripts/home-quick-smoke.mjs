@@ -227,8 +227,8 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
   assert.equal(initial.h1, 'Convert Images and 3D Files to STL Online');
   assert.deepEqual(initial.schemaTypes, ['WebSite']);
   assert.deepEqual(initial.toolLinks, initial.expectedToolLinks);
-  assert.equal(initial.trustText, 'No sign-up · Files stay on your device');
-  assert.equal(initial.trustLabelCount, 1);
+  assert.equal(initial.trustText, 'FreeNo sign-upFiles stay on your device');
+  assert.equal(initial.trustLabelCount, 3);
   assert.equal(initial.overflow, false);
   assert.equal(initial.state, 'idle');
   assert.equal(initial.downloadCount, 0);
