@@ -377,6 +377,11 @@ try {
     stepHeadings: Array.from(document.querySelectorAll('.home-steps h3')).map((heading) => heading.textContent?.trim()),
     faqQuestions: Array.from(document.querySelectorAll('.home-faq-list summary')).map((summary) => summary.textContent?.trim()),
     faqAnswersInHtml: document.querySelectorAll('.home-faq-list details > p').length,
+    headingFontSizes: {
+      tools: getComputedStyle(document.querySelector('#available-tools')).fontSize,
+      how: getComputedStyle(document.querySelector('#home-how-heading')).fontSize,
+      faq: getComputedStyle(document.querySelector('#home-faq-heading')).fontSize,
+    },
     sectionBackgrounds: {
       how: getComputedStyle(document.querySelector('.home-how-section')).backgroundColor,
       faq: getComputedStyle(document.querySelector('.home-faq-section')).backgroundColor,
@@ -1212,8 +1217,9 @@ try {
       { title: 'STL to 3MF', description: 'Convert binary or ASCII STL geometry into a 3MF model.', href: '/stl-to-3mf/' },
     ])
     || results.homeContent.desktop['1440x900'].trustStripCount !== 0
-    || JSON.stringify(results.homeContent.desktop['1440x900'].newHeadings) !== JSON.stringify(['How IntoSTL works', 'Frequently asked questions'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].newHeadings) !== JSON.stringify(['How IntoSTL works', 'FAQ'])
     || JSON.stringify(results.homeContent.desktop['1440x900'].stepHeadings) !== JSON.stringify(['Choose your file', 'Preview the result', 'Download your model'])
+    || new Set(Object.values(results.homeContent.desktop['1440x900'].headingFontSizes)).size !== 1
     || results.homeContent.desktop['1440x900'].faqQuestions.length !== 6
     || results.homeContent.desktop['1440x900'].faqAnswersInHtml !== 6
     || JSON.stringify(results.homeContent.desktop['1440x900'].sectionBackgrounds) !== JSON.stringify({
