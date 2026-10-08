@@ -282,57 +282,6 @@ h3 {
   text-underline-offset: 0.25rem;
 }
 
-.trust-strip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 5rem;
-  border-block: 1px solid var(--line);
-}
-
-.trust-strip > div {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-}
-
-.trust-strip > div + div {
-  border-left: 1px solid var(--line);
-}
-
-.trust-icon {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 50%;
-  color: #117d69;
-  background: #edf8f5;
-}
-
-.trust-icon svg {
-  width: 1.35rem;
-  height: 1.35rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.35;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.trust-copy {
-  display: grid;
-  min-width: 0;
-  gap: 0.15rem;
-}
-
-.trust-copy span {
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
 .tool-page {
   padding-bottom: 6rem;
 }
@@ -1088,18 +1037,12 @@ h3 {
     padding-top: 3.5rem;
   }
 
-  .tool-grid,
-  .trust-strip {
+  .tool-grid {
     grid-template-columns: 1fr;
   }
 
   .tool-card {
     min-height: 210px;
-  }
-
-  .trust-strip > div + div {
-    border-top: 1px solid var(--line);
-    border-left: 0;
   }
 
   .converter-wrap {

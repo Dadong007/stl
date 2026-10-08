@@ -10,6 +10,7 @@ const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', 
 const googleTagScriptUrl = 'https://www.googletagmanager.com/gtag/js?id=G-GKTV9KDNXL';
 const imageWorkspaceOutput = 'test-output/image-workspace';
 const imageFamilyWorkspaceOutput = 'test-output/image-family-workspace';
+const homeContentOutput = 'test-output/home-content';
 const updatedImageRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/'];
 const browser = await chromium.launch({
   executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -127,6 +128,7 @@ const results = {
   footerRoutes: [], brand: null, brandAssets: {}, uploadKeyboard: null, numericValidation: null,
   malformedStl: null, imageWorkspace: { desktop: {}, mobile: [], validation: null, content: null },
   imageFamilyWorkspaces: { desktop: {}, mobile: [], states: {}, content: {} },
+  homeContent: { desktop: {}, mobile: {} },
   externalRequests, consoleErrors, pageErrors,
 };
 
@@ -330,6 +332,7 @@ try {
   results.chromeVersion = browser.version();
   await mkdir(imageWorkspaceOutput, { recursive: true });
   await mkdir(imageFamilyWorkspaceOutput, { recursive: true });
+  await mkdir(homeContentOutput, { recursive: true });
   const meshPreviewSource = await readFile('src/components/converter/MeshPreview.tsx', 'utf8');
   const homepageQuickConverterSource = await readFile('src/components/converter/HomepageQuickConverter.tsx', 'utf8');
   results.imageFamilyWorkspaces.fitPadding = {
@@ -350,6 +353,62 @@ try {
     trustIconCount: document.querySelectorAll('.trust-icon svg').length,
   }));
   await page.screenshot({ path: 'test-output/phase-2-home-desktop.png', fullPage: true });
+
+  const inspectHomeContent = () => page.evaluate(() => ({
+    title: document.title,
+    description: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? null,
+    h1: document.querySelector('h1')?.textContent?.trim() ?? null,
+    h1Count: document.querySelectorAll('h1').length,
+    canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
+    robots: document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? null,
+    ogTitle: document.querySelector('meta[property="og:title"]')?.getAttribute('content') ?? null,
+    ogDescription: document.querySelector('meta[property="og:description"]')?.getAttribute('content') ?? null,
+    schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+      .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
+    heroBenefits: Array.from(document.querySelectorAll('.hero-benefits > span')).map((item) => item.textContent?.trim()),
+    quickConverterCount: document.querySelectorAll('.home-quick-converter').length,
+    toolList: Array.from(document.querySelectorAll('.tool-entry')).map((item) => ({
+      title: item.querySelector('h3')?.textContent?.trim(),
+      description: item.querySelector('p')?.textContent?.trim(),
+      href: item.querySelector('a')?.getAttribute('href'),
+    })),
+    trustStripCount: document.querySelectorAll('.trust-strip').length,
+    newHeadings: Array.from(document.querySelectorAll('.home-content-section h2')).map((heading) => heading.textContent?.trim()),
+    stepHeadings: Array.from(document.querySelectorAll('.home-steps h3')).map((heading) => heading.textContent?.trim()),
+    categoryHeadings: Array.from(document.querySelectorAll('.home-tool-groups h3')).map((heading) => heading.textContent?.trim()),
+    categoryLinks: Array.from(document.querySelectorAll('.home-tool-groups a')).map((link) => ({
+      text: link.textContent?.trim(), href: link.getAttribute('href'),
+    })),
+    faqQuestions: Array.from(document.querySelectorAll('.home-faq-list summary')).map((summary) => summary.textContent?.trim()),
+    faqAnswersInHtml: document.querySelectorAll('.home-faq-list details > p').length,
+    noHorizontalOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
+    stepColumns: getComputedStyle(document.querySelector('.home-steps')).gridTemplateColumns.split(' ').length,
+    categoryColumns: getComputedStyle(document.querySelector('.home-tool-groups')).gridTemplateColumns.split(' ').length,
+  }));
+
+  for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720]]) {
+    await page.setViewportSize({ width, height });
+    results.homeContent.desktop[`${width}x${height}`] = await inspectHomeContent();
+    if (width === 1440) {
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.screenshot({ path: `${homeContentOutput}/home-1440x900-top.png` });
+      await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-how.png` });
+      await page.locator('#home-choose-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-choose.png` });
+      await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-faq.png` });
+    }
+  }
+  for (const [width, height] of [[430, 932], [390, 844]]) {
+    await page.setViewportSize({ width, height });
+    results.homeContent.mobile[`${width}x${height}`] = await inspectHomeContent();
+    if (width === 390) {
+      await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-how.png` });
+      await page.locator('#home-choose-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-choose.png` });
+      await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-faq.png` });
+      await page.locator('.home-faq-list details').first().locator('summary').click();
+      await page.locator('.home-faq-list details').first().screenshot({ path: `${homeContentOutput}/home-390-faq-expanded.png` });
+    }
+  }
+  await page.setViewportSize({ width: 1280, height: 900 });
 
   for (const asset of ['/logo.svg', '/favicon.svg', '/favicon-32x32.png', '/apple-touch-icon.png']) {
     const response = await context.request.get(`${baseUrl}${asset}`);
@@ -1103,7 +1162,35 @@ try {
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
     || JSON.stringify(results.footerRoutes) !== JSON.stringify(expectedFooterRoutes)
     || JSON.stringify(results.brand.iconLinks) !== JSON.stringify(['/favicon.svg', '/favicon-32x32.png', '/apple-touch-icon.png'])
-    || results.brand.trustIconCount !== 3
+    || results.brand.trustIconCount !== 0
+    || Object.values(results.homeContent.desktop).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 3 || entry.categoryColumns !== 3)
+    || Object.values(results.homeContent.mobile).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 1 || entry.categoryColumns !== 1)
+    || results.homeContent.desktop['1440x900'].title !== 'IntoSTL — Free STL & 3D Printing Tools'
+    || results.homeContent.desktop['1440x900'].description !== 'Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.'
+    || results.homeContent.desktop['1440x900'].h1 !== 'Convert Images and 3D Files to STL Online'
+    || results.homeContent.desktop['1440x900'].h1Count !== 1
+    || results.homeContent.desktop['1440x900'].canonical !== 'https://intostl.com/'
+    || results.homeContent.desktop['1440x900'].robots !== 'index, follow'
+    || results.homeContent.desktop['1440x900'].ogTitle !== results.homeContent.desktop['1440x900'].title
+    || results.homeContent.desktop['1440x900'].ogDescription !== results.homeContent.desktop['1440x900'].description
+    || JSON.stringify(results.homeContent.desktop['1440x900'].schemaTypes) !== JSON.stringify(['WebSite'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].heroBenefits) !== JSON.stringify(['Free', 'No sign-up', 'Files stay on your device'])
+    || results.homeContent.desktop['1440x900'].quickConverterCount !== 1
+    || JSON.stringify(results.homeContent.desktop['1440x900'].toolList) !== JSON.stringify([
+      { title: 'Image to STL', description: 'Turn a JPG or PNG into a printable relief or extruded model.', href: '/image-to-stl/' },
+      { title: 'PNG to STL', description: 'Make a relief or extrusion from a transparent or opaque PNG.', href: '/png-to-stl/' },
+      { title: '3MF to STL', description: 'Convert 3MF geometry to a widely supported binary STL file.', href: '/3mf-to-stl/' },
+      { title: 'Logo to STL', description: 'Extrude a PNG or JPG logo into a solid printable model.', href: '/logo-to-stl/' },
+      { title: 'JPG to STL', description: 'Turn a JPG or JPEG into a printable 3D relief.', href: '/jpg-to-stl/' },
+      { title: 'STL to 3MF', description: 'Convert binary or ASCII STL geometry into a 3MF model.', href: '/stl-to-3mf/' },
+    ])
+    || results.homeContent.desktop['1440x900'].trustStripCount !== 0
+    || JSON.stringify(results.homeContent.desktop['1440x900'].newHeadings) !== JSON.stringify(['How IntoSTL works', 'Choose the right tool', 'Frequently asked questions'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].stepHeadings) !== JSON.stringify(['Choose your file', 'Preview the result', 'Download your model'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].categoryHeadings) !== JSON.stringify(['Images → STL', '3MF → STL', 'STL → 3MF'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].categoryLinks.map(({ href }) => href)) !== JSON.stringify(['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/'])
+    || results.homeContent.desktop['1440x900'].faqQuestions.length !== 6
+    || results.homeContent.desktop['1440x900'].faqAnswersInHtml !== 6
     || Object.values(results.brandAssets).some((asset) => asset.status !== 200 || !asset.contentType?.startsWith('image/') || asset.bytes <= 0)
     || results.contact.hasAction
     || results.contact.hasMethod
