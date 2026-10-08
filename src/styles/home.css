@@ -623,29 +623,6 @@
   line-height: 1.62;
 }
 
-.home-tool-groups ul {
-  display: grid;
-  gap: 0.45rem;
-  margin: 1.1rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.home-tool-groups a {
-  color: var(--ink);
-  font-size: 0.96rem;
-  font-weight: 600;
-  text-decoration-thickness: 1px;
-  text-decoration-color: #91aaa3;
-  text-underline-offset: 0.23em;
-}
-
-.home-tool-groups a:hover,
-.home-tool-groups a:focus-visible {
-  color: var(--accent-dark);
-  text-decoration-color: currentColor;
-}
-
 .home-faq-section {
   padding-bottom: clamp(5rem, 8vw, 7rem);
 }
@@ -831,10 +808,6 @@
 
   .home-content-grid h3 {
     margin-bottom: 0.45rem;
-  }
-
-  .home-tool-groups ul {
-    margin-top: 0.75rem;
   }
 
   .home-faq-section {

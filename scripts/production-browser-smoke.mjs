@@ -375,15 +375,10 @@ try {
     trustStripCount: document.querySelectorAll('.trust-strip').length,
     newHeadings: Array.from(document.querySelectorAll('.home-content-section h2')).map((heading) => heading.textContent?.trim()),
     stepHeadings: Array.from(document.querySelectorAll('.home-steps h3')).map((heading) => heading.textContent?.trim()),
-    categoryHeadings: Array.from(document.querySelectorAll('.home-tool-groups h3')).map((heading) => heading.textContent?.trim()),
-    categoryLinks: Array.from(document.querySelectorAll('.home-tool-groups a')).map((link) => ({
-      text: link.textContent?.trim(), href: link.getAttribute('href'),
-    })),
     faqQuestions: Array.from(document.querySelectorAll('.home-faq-list summary')).map((summary) => summary.textContent?.trim()),
     faqAnswersInHtml: document.querySelectorAll('.home-faq-list details > p').length,
     noHorizontalOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
     stepColumns: getComputedStyle(document.querySelector('.home-steps')).gridTemplateColumns.split(' ').length,
-    categoryColumns: getComputedStyle(document.querySelector('.home-tool-groups')).gridTemplateColumns.split(' ').length,
   }));
 
   for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720]]) {
@@ -393,7 +388,6 @@ try {
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({ path: `${homeContentOutput}/home-1440x900-top.png` });
       await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-how.png` });
-      await page.locator('#home-choose-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-choose.png` });
       await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-faq.png` });
     }
   }
@@ -402,7 +396,6 @@ try {
     results.homeContent.mobile[`${width}x${height}`] = await inspectHomeContent();
     if (width === 390) {
       await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-how.png` });
-      await page.locator('#home-choose-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-choose.png` });
       await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-faq.png` });
       await page.locator('.home-faq-list details').first().locator('summary').click();
       await page.locator('.home-faq-list details').first().screenshot({ path: `${homeContentOutput}/home-390-faq-expanded.png` });
@@ -1163,8 +1156,8 @@ try {
     || JSON.stringify(results.footerRoutes) !== JSON.stringify(expectedFooterRoutes)
     || JSON.stringify(results.brand.iconLinks) !== JSON.stringify(['/favicon.svg', '/favicon-32x32.png', '/apple-touch-icon.png'])
     || results.brand.trustIconCount !== 0
-    || Object.values(results.homeContent.desktop).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 3 || entry.categoryColumns !== 3)
-    || Object.values(results.homeContent.mobile).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 1 || entry.categoryColumns !== 1)
+    || Object.values(results.homeContent.desktop).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 3)
+    || Object.values(results.homeContent.mobile).some((entry) => entry.noHorizontalOverflow !== true || entry.stepColumns !== 1)
     || results.homeContent.desktop['1440x900'].title !== 'IntoSTL — Free STL & 3D Printing Tools'
     || results.homeContent.desktop['1440x900'].description !== 'Free browser-based tools for converting images and 3D files to STL or 3MF. No sign-up and no uploads — your files stay on your device.'
     || results.homeContent.desktop['1440x900'].h1 !== 'Convert Images and 3D Files to STL Online'
@@ -1185,10 +1178,8 @@ try {
       { title: 'STL to 3MF', description: 'Convert binary or ASCII STL geometry into a 3MF model.', href: '/stl-to-3mf/' },
     ])
     || results.homeContent.desktop['1440x900'].trustStripCount !== 0
-    || JSON.stringify(results.homeContent.desktop['1440x900'].newHeadings) !== JSON.stringify(['How IntoSTL works', 'Choose the right tool', 'Frequently asked questions'])
+    || JSON.stringify(results.homeContent.desktop['1440x900'].newHeadings) !== JSON.stringify(['How IntoSTL works', 'Frequently asked questions'])
     || JSON.stringify(results.homeContent.desktop['1440x900'].stepHeadings) !== JSON.stringify(['Choose your file', 'Preview the result', 'Download your model'])
-    || JSON.stringify(results.homeContent.desktop['1440x900'].categoryHeadings) !== JSON.stringify(['Images → STL', '3MF → STL', 'STL → 3MF'])
-    || JSON.stringify(results.homeContent.desktop['1440x900'].categoryLinks.map(({ href }) => href)) !== JSON.stringify(['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/'])
     || results.homeContent.desktop['1440x900'].faqQuestions.length !== 6
     || results.homeContent.desktop['1440x900'].faqAnswersInHtml !== 6
     || Object.values(results.brandAssets).some((asset) => asset.status !== 200 || !asset.contentType?.startsWith('image/') || asset.bytes <= 0)
