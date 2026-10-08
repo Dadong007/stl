@@ -4,6 +4,7 @@ import sharp from 'sharp';
 
 const baseUrl = 'http://127.0.0.1:4321';
 const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
+const toolRoutes = ['/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/'];
 const newRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/'];
 const trustRoutes = ['/about/', '/privacy/', '/contact/'];
 const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
@@ -51,6 +52,11 @@ const inspectPage = () => page.evaluate(() => ({
   footerLogoLoaded: document.querySelector('.footer-logo')?.complete && document.querySelector('.footer-logo')?.naturalWidth > 0,
   googleTagLoaderCount: document.querySelectorAll('script[src="https://www.googletagmanager.com/gtag/js?id=G-GKTV9KDNXL"]').length,
   googleTagConfigCount: Array.from(document.scripts).filter((script) => !script.src && script.textContent?.includes("gtag('config', 'G-GKTV9KDNXL')")).length,
+  chooseToolH2FontSize: document.querySelector('#available-tools')
+    ? getComputedStyle(document.querySelector('#available-tools')).fontSize
+    : null,
+  contentH2FontSizes: Array.from(document.querySelectorAll('.content-stack h2'))
+    .map((heading) => getComputedStyle(heading).fontSize),
   schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
     .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
 }));
@@ -1189,6 +1195,9 @@ try {
     || !results.skipLink.keyboardFocused.visibleInViewport
     || !results.skipLink.keyboardFocused.focusVisible
     || pageEntries.some((entry) => entry.status !== 200 || !entry.hasContent || entry.h1Count !== 1 || entry.hasOverflow || !entry.description || !entry.canonical || !entry.brandLogoLoaded || !entry.footerLogoLoaded || entry.googleTagLoaderCount !== 1 || entry.googleTagConfigCount !== 1)
+    || toolRoutes.some((route) => results.pages[route].contentH2FontSizes.some(
+      (fontSize) => fontSize !== results.pages['/'].chooseToolH2FontSize,
+    ))
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)

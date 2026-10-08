@@ -600,6 +600,10 @@ h3 {
   gap: clamp(3.75rem, 6vw, 5rem);
 }
 
+.content-stack h2 {
+  font-size: clamp(1.5rem, 1.9vw, 1.75rem);
+}
+
 .section-intro {
   max-width: 70ch;
   margin-bottom: 2rem;
