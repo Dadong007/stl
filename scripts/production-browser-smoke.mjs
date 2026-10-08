@@ -377,6 +377,11 @@ try {
     stepHeadings: Array.from(document.querySelectorAll('.home-steps h3')).map((heading) => heading.textContent?.trim()),
     faqQuestions: Array.from(document.querySelectorAll('.home-faq-list summary')).map((summary) => summary.textContent?.trim()),
     faqAnswersInHtml: document.querySelectorAll('.home-faq-list details > p').length,
+    sectionBackgrounds: {
+      how: getComputedStyle(document.querySelector('.home-how-section')).backgroundColor,
+      faq: getComputedStyle(document.querySelector('.home-faq-section')).backgroundColor,
+      footer: getComputedStyle(document.querySelector('.site-footer')).backgroundColor,
+    },
     noHorizontalOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
     stepColumns: getComputedStyle(document.querySelector('.home-steps')).gridTemplateColumns.split(' ').length,
   }));
@@ -387,18 +392,47 @@ try {
     if (width === 1440) {
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({ path: `${homeContentOutput}/home-1440x900-top.png` });
-      await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-how.png` });
+      await page.locator('.home-how-section').screenshot({ path: `${homeContentOutput}/home-1440-how.png` });
       await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-1440-faq.png` });
+
+      const documentBox = (selector) => page.locator(selector).evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        return { y: rect.top + window.scrollY, height: rect.height };
+      });
+      const howBox = await documentBox('.home-how-section');
+      const faqBox = await documentBox('.home-faq-section');
+      const footerBox = await documentBox('.site-footer');
+      const transitionY = Math.max(0, howBox.y - 320);
+      await page.evaluate((y) => window.scrollTo(0, y), transitionY);
+      await page.screenshot({ path: `${homeContentOutput}/home-1440-tool-to-how.png` });
+
+      const faqFooterHeight = Math.ceil(footerBox.y + footerBox.height - faqBox.y);
+      await page.setViewportSize({ width: 1440, height: faqFooterHeight });
+      await page.evaluate((y) => window.scrollTo(0, y), faqBox.y);
+      await page.screenshot({ path: `${homeContentOutput}/home-1440-faq-footer.png` });
+      await page.setViewportSize({ width: 1440, height: 900 });
     }
   }
   for (const [width, height] of [[430, 932], [390, 844]]) {
     await page.setViewportSize({ width, height });
     results.homeContent.mobile[`${width}x${height}`] = await inspectHomeContent();
     if (width === 390) {
-      await page.locator('#home-how-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-how.png` });
+      await page.locator('.home-how-section').screenshot({ path: `${homeContentOutput}/home-390-how.png` });
       await page.locator('#home-faq-heading').locator('..').screenshot({ path: `${homeContentOutput}/home-390-faq.png` });
       await page.locator('.home-faq-list details').first().locator('summary').click();
       await page.locator('.home-faq-list details').first().screenshot({ path: `${homeContentOutput}/home-390-faq-expanded.png` });
+      const mobileFaqBox = await page.locator('.home-faq-section').evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        return { y: rect.top + window.scrollY, height: rect.height };
+      });
+      const mobileFooterBox = await page.locator('.site-footer').evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        return { y: rect.top + window.scrollY, height: rect.height };
+      });
+      const mobileFaqFooterHeight = Math.ceil(mobileFooterBox.y + mobileFooterBox.height - mobileFaqBox.y);
+      await page.setViewportSize({ width: 390, height: mobileFaqFooterHeight });
+      await page.evaluate((y) => window.scrollTo(0, y), mobileFaqBox.y);
+      await page.screenshot({ path: `${homeContentOutput}/home-390-faq-footer-expanded.png` });
     }
   }
   await page.setViewportSize({ width: 1280, height: 900 });
@@ -1182,6 +1216,11 @@ try {
     || JSON.stringify(results.homeContent.desktop['1440x900'].stepHeadings) !== JSON.stringify(['Choose your file', 'Preview the result', 'Download your model'])
     || results.homeContent.desktop['1440x900'].faqQuestions.length !== 6
     || results.homeContent.desktop['1440x900'].faqAnswersInHtml !== 6
+    || JSON.stringify(results.homeContent.desktop['1440x900'].sectionBackgrounds) !== JSON.stringify({
+      how: 'rgb(244, 248, 246)',
+      faq: 'rgb(255, 255, 255)',
+      footer: 'rgb(240, 243, 242)',
+    })
     || Object.values(results.brandAssets).some((asset) => asset.status !== 200 || !asset.contentType?.startsWith('image/') || asset.bytes <= 0)
     || results.contact.hasAction
     || results.contact.hasMethod
