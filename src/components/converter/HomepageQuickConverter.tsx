@@ -182,7 +182,7 @@ export default function HomepageQuickConverter() {
         className="upload-input"
         type="file"
         tabIndex={-1}
-        accept=".jpg,.jpeg,.png,.3mf,image/jpeg,image/png,model/3mf"
+        accept=".jpg,.jpeg,.png,.3mf"
         aria-label="Choose a JPG, PNG, JPEG, or 3MF file"
         onChange={(event) => {
           const nextFile = event.currentTarget.files?.[0];

@@ -215,6 +215,7 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
       overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       state: document.querySelector('.home-quick-converter')?.getAttribute('data-state'),
       downloadCount: document.querySelectorAll('.home-quick-download').length,
+      uploadAccept: document.querySelector('#home-quick-upload')?.getAttribute('accept'),
     };
   }, expectedToolLinks);
   const forbiddenInitialResources = requests.filter((url) => /(?:MeshPreview|threeMf|lib3mf|\/image\.[^/]+\.js|\/stl\.[^/]+\.js|three\.core|\.wasm)/i.test(url));
@@ -231,6 +232,8 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
   assert.equal(initial.overflow, false);
   assert.equal(initial.state, 'idle');
   assert.equal(initial.downloadCount, 0);
+  assert.equal(initial.uploadAccept, '.jpg,.jpeg,.png,.3mf');
+  assert.ok(initial.uploadAccept.split(',').includes('.3mf'));
   assert.deepEqual(forbiddenInitialResources, []);
   if (width === 1440) {
     await page.screenshot({ path: resolve(outputDirectory, 'home-1440x900-idle.png') });
