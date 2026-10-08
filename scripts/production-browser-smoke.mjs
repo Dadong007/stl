@@ -798,6 +798,7 @@ try {
     await mobilePage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
     if (selectedStyle) {
       await mobilePage.getByRole('radio', { name: selectedStyle === 'relief' ? 'Relief' : 'Extrude' }).check();
+      await mobilePage.locator('.status-processing').waitFor({ timeout: 30_000 });
       await mobilePage.locator('.status-ready').waitFor({ timeout: 120_000 });
       await mobilePage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
     }

@@ -57,8 +57,26 @@ export default function StlToThreeMfConverter() {
     }
   };
 
+  const statusPanel = (
+    <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
+      {state === 'processing' && <span className="spinner" aria-hidden="true" />}
+      <span>{message}</span>
+    </div>
+  );
+
+  const downloadButton = (
+    <button
+      className="primary-button"
+      type="button"
+      disabled={!threeMf || state !== 'ready' || !file}
+      onClick={() => threeMf && file && downloadBytes(threeMf, threeMfFilename(file.name), 'model/3mf')}
+    >
+      Download 3MF
+    </button>
+  );
+
   return (
-    <section className="converter converter-format" aria-label="STL to 3MF converter">
+    <section className="converter converter-format image-workspace format-workspace" aria-label="STL to 3MF converter">
       <div className="converter-controls">
         <UploadField
           id="stl-upload"
@@ -68,29 +86,15 @@ export default function StlToThreeMfConverter() {
           onFile={(nextFile) => void receiveFile(nextFile)}
         />
 
-        <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
-          {state === 'processing' && <span className="spinner" aria-hidden="true" />}
-          <span>{message}</span>
-        </div>
-
         <p className="format-note">
           STL files do not include unit metadata. IntoSTL treats STL units as millimeters.
         </p>
-
-        <button
-          className="primary-button"
-          type="button"
-          disabled={!threeMf || state !== 'ready' || !file}
-          onClick={() => threeMf && file && downloadBytes(threeMf, threeMfFilename(file.name), 'model/3mf')}
-        >
-          Download 3MF
-        </button>
       </div>
 
       <div className="preview-panel">
         {mesh ? (
           <Suspense fallback={<div className="preview-placeholder">Loading 3D preview…</div>}>
-            <MeshPreview mesh={mesh} />
+            <MeshPreview mesh={mesh} backgroundColor={0xf4f7f6} pixelRatioCap={3} />
           </Suspense>
         ) : (
           <div className="preview-placeholder">
@@ -98,6 +102,11 @@ export default function StlToThreeMfConverter() {
             <p>{state === 'processing' ? 'Reading your model…' : 'Your 3D preview will appear here.'}</p>
           </div>
         )}
+      </div>
+
+      <div className="image-workspace-completion">
+        {statusPanel}
+        {downloadButton}
       </div>
     </section>
   );

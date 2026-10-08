@@ -57,8 +57,26 @@ export default function ThreeMfConverter() {
     }
   };
 
+  const statusPanel = (
+    <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
+      {state === 'processing' && <span className="spinner" aria-hidden="true" />}
+      <span>{message}</span>
+    </div>
+  );
+
+  const downloadButton = (
+    <button
+      className="primary-button"
+      type="button"
+      disabled={!stl || state !== 'ready' || !file}
+      onClick={() => stl && file && downloadBytes(stl, stlFilename(file.name))}
+    >
+      Download STL
+    </button>
+  );
+
   return (
-    <section className="converter converter-format" aria-label="3MF to STL converter">
+    <section className="converter converter-format image-workspace format-workspace" aria-label="3MF to STL converter">
       <div className="converter-controls">
         <UploadField
           id="three-mf-upload"
@@ -67,29 +85,15 @@ export default function ThreeMfConverter() {
           onFile={(nextFile) => void receiveFile(nextFile)}
         />
 
-        <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
-          {state === 'processing' && <span className="spinner" aria-hidden="true" />}
-          <span>{message}</span>
-        </div>
-
         <p className="format-note">
           STL stores geometry only. Colors, materials, textures and other 3MF metadata are not preserved.
         </p>
-
-        <button
-          className="primary-button"
-          type="button"
-          disabled={!stl || state !== 'ready' || !file}
-          onClick={() => stl && file && downloadBytes(stl, stlFilename(file.name))}
-        >
-          Download STL
-        </button>
       </div>
 
       <div className="preview-panel">
         {mesh ? (
           <Suspense fallback={<div className="preview-placeholder">Loading 3D preview…</div>}>
-            <MeshPreview mesh={mesh} />
+            <MeshPreview mesh={mesh} backgroundColor={0xf4f7f6} pixelRatioCap={3} />
           </Suspense>
         ) : (
           <div className="preview-placeholder">
@@ -97,6 +101,11 @@ export default function ThreeMfConverter() {
             <p>{state === 'processing' ? 'Reading your model…' : 'Your 3D preview will appear here.'}</p>
           </div>
         )}
+      </div>
+
+      <div className="image-workspace-completion">
+        {statusPanel}
+        {downloadButton}
       </div>
     </section>
   );

@@ -1,0 +1,18 @@
+.format-workspace .converter-controls {
+  justify-content: flex-start;
+}
+
+.format-workspace .upload-field strong {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.format-workspace .format-note {
+  max-width: 31ch;
+  margin: 0;
+  color: #626a6d;
+}

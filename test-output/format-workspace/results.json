@@ -1,0 +1,501 @@
+{
+  "desktop": {
+    "/3mf-to-stl/": {
+      "1440x900": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1366x768": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x800": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x720": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      }
+    },
+    "/stl-to-3mf/": {
+      "1440x900": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1366x768": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x800": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x720": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      }
+    },
+    "/stl-to-3mf/ascii": {
+      "1440x900": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1366x768": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x800": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      },
+      "1280x720": {
+        "controlsRatio": 0.3194518008474576,
+        "previewRatio": 0.6788400423728813,
+        "completionSpansWorkspace": true,
+        "statusAndDownloadShareRow": true,
+        "downloadVisible": true,
+        "noHorizontalOverflow": true,
+        "imageControlCount": 0
+      }
+    }
+  },
+  "mobile": [
+    {
+      "route": "/3mf-to-stl/",
+      "selector": "#three-mf-upload",
+      "file": "test-assets/generated/multi-object-transformed.3mf",
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "screenshot": "3mf-to-stl-390x844-ready.png",
+      "preview": {
+        "width": 368,
+        "height": 290,
+        "top": 600.96875,
+        "bottom": 890.96875
+      },
+      "canvasCss": {
+        "width": 368,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 368,
+        "height": 290
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 368,
+        "imageHeight": 291,
+        "pixels": 22836,
+        "minX": 72,
+        "minY": 63,
+        "maxX": 302,
+        "maxY": 250,
+        "contained": true
+      }
+    },
+    {
+      "route": "/3mf-to-stl/",
+      "selector": "#three-mf-upload",
+      "file": "test-assets/generated/multi-object-transformed.3mf",
+      "width": 390,
+      "height": 844,
+      "dpr": 2,
+      "preview": {
+        "width": 368,
+        "height": 290,
+        "top": 600.96875,
+        "bottom": 890.96875
+      },
+      "canvasCss": {
+        "width": 368,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 736,
+        "height": 580
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 736,
+        "imageHeight": 582,
+        "pixels": 91080,
+        "minX": 144,
+        "minY": 126,
+        "maxX": 605,
+        "maxY": 501,
+        "contained": true
+      }
+    },
+    {
+      "route": "/3mf-to-stl/",
+      "selector": "#three-mf-upload",
+      "file": "test-assets/generated/multi-object-transformed.3mf",
+      "width": 430,
+      "height": 932,
+      "dpr": 3,
+      "preview": {
+        "width": 408,
+        "height": 290,
+        "top": 600.96875,
+        "bottom": 890.96875
+      },
+      "canvasCss": {
+        "width": 408,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 1224,
+        "height": 870
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 1224,
+        "imageHeight": 873,
+        "pixels": 204759,
+        "minX": 276,
+        "minY": 190,
+        "maxX": 968,
+        "maxY": 752,
+        "contained": true
+      }
+    },
+    {
+      "route": "/stl-to-3mf/",
+      "selector": "#stl-upload",
+      "file": "test-assets/generated/binary-cube.stl",
+      "width": 390,
+      "height": 844,
+      "dpr": 1,
+      "screenshot": "stl-to-3mf-390x844-ready.png",
+      "belowScreenshot": "stl-to-3mf-390x844-preview-completion-nav.png",
+      "preview": {
+        "width": 368,
+        "height": 290,
+        "top": 629.015625,
+        "bottom": 919.015625
+      },
+      "canvasCss": {
+        "width": 368,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 368,
+        "height": 290
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 368,
+        "imageHeight": 291,
+        "pixels": 36483,
+        "minX": 69,
+        "minY": 15,
+        "maxX": 300,
+        "maxY": 260,
+        "contained": true
+      }
+    },
+    {
+      "route": "/stl-to-3mf/",
+      "selector": "#stl-upload",
+      "file": "test-assets/generated/ascii-cube.stl",
+      "width": 390,
+      "height": 844,
+      "dpr": 2,
+      "preview": {
+        "width": 368,
+        "height": 290,
+        "top": 629.015625,
+        "bottom": 919.015625
+      },
+      "canvasCss": {
+        "width": 368,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 736,
+        "height": 580
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 736,
+        "imageHeight": 582,
+        "pixels": 145642,
+        "minX": 138,
+        "minY": 29,
+        "maxX": 601,
+        "maxY": 522,
+        "contained": true
+      }
+    },
+    {
+      "route": "/stl-to-3mf/",
+      "selector": "#stl-upload",
+      "file": "test-assets/generated/disconnected-cubes.stl",
+      "width": 430,
+      "height": 932,
+      "dpr": 3,
+      "screenshot": "stl-to-3mf-430x932-disconnected-ready.png",
+      "preview": {
+        "width": 408,
+        "height": 290,
+        "top": 600.96875,
+        "bottom": 890.96875
+      },
+      "canvasCss": {
+        "width": 408,
+        "height": 290
+      },
+      "canvasBuffer": {
+        "width": 1224,
+        "height": 870
+      },
+      "noHorizontalOverflow": true,
+      "boundedPreviewHeight": true,
+      "canvasMatchesPreview": true,
+      "drawingBufferMatchesDpr": true,
+      "correctOrder": true,
+      "downloadEnabled": true,
+      "contentReachable": true,
+      "modelBounds": {
+        "imageWidth": 1224,
+        "imageHeight": 873,
+        "pixels": 200671,
+        "minX": 277,
+        "minY": 164,
+        "maxX": 996,
+        "maxY": 747,
+        "contained": true
+      }
+    }
+  ],
+  "states": {
+    "threeMf": {
+      "firstReady": {
+        "message": "multi-object-transformed.3mf is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      },
+      "wrongExtension": {
+        "message": "Choose a file with the .3mf extension.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "corrupt": {
+        "message": "The 3MF file could not be converted. Check that it is a valid 3MF model and try again.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "oversized": {
+        "message": "This 3MF file is larger than 50 MB. Choose a smaller file.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "longFilename": {
+        "message": "3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-3mf-selected-file-final.3mf is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      },
+      "replacement": {
+        "message": "multi-object-transformed.3mf is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      }
+    },
+    "stl": {
+      "firstReady": {
+        "message": "binary-cube.stl is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      },
+      "wrongExtension": {
+        "message": "Choose a file with the .stl extension.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "corrupt": {
+        "message": "The STL file could not be converted. Check that it is a valid binary or ASCII STL model and try again.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "oversized": {
+        "message": "This STL file is larger than 50 MB. Choose a smaller file.",
+        "downloadDisabled": true,
+        "hasPreview": false,
+        "filenameContained": true
+      },
+      "longFilename": {
+        "message": "stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-stl-selected-file-final.stl is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      },
+      "replacement": {
+        "message": "binary-cube.stl is ready to download.",
+        "downloadDisabled": false,
+        "hasPreview": true,
+        "filenameContained": true
+      }
+    }
+  },
+  "content": {
+    "/3mf-to-stl/": {
+      "title": "3MF to STL Converter — Free, No Upload | IntoSTL",
+      "description": "Convert 3MF files to STL directly in your browser while preserving final geometry and transforms. Free, private and no upload required.",
+      "h1": "Convert 3MF to STL",
+      "h1Count": 1,
+      "intro": "Turn the final geometry in a 3MF model into a binary STL without sending the file anywhere.",
+      "privacy": "● Private by design. Your files are processed locally in your browser and are not uploaded to our servers.",
+      "onThisPage": "On this pageHow to convert 3MF to STLWhat is preservedWhat is lostWhy convertFAQ",
+      "headings": [
+        "How to convert 3MF to STL",
+        "What is preserved when converting 3MF to STL?",
+        "What 3MF data STL cannot keep",
+        "Why convert 3MF to STL?",
+        "3MF to STL FAQ"
+      ],
+      "faqCount": 4,
+      "canonical": "https://intostl.com/3mf-to-stl/",
+      "robots": "index, follow",
+      "schemaCount": 3,
+      "internalLinksValid": true
+    },
+    "/stl-to-3mf/": {
+      "title": "STL to 3MF Converter — Free, No Upload | IntoSTL",
+      "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
+      "h1": "Convert STL to 3MF",
+      "h1Count": 1,
+      "intro": "Turn a binary or ASCII STL into a 3MF model while keeping the conversion entirely on your device.",
+      "privacy": "● Private by design. Your STL is processed locally in your browser.",
+      "onThisPage": "On this pageHow to convert STL to 3MFWhat changesUnitsWhy convertFAQ",
+      "headings": [
+        "How to convert STL to 3MF",
+        "What changes when STL becomes 3MF?",
+        "STL units and millimeter handling",
+        "Why convert STL to 3MF?",
+        "STL to 3MF FAQ"
+      ],
+      "faqCount": 4,
+      "canonical": "https://intostl.com/stl-to-3mf/",
+      "robots": "index, follow",
+      "schemaCount": 3,
+      "internalLinksValid": true
+    },
+    "/stl-to-3mf/ascii": {
+      "title": "STL to 3MF Converter — Free, No Upload | IntoSTL",
+      "description": "Convert binary or ASCII STL files to 3MF directly in your browser. Geometry is preserved and STL units are treated as millimeters.",
+      "h1": "Convert STL to 3MF",
+      "h1Count": 1,
+      "intro": "Turn a binary or ASCII STL into a 3MF model while keeping the conversion entirely on your device.",
+      "privacy": "● Private by design. Your STL is processed locally in your browser.",
+      "onThisPage": "On this pageHow to convert STL to 3MFWhat changesUnitsWhy convertFAQ",
+      "headings": [
+        "How to convert STL to 3MF",
+        "What changes when STL becomes 3MF?",
+        "STL units and millimeter handling",
+        "Why convert STL to 3MF?",
+        "STL to 3MF FAQ"
+      ],
+      "faqCount": 4,
+      "canonical": "https://intostl.com/stl-to-3mf/",
+      "robots": "index, follow",
+      "schemaCount": 3,
+      "internalLinksValid": true
+    }
+  }
+}
