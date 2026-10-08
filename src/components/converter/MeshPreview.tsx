@@ -5,9 +5,10 @@ import type { IndexedMesh } from '../../engines/image';
 
 interface MeshPreviewProps {
   mesh: IndexedMesh;
+  fitPadding?: number;
 }
 
-export default function MeshPreview({ mesh }: MeshPreviewProps) {
+export default function MeshPreview({ mesh, fitPadding = 0.1 }: MeshPreviewProps) {
   const host = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -91,7 +92,10 @@ export default function MeshPreview({ mesh }: MeshPreviewProps) {
       camera.lookAt(center);
       const inverseRotation = camera.quaternion.clone().invert();
       let distance = radius;
-      const frameUsage = 0.9;
+      const safeFitPadding = Number.isFinite(fitPadding)
+        ? Math.min(Math.max(fitPadding, 0), 0.5)
+        : 0.1;
+      const frameUsage = 1 - safeFitPadding;
       for (const corner of corners) {
         const viewPoint = corner.clone().sub(center).applyQuaternion(inverseRotation);
         distance = Math.max(
@@ -133,7 +137,7 @@ export default function MeshPreview({ mesh }: MeshPreviewProps) {
       renderer.forceContextLoss();
       renderer.domElement.remove();
     };
-  }, [mesh]);
+  }, [fitPadding, mesh]);
 
   return <div ref={host} className="preview-canvas" aria-label="Interactive 3D model preview" />;
 }

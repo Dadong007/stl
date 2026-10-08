@@ -15,7 +15,14 @@ import {
 const THREE_MF_MAX_BYTES = 50 * 1024 * 1024;
 
 export type QuickConversionKind = 'jpg' | 'png' | '3mf';
-export type QuickConversionMode = 'relief' | 'extrude' | '3mf';
+export type QuickImageMode = 'relief' | 'extrude';
+export type QuickConversionMode = QuickImageMode | '3mf';
+
+export interface QuickImageSettings {
+  mode: QuickImageMode;
+  depthMm: number;
+  sizeMm: number;
+}
 
 export interface QuickConversionResult {
   kind: QuickConversionKind;
@@ -26,7 +33,7 @@ export interface QuickConversionResult {
 
 export class QuickConversionError extends Error {}
 
-function fileKind(file: File): QuickConversionKind | null {
+export function quickFileKind(file: File): QuickConversionKind | null {
   const extension = file.name.toLowerCase().match(/\.[^.]+$/)?.[0];
   if (extension === '.jpg' || extension === '.jpeg') return 'jpg';
   if (extension === '.png') return 'png';
@@ -34,7 +41,11 @@ function fileKind(file: File): QuickConversionKind | null {
   return null;
 }
 
-async function convertImage(file: File, kind: 'jpg' | 'png'): Promise<QuickConversionResult> {
+async function convertImage(
+  file: File,
+  kind: 'jpg' | 'png',
+  settings?: QuickImageSettings,
+): Promise<QuickConversionResult> {
   if (!isSupportedImage(file, kind)) {
     throw new QuickConversionError('Choose a JPG, PNG, JPEG, or 3MF file.');
   }
@@ -58,18 +69,19 @@ async function convertImage(file: File, kind: 'jpg' | 'png'): Promise<QuickConve
       import('../../engines/formats/stl'),
     ]);
     const pixels = await imageEngine.decodeImage(file, IMAGE_INTERNAL_RESOLUTION);
-    const mode: QuickConversionMode = kind === 'png' && inspection.meaningfulTransparency
-      ? 'extrude'
-      : 'relief';
+    const mode: QuickImageMode = settings?.mode
+      ?? (kind === 'png' && inspection.meaningfulTransparency ? 'extrude' : 'relief');
+    const depthMm = settings?.depthMm ?? IMAGE_DEFAULT_DEPTH_MM;
+    const sizeMm = settings?.sizeMm ?? IMAGE_DEFAULT_SIZE_MM;
     const mesh = mode === 'extrude'
       ? imageEngine.createExtrudedMesh(pixels, {
-          widthMm: IMAGE_DEFAULT_SIZE_MM,
-          depthMm: IMAGE_DEFAULT_DEPTH_MM,
+          widthMm: sizeMm,
+          depthMm,
           maskMode: hasTransparency(pixels.data) ? 'alpha' : 'dark-on-light',
         })
       : imageEngine.createReliefMesh(pixels, {
-          widthMm: IMAGE_DEFAULT_SIZE_MM,
-          reliefDepthMm: IMAGE_DEFAULT_DEPTH_MM,
+          widthMm: sizeMm,
+          reliefDepthMm: depthMm,
           baseThicknessMm: IMAGE_DEFAULT_BASE_MM,
         });
     return { kind, mode, mesh, stl: stlEngine.exportBinaryStl(mesh) };
@@ -96,8 +108,11 @@ async function convertThreeMf(file: File): Promise<QuickConversionResult> {
   }
 }
 
-export async function convertQuickFile(file: File): Promise<QuickConversionResult> {
-  const kind = fileKind(file);
+export async function convertQuickFile(
+  file: File,
+  imageSettings?: QuickImageSettings,
+): Promise<QuickConversionResult> {
+  const kind = quickFileKind(file);
   if (!kind) throw new QuickConversionError('Choose a JPG, PNG, JPEG, or 3MF file.');
-  return kind === '3mf' ? convertThreeMf(file) : convertImage(file, kind);
+  return kind === '3mf' ? convertThreeMf(file) : convertImage(file, kind, imageSettings);
 }

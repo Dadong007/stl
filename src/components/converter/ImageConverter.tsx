@@ -10,15 +10,18 @@ import {
   isSupportedImage,
   type AcceptedImageInput,
 } from './imageInput';
+import {
+  IMAGE_DEPTH_STEP_MM,
+  IMAGE_MAX_DEPTH_MM,
+  IMAGE_MAX_SIZE_MM,
+  IMAGE_MIN_DEPTH_MM,
+  IMAGE_MIN_SIZE_MM,
+  IMAGE_SIZE_STEP_MM,
+  validImageParameter,
+} from './imageParameters';
 import UploadField from './UploadField';
 
 const MeshPreview = lazy(() => import('./MeshPreview'));
-const MIN_DEPTH = 0.5;
-const MAX_DEPTH = 50;
-const DEPTH_STEP = 0.5;
-const MIN_SIZE = 10;
-const MAX_SIZE = 300;
-const SIZE_STEP = 1;
 
 type Style = 'relief' | 'extrude';
 type State = 'idle' | 'processing' | 'ready' | 'error';
@@ -28,16 +31,6 @@ interface ImageConverterProps {
   defaultStyle?: Style;
   autoStyleFromTransparency?: boolean;
   uploadPrompt?: string;
-}
-
-function validParameter(value: string, minimum: number, maximum: number, step: number): number | null {
-  if (value.trim() === '') return null;
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < minimum || parsed > maximum) return null;
-  const stepsFromMinimum = (parsed - minimum) / step;
-  return Math.abs(stepsFromMinimum - Math.round(stepsFromMinimum)) < Number.EPSILON * 100
-    ? parsed
-    : null;
 }
 
 export default function ImageConverter({
@@ -62,8 +55,18 @@ export default function ImageConverter({
   const [stl, setStl] = useState<Uint8Array | null>(null);
   const request = useRef(0);
   const styleChangeVersion = useRef(0);
-  const depthValue = validParameter(depth, MIN_DEPTH, MAX_DEPTH, DEPTH_STEP);
-  const sizeValue = validParameter(size, MIN_SIZE, MAX_SIZE, SIZE_STEP);
+  const depthValue = validImageParameter(
+    depth,
+    IMAGE_MIN_DEPTH_MM,
+    IMAGE_MAX_DEPTH_MM,
+    IMAGE_DEPTH_STEP_MM,
+  );
+  const sizeValue = validImageParameter(
+    size,
+    IMAGE_MIN_SIZE_MM,
+    IMAGE_MAX_SIZE_MM,
+    IMAGE_SIZE_STEP_MM,
+  );
 
   const receiveFile = async (nextFile: File) => {
     const currentRequest = ++request.current;
