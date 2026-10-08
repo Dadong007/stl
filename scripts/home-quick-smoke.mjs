@@ -27,8 +27,8 @@ const browser = await chromium.launch({
   args: ['--disable-extensions', '--disable-component-extensions-with-background-pages'],
 });
 
-async function createPage(viewport = { width: 1440, height: 900 }) {
-  const context = await browser.newContext({ acceptDownloads: true, viewport });
+async function createPage(viewport = { width: 1440, height: 900 }, deviceScaleFactor = 1) {
+  const context = await browser.newContext({ acceptDownloads: true, viewport, deviceScaleFactor });
   await context.route(googleTagScriptUrl, (route) => route.fulfill({
     status: 200,
     contentType: 'application/javascript',
@@ -94,7 +94,27 @@ async function downloadResult(page) {
 }
 
 async function inspectPreviewFraming(page) {
-  const screenshot = await page.locator('.home-quick-preview canvas').screenshot();
+  const preview = page.locator('.home-quick-preview');
+  const screenshot = await preview.screenshot();
+  const layout = await preview.evaluate((shell) => {
+    const canvas = shell.querySelector('canvas');
+    if (!(canvas instanceof HTMLCanvasElement)) return null;
+    const shellBounds = shell.getBoundingClientRect();
+    const canvasBounds = canvas.getBoundingClientRect();
+    return {
+      shellCssWidth: Math.round(shellBounds.width),
+      shellCssHeight: Math.round(shellBounds.height),
+      canvasCssWidth: Math.round(canvasBounds.width),
+      canvasCssHeight: Math.round(canvasBounds.height),
+      canvasBufferWidth: canvas.width,
+      canvasBufferHeight: canvas.height,
+      canvasContained: canvasBounds.width <= shellBounds.width + 1
+        && canvasBounds.height <= shellBounds.height + 1,
+      shellOverflow: shell.scrollWidth > shell.clientWidth + 1
+        || shell.scrollHeight > shell.clientHeight + 1,
+    };
+  });
+  assert.ok(layout, 'Expected a rendered canvas inside the visible preview shell.');
   const { data, info } = await sharp(screenshot)
     .removeAlpha()
     .raw()
@@ -142,10 +162,13 @@ async function inspectPreviewFraming(page) {
       x: Number((Math.abs((minX + maxX) / 2 - info.width / 2) / info.width).toFixed(3)),
       y: Number((Math.abs((minY + maxY) / 2 - info.height / 2) / info.height).toFixed(3)),
     },
+    layout,
   };
 }
 
 function assertFullyFramed(framing, label) {
+  assert.equal(framing.layout.canvasContained, true, `${label} canvas should fit the visible preview shell.`);
+  assert.equal(framing.layout.shellOverflow, false, `${label} preview shell should not overflow.`);
   assert.ok(
     Math.min(...Object.values(framing.margins)) >= 3,
     `${label} should retain visible padding on every side: ${JSON.stringify(framing)}`,
@@ -166,6 +189,7 @@ const results = {
   replacement: {},
   errors: {},
   mobile: {},
+  resize: {},
 };
 
 for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720]]) {
@@ -216,7 +240,7 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
 }
 
 {
-  const { context, page } = await createPage();
+  const { context, page } = await createPage({ width: 1440, height: 900 }, 3);
   await openHomepage(page);
   results.jpg = await uploadAndWait(page, resolve('test-assets/01-photo-relief.jpg'));
   assert.equal(results.jpg.kind, 'jpg');
@@ -299,7 +323,7 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
 }
 
 {
-  const { context, page } = await createPage();
+  const { context, page } = await createPage({ width: 1440, height: 900 }, 3);
   await openHomepage(page);
   results.wideJpg = await uploadAndWait(page, {
     name: 'wide-flat-relief.jpg',
@@ -309,6 +333,20 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
   assert.equal(results.wideJpg.mode, 'relief');
   results.wideJpg.framing = await inspectPreviewFraming(page);
   assertFullyFramed(results.wideJpg.framing, 'Wide JPG relief');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForFunction(() => {
+    const shell = document.querySelector('.home-quick-preview');
+    const canvas = shell?.querySelector('canvas');
+    if (!(shell instanceof HTMLElement) || !(canvas instanceof HTMLCanvasElement)) return false;
+    const shellBounds = shell.getBoundingClientRect();
+    const canvasBounds = canvas.getBoundingClientRect();
+    return Math.abs(shellBounds.width - 336) <= 1
+      && Math.abs(shellBounds.height - 320) <= 1
+      && Math.abs(canvasBounds.width - shellBounds.width) <= 1
+      && Math.abs(canvasBounds.height - shellBounds.height) <= 1;
+  });
+  results.resize.wideDesktopToMobile = await inspectPreviewFraming(page);
+  assertFullyFramed(results.resize.wideDesktopToMobile, 'Wide JPG after desktop-to-mobile resize');
   await context.close();
 }
 
@@ -444,40 +482,73 @@ for (const [width, height] of [[1440, 900], [1366, 768], [1280, 800], [1280, 720
   await context.close();
 }
 
+const mobileFixtures = [
+  {
+    key: 'normal-jpg',
+    file: resolve('test-assets/01-photo-relief.jpg'),
+    kind: 'jpg',
+    mode: 'relief',
+    hasAdjust: true,
+  },
+  {
+    key: 'wide-jpg',
+    file: { name: 'wide-5x1-relief.jpg', mimeType: 'image/jpeg', buffer: wideJpgBuffer },
+    kind: 'jpg',
+    mode: 'relief',
+    hasAdjust: true,
+  },
+  {
+    key: 'opaque-png',
+    file: resolve('test-assets/04-white-bg-question.png'),
+    kind: 'png',
+    mode: 'relief',
+    hasAdjust: true,
+  },
+  {
+    key: 'transparent-png',
+    file: resolve('test-assets/02-transparent-silhouette.png'),
+    kind: 'png',
+    mode: 'extrude',
+    hasAdjust: true,
+  },
+  {
+    key: 'multi-object-3mf',
+    file: resolve('test-assets/generated/multi-object-transformed.3mf'),
+    kind: '3mf',
+    mode: '3mf',
+    hasAdjust: false,
+  },
+];
+
 for (const [width, height] of [[390, 844], [430, 932]]) {
-  const { context, page } = await createPage({ width, height });
-  await openHomepage(page);
-  const ready = await uploadAndWait(page, resolve('test-assets/02-transparent-silhouette.png'));
-  const adjustReachable = await page.locator('.home-quick-adjust').isVisible();
-  await page.getByRole('button', { name: 'Adjust' }).click();
-  await page.locator('.home-quick-settings').waitFor();
-  const controls = await page.evaluate(() => {
-    const reachable = (selector) => {
-      const element = document.querySelector(selector);
-      if (!(element instanceof HTMLElement)) return false;
-      const rect = element.getBoundingClientRect();
-      return rect.width > 0 && rect.height > 0;
-    };
-    return {
-      overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-      replaceReachable: reachable('.home-quick-replace'),
-      doneReachable: reachable('.home-quick-settings-heading button'),
-      downloadReachable: reachable('.home-quick-download'),
-      styleControlReachable: reachable('.home-quick-style-control'),
-      styleOptionCount: document.querySelectorAll('.home-quick-style-control input[type="radio"]').length,
-    };
-  });
-  assert.equal(ready.mode, 'extrude');
-  assert.equal(adjustReachable, true);
-  assert.deepEqual(controls, {
-    overflow: false,
-    replaceReachable: true,
-    doneReachable: true,
-    downloadReachable: true,
-    styleControlReachable: true,
-    styleOptionCount: 2,
-  });
-  results.mobile[`${width}x${height}`] = { ready, controls };
+  const { context, page } = await createPage({ width, height }, 3);
+  for (const fixture of mobileFixtures) {
+    await openHomepage(page);
+    const ready = await uploadAndWait(page, fixture.file);
+    const framing = await inspectPreviewFraming(page);
+    assertFullyFramed(framing, `${fixture.key} at ${width}x${height}`);
+    const controls = await page.evaluate(() => {
+      const reachable = (selector) => {
+        const element = document.querySelector(selector);
+        if (!(element instanceof HTMLElement)) return false;
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      };
+      return {
+        overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        replaceReachable: reachable('.home-quick-replace'),
+        adjustReachable: reachable('.home-quick-adjust'),
+        downloadReachable: reachable('.home-quick-download'),
+      };
+    });
+    assert.equal(ready.kind, fixture.kind);
+    assert.equal(ready.mode, fixture.mode);
+    assert.equal(controls.overflow, false);
+    assert.equal(controls.replaceReachable, true);
+    assert.equal(controls.downloadReachable, true);
+    assert.equal(controls.adjustReachable, fixture.hasAdjust);
+    results.mobile[`${width}x${height}-${fixture.key}`] = { ready, controls, framing };
+  }
   await context.close();
 }
 

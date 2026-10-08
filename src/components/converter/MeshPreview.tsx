@@ -117,7 +117,7 @@ export default function MeshPreview({ mesh, fitPadding = 0.1 }: MeshPreviewProps
     const resize = () => {
       const width = Math.max(container.clientWidth, 1);
       const height = Math.max(container.clientHeight, 1);
-      renderer.setSize(width, height, false);
+      renderer.setSize(width, height, true);
       fitCamera(width, height);
       render();
     };
