@@ -674,6 +674,33 @@ h3 {
   color: var(--ink);
 }
 
+.faq-list summary,
+.home-faq-list summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6875rem;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker,
+.home-faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::before,
+.home-faq-list summary::before {
+  content: "\25B6";
+  flex: 0 0 0.625rem;
+  min-width: 0;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.faq-list details[open] > summary::before,
+.home-faq-list details[open] > summary::before {
+  content: "\25BC";
+}
+
 .faq-list summary {
   padding: 1rem 2.25rem 1rem 0;
   cursor: pointer;
@@ -682,7 +709,7 @@ h3 {
 
 .faq-list p {
   max-width: 70ch;
-  padding: 0 2rem 1.1rem 0;
+  padding: 0 2rem 1.1rem 1.3125rem;
   color: var(--muted);
 }
 

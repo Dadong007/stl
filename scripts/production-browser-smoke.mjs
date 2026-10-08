@@ -5,6 +5,7 @@ import sharp from 'sharp';
 const baseUrl = 'http://127.0.0.1:4321';
 const publicRoutes = ['/', '/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
 const toolRoutes = ['/image-to-stl/', '/png-to-stl/', '/3mf-to-stl/', '/logo-to-stl/', '/jpg-to-stl/', '/stl-to-3mf/'];
+const faqRoutes = ['/', ...toolRoutes];
 const newRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/stl-to-3mf/'];
 const trustRoutes = ['/about/', '/privacy/', '/contact/'];
 const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
@@ -57,6 +58,12 @@ const inspectPage = () => page.evaluate(() => ({
     : null,
   contentH2FontSizes: Array.from(document.querySelectorAll('.content-stack h2'))
     .map((heading) => getComputedStyle(heading).fontSize),
+  faqSummaryGap: document.querySelector('.home-faq-list summary, .faq-list summary')
+    ? getComputedStyle(document.querySelector('.home-faq-list summary, .faq-list summary')).columnGap
+    : null,
+  faqAnswerPaddingLeft: document.querySelector('.home-faq-list details > p, .faq-list details > p')
+    ? getComputedStyle(document.querySelector('.home-faq-list details > p, .faq-list details > p')).paddingLeft
+    : null,
   schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
     .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
 }));
@@ -1198,6 +1205,8 @@ try {
     || toolRoutes.some((route) => results.pages[route].contentH2FontSizes.some(
       (fontSize) => fontSize !== results.pages['/'].chooseToolH2FontSize,
     ))
+    || faqRoutes.some((route) => results.pages[route].faqSummaryGap !== '11px'
+      || results.pages[route].faqAnswerPaddingLeft !== '21px')
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
