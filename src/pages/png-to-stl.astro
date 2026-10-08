@@ -2,6 +2,7 @@
 import ImageConverter from '../components/converter/ImageConverter';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { absoluteUrl } from '../config/site';
+import '../styles/image-workspace.css';
 
 const title = 'PNG to STL Converter — Free Online Tool | IntoSTL';
 const description = 'Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.';
@@ -29,7 +30,7 @@ const structuredData = [
     </header>
     <div class="shell converter-wrap">
       <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your PNG is processed locally in your browser.</p>
-      <ImageConverter client:load acceptedInput="png" uploadPrompt="Upload a PNG image" />
+      <ImageConverter unifiedWorkspace client:load acceptedInput="png" uploadPrompt="Upload a PNG image" />
     </div>
 
     <nav class="on-this-page shell-narrow" aria-labelledby="png-page-nav">

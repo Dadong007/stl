@@ -2,6 +2,7 @@
 import ImageConverter from '../components/converter/ImageConverter';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { absoluteUrl } from '../config/site';
+import '../styles/image-workspace.css';
 
 const title = 'Logo to STL Converter — Create Printable 3D Logos | IntoSTL';
 const description = 'Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.';
@@ -29,7 +30,7 @@ const structuredData = [
     </header>
     <div class="shell converter-wrap">
       <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your logo is processed locally in your browser.</p>
-      <ImageConverter client:load defaultStyle="extrude" autoStyleFromTransparency={false} uploadPrompt="Upload a PNG or JPG logo" />
+      <ImageConverter unifiedWorkspace client:load defaultStyle="extrude" autoStyleFromTransparency={false} uploadPrompt="Upload a PNG or JPG logo" />
     </div>
 
     <nav class="on-this-page shell-narrow" aria-labelledby="logo-page-nav">

@@ -9,6 +9,8 @@ const trustRoutes = ['/about/', '/privacy/', '/contact/'];
 const expectedFooterRoutes = ['/image-to-stl/', '/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/', '/3mf-to-stl/', '/stl-to-3mf/', '/about/', '/privacy/', '/contact/'];
 const googleTagScriptUrl = 'https://www.googletagmanager.com/gtag/js?id=G-GKTV9KDNXL';
 const imageWorkspaceOutput = 'test-output/image-workspace';
+const imageFamilyWorkspaceOutput = 'test-output/image-family-workspace';
+const updatedImageRoutes = ['/png-to-stl/', '/jpg-to-stl/', '/logo-to-stl/'];
 const browser = await chromium.launch({
   executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
   headless: true,
@@ -124,6 +126,7 @@ const results = {
   png: null, jpg: null, logo: null, stlToThreeMf: null, mobile: {}, trustMobile: {}, contact: null,
   footerRoutes: [], brand: null, brandAssets: {}, uploadKeyboard: null, numericValidation: null,
   malformedStl: null, imageWorkspace: { desktop: {}, mobile: [], validation: null, content: null },
+  imageFamilyWorkspaces: { desktop: {}, mobile: [], states: {}, content: {} },
   externalRequests, consoleErrors, pageErrors,
 };
 
@@ -209,9 +212,130 @@ const inspectImageWorkspacePreview = async (targetPage, deviceScaleFactor) => {
   return { ...layout, modelBounds };
 };
 
+const inspectDesktopImageWorkspace = (targetPage) => targetPage.locator('.image-workspace').evaluate((workspace) => {
+  const bounds = workspace.getBoundingClientRect();
+  const controls = workspace.querySelector('.converter-controls')?.getBoundingClientRect();
+  const preview = workspace.querySelector('.preview-panel')?.getBoundingClientRect();
+  const completion = workspace.querySelector('.image-workspace-completion')?.getBoundingClientRect();
+  const download = workspace.querySelector('.primary-button')?.getBoundingClientRect();
+  return {
+    workspaceWidth: bounds.width,
+    controlsRatio: controls ? controls.width / bounds.width : 0,
+    previewRatio: preview ? preview.width / bounds.width : 0,
+    completionSpansWorkspace: Boolean(completion && Math.abs(completion.width - bounds.width) <= 3),
+    downloadVisible: Boolean(download && download.width > 0 && download.height > 0),
+    noHorizontalOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
+    styleRadioCount: workspace.querySelectorAll('input[name="image-converter-style"]').length,
+    styleSelectCount: workspace.querySelectorAll('select').length,
+  };
+});
+
+const inspectImageRouteContent = (targetPage) => targetPage.evaluate(() => ({
+  title: document.title,
+  description: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? null,
+  h1: document.querySelector('.tool-intro h1')?.textContent?.trim() ?? null,
+  h1Count: document.querySelectorAll('h1').length,
+  intro: document.querySelector('.tool-intro p')?.textContent?.trim() ?? null,
+  privacy: document.querySelector('.privacy-note')?.textContent?.replace(/\s+/g, ' ').trim() ?? null,
+  onThisPage: document.querySelector('.on-this-page')?.textContent?.replace(/\s+/g, ' ').trim() ?? null,
+  headings: Array.from(document.querySelectorAll('.content-stack h2, .content-stack h3')).map((heading) => heading.textContent?.trim()),
+  faq: Array.from(document.querySelectorAll('.faq-list details')).map((details) => ({
+    question: details.querySelector('summary')?.textContent?.trim(),
+    answer: details.querySelector('p')?.textContent?.trim(),
+  })),
+  internalLinks: Array.from(document.querySelectorAll('.tool-page a')).map((link) => ({
+    text: link.textContent?.trim(),
+    href: link.getAttribute('href'),
+  })),
+  canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
+  robots: document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? null,
+  schema: Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map((script) => script.textContent),
+}));
+
+const captureDesktopImageWorkspace = async (targetPage, route, screenshotName) => {
+  const viewports = [[1440, 900], [1366, 768], [1280, 800], [1280, 720]];
+  results.imageFamilyWorkspaces.desktop[route] = {};
+  results.imageFamilyWorkspaces.content[route] = await inspectImageRouteContent(targetPage);
+  for (const [width, height] of viewports) {
+    await targetPage.setViewportSize({ width, height });
+    results.imageFamilyWorkspaces.desktop[route][`${width}x${height}`] = await inspectDesktopImageWorkspace(targetPage);
+    if (width === 1440 && height === 900) {
+      await targetPage.evaluate(() => window.scrollTo(0, 0));
+      await targetPage.screenshot({ path: `${imageFamilyWorkspaceOutput}/${screenshotName}` });
+    }
+  }
+  await targetPage.setViewportSize({ width: 1440, height: 900 });
+};
+
+const exerciseUnifiedImageControls = async ({
+  targetPage,
+  initialStyle,
+  replacement,
+  replacementName,
+  replacementStyle,
+}) => {
+  const oppositeStyle = initialStyle === 'relief' ? 'extrude' : 'relief';
+  const switchStyle = async (nextStyle) => {
+    await targetPage.getByRole('radio', { name: nextStyle === 'relief' ? 'Relief' : 'Extrude' }).check();
+    await targetPage.locator('.status-processing').waitFor({ timeout: 30_000 });
+    await targetPage.locator('.status-ready').waitFor({ timeout: 120_000 });
+    await targetPage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+    return readImageStyle(targetPage);
+  };
+  const changedStyle = await switchStyle(oppositeStyle);
+  const restoredStyle = await switchStyle(initialStyle);
+  const numericInputs = targetPage.locator('.number-control input');
+  const depthInput = numericInputs.nth(0);
+  const sizeInput = numericInputs.nth(1);
+  await depthInput.fill('4');
+  await targetPage.locator('.status-processing').waitFor({ timeout: 30_000 });
+  await targetPage.locator('.status-ready').waitFor({ timeout: 120_000 });
+  await sizeInput.fill('120');
+  await targetPage.locator('.status-processing').waitFor({ timeout: 30_000 });
+  await targetPage.locator('.status-ready').waitFor({ timeout: 120_000 });
+  await depthInput.fill('0');
+  await targetPage.locator('.status-error').filter({ hasText: 'Enter a depth from 0.5 to 50 mm in 0.5 mm steps.' }).waitFor();
+  const invalidDepth = await targetPage.evaluate(() => ({
+    downloadDisabled: document.querySelector('.image-workspace-completion .primary-button')?.disabled ?? false,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
+  await depthInput.fill('3');
+  await targetPage.locator('.status-processing').waitFor({ timeout: 30_000 });
+  await targetPage.locator('.status-ready').waitFor({ timeout: 120_000 });
+  await sizeInput.fill('301');
+  await targetPage.locator('.status-error').filter({ hasText: 'Enter a whole-number size from 10 to 300 mm.' }).waitFor();
+  const invalidSize = await targetPage.evaluate(() => ({
+    downloadDisabled: document.querySelector('.image-workspace-completion .primary-button')?.disabled ?? false,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
+  await sizeInput.fill('100');
+  await targetPage.locator('.status-processing').waitFor({ timeout: 30_000 });
+  await targetPage.locator('.status-ready').waitFor({ timeout: 120_000 });
+  await targetPage.locator('#image-upload').setInputFiles(replacement);
+  await targetPage.locator('.status-ready').filter({ hasText: replacementName }).waitFor({ timeout: 120_000 });
+  await targetPage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+  return {
+    initialStyle,
+    changedStyle,
+    restoredStyle,
+    replacementStyle: await readImageStyle(targetPage),
+    expectedReplacementStyle: replacementStyle,
+    invalidDepth,
+    invalidSize,
+    downloadEnabled: await targetPage.getByRole('button', { name: 'Download STL' }).isEnabled(),
+  };
+};
+
 try {
   results.chromeVersion = browser.version();
   await mkdir(imageWorkspaceOutput, { recursive: true });
+  await mkdir(imageFamilyWorkspaceOutput, { recursive: true });
+  const meshPreviewSource = await readFile('src/components/converter/MeshPreview.tsx', 'utf8');
+  const homepageQuickConverterSource = await readFile('src/components/converter/HomepageQuickConverter.tsx', 'utf8');
+  results.imageFamilyWorkspaces.fitPadding = {
+    dedicatedDefaultIsPointOne: /fitPadding\s*=\s*0\.1/.test(meshPreviewSource),
+    homepageRemainsPointZeroSix: /fitPadding=\{0\.06\}/.test(homepageQuickConverterSource),
+  };
 
   for (const route of publicRoutes) {
     const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
@@ -522,12 +646,72 @@ try {
   const pngOpaque = await uploadImage('test-assets/04-white-bg-question.png', 'relief');
   const pngTransparent = await uploadImage('test-assets/02-transparent-silhouette.png', 'extrude');
   results.png = { opaque: pngOpaque, transparent: pngTransparent };
+  await captureDesktopImageWorkspace(page, '/png-to-stl/', 'png-to-stl-1440x900-transparent-ready.png');
+  results.imageFamilyWorkspaces.states['/png-to-stl/'] = await exerciseUnifiedImageControls({
+    targetPage: page,
+    initialStyle: 'extrude',
+    replacement: 'test-assets/04-white-bg-question.png',
+    replacementName: '04-white-bg-question.png',
+    replacementStyle: 'relief',
+  });
+  const overDimensionPng = await sharp({
+    create: { width: 4097, height: 2, channels: 4, background: { r: 20, g: 20, b: 20, alpha: 1 } },
+  }).png().toBuffer();
+  const longPngName = `${'transparent-mark-'.repeat(10)}final.png`;
+  await page.locator('#image-upload').setInputFiles({ name: longPngName, mimeType: 'image/png', buffer: transparentBytes });
+  await page.locator('.status-ready').filter({ hasText: longPngName }).waitFor({ timeout: 120_000 });
+  const pngLongFilenameContained = await page.locator('.upload-field strong').evaluate((label) => label.scrollWidth <= label.clientWidth + 1);
+  await page.locator('#image-upload').setInputFiles({ name: 'corrupt.png', mimeType: 'image/png', buffer: Buffer.from('not an image') });
+  await page.locator('.status-error').filter({ hasText: 'We could not read this image.' }).waitFor();
+  const corruptGuard = await page.evaluate(() => ({
+    downloadDisabled: document.querySelector('.image-workspace-completion .primary-button')?.disabled ?? false,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
+  await page.locator('#image-upload').setInputFiles({
+    name: 'oversized.png',
+    mimeType: 'image/png',
+    buffer: Buffer.alloc(20 * 1024 * 1024 + 1),
+  });
+  await page.locator('.status-error').filter({ hasText: 'This image is larger than 20 MB.' }).waitFor();
+  const byteLimitGuard = await page.evaluate(() => ({
+    downloadDisabled: document.querySelector('.image-workspace-completion .primary-button')?.disabled ?? false,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
+  await page.locator('#image-upload').setInputFiles({ name: 'too-wide.png', mimeType: 'image/png', buffer: overDimensionPng });
+  await page.locator('.status-error').filter({ hasText: 'This image is larger than 4096 × 4096 pixels.' }).waitFor();
+  const dimensionGuard = await page.evaluate(() => ({
+    downloadDisabled: document.querySelector('.image-workspace-completion .primary-button')?.disabled ?? false,
+    hasPreview: Boolean(document.querySelector('.preview-canvas canvas')),
+  }));
+  results.imageFamilyWorkspaces.states.sharedInputGuards = {
+    longFilenameContained: pngLongFilenameContained,
+    corruptGuard,
+    byteLimitGuard,
+    dimensionGuard,
+  };
 
   await page.goto(`${baseUrl}/jpg-to-stl/`, { waitUntil: 'networkidle' });
   results.jpg = await uploadImage('test-assets/01-photo-relief.jpg', 'relief');
+  await captureDesktopImageWorkspace(page, '/jpg-to-stl/', 'jpg-to-stl-1440x900-ready.png');
+  const jpgBytes = await readFile('test-assets/01-photo-relief.jpg');
+  results.imageFamilyWorkspaces.states['/jpg-to-stl/'] = await exerciseUnifiedImageControls({
+    targetPage: page,
+    initialStyle: 'relief',
+    replacement: { name: 'photo-replacement.jpeg', mimeType: 'image/jpeg', buffer: jpgBytes },
+    replacementName: 'photo-replacement.jpeg',
+    replacementStyle: 'relief',
+  });
 
   await page.goto(`${baseUrl}/logo-to-stl/`, { waitUntil: 'networkidle' });
   results.logo = await uploadImage('test-assets/02-transparent-silhouette.png', 'extrude');
+  await captureDesktopImageWorkspace(page, '/logo-to-stl/', 'logo-to-stl-1440x900-transparent-ready.png');
+  results.imageFamilyWorkspaces.states['/logo-to-stl/'] = await exerciseUnifiedImageControls({
+    targetPage: page,
+    initialStyle: 'extrude',
+    replacement: 'test-assets/01-photo-relief.jpg',
+    replacementName: '01-photo-relief.jpg',
+    replacementStyle: 'extrude',
+  });
 
   await page.goto(`${baseUrl}/stl-to-3mf/`, { waitUntil: 'networkidle' });
   await page.locator('#stl-upload').setInputFiles({
@@ -584,8 +768,19 @@ try {
       <circle cx="790" cy="100" r="42" fill="#e8e8e8" />
     </svg>
   `)).png().toBuffer();
+  const wideReliefJpg = await sharp(wideReliefPng).jpeg({ quality: 92 }).toBuffer();
 
-  const openMobileImageWorkspace = async ({ width, height, dpr, file, expectedStyle, screenshot }) => {
+  const openMobileImageWorkspace = async ({
+    route = '/image-to-stl/',
+    width,
+    height,
+    dpr,
+    file,
+    expectedStyle,
+    selectedStyle,
+    screenshot,
+    outputDirectory = imageWorkspaceOutput,
+  }) => {
     const mobileContext = await browser.newContext({
       acceptDownloads: true,
       viewport: { width, height },
@@ -597,10 +792,15 @@ try {
       body: '',
     }));
     const mobilePage = await mobileContext.newPage();
-    await mobilePage.goto(`${baseUrl}/image-to-stl/`, { waitUntil: 'networkidle' });
+    await mobilePage.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
     await mobilePage.locator('#image-upload').setInputFiles(file);
     await mobilePage.locator('.status-ready').waitFor({ timeout: 120_000 });
     await mobilePage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+    if (selectedStyle) {
+      await mobilePage.getByRole('radio', { name: selectedStyle === 'relief' ? 'Relief' : 'Extrude' }).check();
+      await mobilePage.locator('.status-ready').waitFor({ timeout: 120_000 });
+      await mobilePage.locator('.preview-canvas canvas').waitFor({ timeout: 30_000 });
+    }
     const style = await readImageStyle(mobilePage);
     const metrics = await inspectImageWorkspacePreview(mobilePage, dpr);
     if (screenshot) {
@@ -608,9 +808,9 @@ try {
         const workspace = document.querySelector('.image-workspace');
         if (workspace) window.scrollTo(0, workspace.getBoundingClientRect().top + window.scrollY - 8);
       });
-      await mobilePage.screenshot({ path: `${imageWorkspaceOutput}/${screenshot}` });
+      await mobilePage.screenshot({ path: `${outputDirectory}/${screenshot}` });
     }
-    return { mobileContext, mobilePage, result: { width, height, dpr, expectedStyle, style, ...metrics } };
+    return { mobileContext, mobilePage, result: { route, width, height, dpr, expectedStyle, style, ...metrics } };
   };
 
   const jpgMobile = await openMobileImageWorkspace({
@@ -675,6 +875,75 @@ try {
   results.imageWorkspace.mobile.push(wideViewportMobile.result);
   await wideViewportMobile.mobileContext.close();
 
+  const mobileImageFamilyConfigs = [
+    {
+      route: '/png-to-stl/',
+      file: 'test-assets/02-transparent-silhouette.png',
+      expectedStyle: 'extrude',
+      wideFile: { name: 'very-wide-relief.png', mimeType: 'image/png', buffer: wideReliefPng },
+      screenshot: 'png-to-stl-390x844-transparent-ready.png',
+    },
+    {
+      route: '/jpg-to-stl/',
+      file: 'test-assets/01-photo-relief.jpg',
+      expectedStyle: 'relief',
+      wideFile: { name: 'very-wide-relief.jpeg', mimeType: 'image/jpeg', buffer: wideReliefJpg },
+      screenshot: 'jpg-to-stl-390x844-ready.png',
+    },
+    {
+      route: '/logo-to-stl/',
+      file: 'test-assets/02-transparent-silhouette.png',
+      expectedStyle: 'extrude',
+      wideFile: { name: 'very-wide-logo.png', mimeType: 'image/png', buffer: wideReliefPng },
+      wideSelectedStyle: 'relief',
+      screenshot: 'logo-to-stl-390x844-transparent-ready.png',
+    },
+  ];
+
+  for (const config of mobileImageFamilyConfigs) {
+    const mobile390 = await openMobileImageWorkspace({
+      route: config.route,
+      width: 390,
+      height: 844,
+      dpr: 1,
+      file: config.file,
+      expectedStyle: config.expectedStyle,
+      screenshot: config.screenshot,
+      outputDirectory: imageFamilyWorkspaceOutput,
+    });
+    results.imageFamilyWorkspaces.mobile.push(mobile390.result);
+    if (config.route === '/png-to-stl/') {
+      await mobile390.mobilePage.locator('.on-this-page').scrollIntoViewIfNeeded();
+      await mobile390.mobilePage.screenshot({
+        path: `${imageFamilyWorkspaceOutput}/png-to-stl-390x844-preview-completion-nav.png`,
+      });
+    }
+    await mobile390.mobileContext.close();
+
+    const mobile430 = await openMobileImageWorkspace({
+      route: config.route,
+      width: 430,
+      height: 932,
+      dpr: 2,
+      file: config.file,
+      expectedStyle: config.expectedStyle,
+    });
+    results.imageFamilyWorkspaces.mobile.push(mobile430.result);
+    await mobile430.mobileContext.close();
+
+    const mobileWide = await openMobileImageWorkspace({
+      route: config.route,
+      width: 390,
+      height: 844,
+      dpr: 3,
+      file: config.wideFile,
+      expectedStyle: 'relief',
+      selectedStyle: config.wideSelectedStyle,
+    });
+    results.imageFamilyWorkspaces.mobile.push({ ...mobileWide.result, wide: true });
+    await mobileWide.mobileContext.close();
+  }
+
   for (const route of trustRoutes) {
     await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
     results.trustMobile[route] = await inspectPage();
@@ -728,6 +997,99 @@ try {
       || !entry.modelBounds.contained
       || Math.abs(entry.preview.width - expectedWidth) > 1;
   });
+  const imageFamilyDesktopStates = updatedImageRoutes.flatMap((route) => (
+    Object.values(results.imageFamilyWorkspaces.desktop[route] ?? {})
+  ));
+  const imageFamilyDesktopFailed = imageFamilyDesktopStates.some((entry) => (
+    entry.controlsRatio < 0.3
+    || entry.controlsRatio > 0.34
+    || entry.previewRatio < 0.66
+    || entry.previewRatio > 0.7
+    || !entry.completionSpansWorkspace
+    || !entry.downloadVisible
+    || !entry.noHorizontalOverflow
+    || entry.styleRadioCount !== 2
+    || entry.styleSelectCount !== 0
+  ));
+  const imageFamilyMobileFailed = results.imageFamilyWorkspaces.mobile.some((entry) => {
+    const expectedWidth = entry.width === 390 ? 368 : 408;
+    return entry.style !== entry.expectedStyle
+      || !entry.noHorizontalOverflow
+      || !entry.boundedPreviewHeight
+      || !entry.canvasMatchesPreview
+      || !entry.drawingBufferMatchesDpr
+      || !entry.completionAfterPreview
+      || !entry.downloadAfterPreview
+      || !entry.contentAfterCompletion
+      || !entry.contentReachable
+      || !entry.modelBounds.contained
+      || Math.abs(entry.preview.width - expectedWidth) > 1;
+  });
+  const imageFamilyControlFailed = updatedImageRoutes.some((route) => {
+    const state = results.imageFamilyWorkspaces.states[route];
+    const expectedOpposite = state.initialStyle === 'relief' ? 'extrude' : 'relief';
+    return state.changedStyle !== expectedOpposite
+      || state.restoredStyle !== state.initialStyle
+      || state.replacementStyle !== state.expectedReplacementStyle
+      || !state.invalidDepth.downloadDisabled
+      || state.invalidDepth.hasPreview
+      || !state.invalidSize.downloadDisabled
+      || state.invalidSize.hasPreview
+      || !state.downloadEnabled;
+  });
+  const expectedImageFamilyContent = {
+    '/png-to-stl/': {
+      title: 'PNG to STL Converter — Free Online Tool | IntoSTL',
+      description: 'Convert PNG images into printable STL models in your browser. Transparent PNGs can be extruded, while opaque images can become reliefs.',
+      h1: 'Convert PNG to STL',
+      intro: 'Turn a PNG into a printable relief or extruded model without uploading it.',
+      privacy: '● Private by design. Your PNG is processed locally in your browser.',
+      onThisPage: 'On this pageHow to convert PNG to STLTransparent PNGsRelief vs ExtrudeBest PNGsFAQ',
+      headings: ['How to convert PNG to STL', 'How transparent PNGs become STL shapes', 'Relief or Extrude for PNG?', 'What PNG images work best?', 'PNG to STL FAQ'],
+      faqCount: 4,
+      canonical: 'https://intostl.com/png-to-stl/',
+    },
+    '/jpg-to-stl/': {
+      title: 'JPG to STL Converter — Free Online Tool | IntoSTL',
+      description: 'Convert JPG or JPEG images into printable STL relief models directly in your browser. Free, private and no sign-up required.',
+      h1: 'Convert JPG to STL',
+      intro: 'Turn a JPG or JPEG into a printable 3D relief directly in your browser.',
+      privacy: '● Private by design. Your JPG is processed locally in your browser.',
+      onThisPage: 'On this pageHow to convert JPG to STLHow photo relief worksBest JPG imagesFAQ',
+      headings: ['How to convert JPG or JPEG to STL', 'How a JPG photo becomes a 3D relief', 'What JPG images work best?', 'JPG to STL FAQ'],
+      faqCount: 4,
+      canonical: 'https://intostl.com/jpg-to-stl/',
+    },
+    '/logo-to-stl/': {
+      title: 'Logo to STL Converter — Create Printable 3D Logos | IntoSTL',
+      description: 'Turn PNG or JPG logos into extruded STL models for 3D printing. Works best with transparent or high-contrast logos and runs locally in your browser.',
+      h1: 'Convert a Logo to STL',
+      intro: 'Turn a PNG or JPG logo into a solid, printable STL directly in your browser.',
+      privacy: '● Private by design. Your logo is processed locally in your browser.',
+      onThisPage: 'On this pageHow to convert a logo to STLTransparent vs solid backgroundBest logos for extrusionFAQ',
+      headings: ['How to convert a logo to STL', 'Transparent vs solid-background logos', 'What logos work best for STL extrusion?', 'Logo to STL FAQ'],
+      faqCount: 4,
+      canonical: 'https://intostl.com/logo-to-stl/',
+    },
+  };
+  const imageFamilyContentFailed = updatedImageRoutes.some((route) => {
+    const actual = results.imageFamilyWorkspaces.content[route];
+    const expected = expectedImageFamilyContent[route];
+    return actual.title !== expected.title
+      || actual.description !== expected.description
+      || actual.h1 !== expected.h1
+      || actual.h1Count !== 1
+      || actual.intro !== expected.intro
+      || actual.privacy !== expected.privacy
+      || actual.onThisPage !== expected.onThisPage
+      || JSON.stringify(actual.headings) !== JSON.stringify(expected.headings)
+      || actual.faq.length !== expected.faqCount
+      || actual.canonical !== expected.canonical
+      || actual.robots !== 'index, follow'
+      || actual.schema.length !== 3
+      || actual.internalLinks.some((link) => !link.text || !link.href);
+  });
+  const sharedInputGuards = results.imageFamilyWorkspaces.states.sharedInputGuards;
   const failed = pageErrors.length > 0
     || consoleErrors.length > 0
     || externalRequests.length > 0
@@ -779,6 +1141,19 @@ try {
     || !results.imageWorkspace.validation.oversizedState.downloadDisabled
     || results.imageWorkspace.validation.oversizedState.hasPreview
     || mobileWorkspaceFailed
+    || imageFamilyDesktopFailed
+    || imageFamilyMobileFailed
+    || imageFamilyControlFailed
+    || imageFamilyContentFailed
+    || !results.imageFamilyWorkspaces.fitPadding.dedicatedDefaultIsPointOne
+    || !results.imageFamilyWorkspaces.fitPadding.homepageRemainsPointZeroSix
+    || !sharedInputGuards.longFilenameContained
+    || !sharedInputGuards.corruptGuard.downloadDisabled
+    || sharedInputGuards.corruptGuard.hasPreview
+    || !sharedInputGuards.byteLimitGuard.downloadDisabled
+    || sharedInputGuards.byteLimitGuard.hasPreview
+    || !sharedInputGuards.dimensionGuard.downloadDisabled
+    || sharedInputGuards.dimensionGuard.hasPreview
     || imageContent.h1 !== 'Convert an Image to STL'
     || imageContent.intro !== 'Upload a JPG or PNG, choose Relief or Extrude, and create a printable model directly in your browser.'
     || imageContent.privacy !== '● Private by design. Your files are processed locally in your browser and are not uploaded to our servers.'
