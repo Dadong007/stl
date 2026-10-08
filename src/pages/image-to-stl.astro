@@ -2,6 +2,7 @@
 import ImageConverter from '../components/converter/ImageConverter';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { absoluteUrl } from '../config/site';
+import '../styles/image-workspace.css';
 
 const title = 'Image to STL Converter — Free Online Tool | IntoSTL';
 const description = 'Convert JPG or PNG images into printable STL models in your browser. Create relief or extruded models for free, with no upload or sign-up.';
@@ -59,7 +60,7 @@ const structuredData = [
 
     <div class="shell converter-wrap">
       <p class="privacy-note"><span aria-hidden="true">●</span> Private by design. Your files are processed locally in your browser and are not uploaded to our servers.</p>
-      <ImageConverter client:load />
+      <ImageConverter unifiedWorkspace client:load />
     </div>
 
     <nav class="on-this-page shell-narrow" aria-labelledby="image-page-nav">

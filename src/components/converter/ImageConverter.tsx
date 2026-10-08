@@ -31,6 +31,7 @@ interface ImageConverterProps {
   defaultStyle?: Style;
   autoStyleFromTransparency?: boolean;
   uploadPrompt?: string;
+  unifiedWorkspace?: boolean;
 }
 
 export default function ImageConverter({
@@ -38,6 +39,7 @@ export default function ImageConverter({
   defaultStyle = 'relief',
   autoStyleFromTransparency = true,
   uploadPrompt,
+  unifiedWorkspace = false,
 }: ImageConverterProps) {
   const [file, setFile] = useState<File | null>(null);
   const [style, setStyle] = useState<Style>(defaultStyle);
@@ -163,8 +165,34 @@ export default function ImageConverter({
     };
   }, [file, style, depthValue, sizeValue]);
 
+  const selectStyle = (nextStyle: Style) => {
+    styleChangeVersion.current += 1;
+    setStyle(nextStyle);
+  };
+
+  const statusPanel = (
+    <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
+      {state === 'processing' && <span className="spinner" aria-hidden="true" />}
+      <span>{message}</span>
+    </div>
+  );
+
+  const downloadButton = (
+    <button
+      className="primary-button"
+      type="button"
+      disabled={!stl || state !== 'ready' || !file}
+      onClick={() => stl && file && downloadBytes(stl, stlFilename(file.name))}
+    >
+      Download STL
+    </button>
+  );
+
   return (
-    <section className="converter" aria-label="Image to STL converter">
+    <section
+      className={`converter${unifiedWorkspace ? ' image-workspace' : ''}`}
+      aria-label="Image to STL converter"
+    >
       <div className="converter-controls">
         <UploadField
           id="image-upload"
@@ -175,19 +203,36 @@ export default function ImageConverter({
         />
 
         <div className="control-grid" aria-label="Model settings">
-          <label>
-            <span>Style</span>
-            <select
-              value={style}
-              onChange={(event) => {
-                styleChangeVersion.current += 1;
-                setStyle(event.target.value as Style);
-              }}
-            >
-              <option value="relief">Relief</option>
-              <option value="extrude">Extrude</option>
-            </select>
-          </label>
+          {unifiedWorkspace ? (
+            <fieldset className="image-style-control">
+              <legend>Style</legend>
+              <div>
+                {(['relief', 'extrude'] as const).map((option) => (
+                  <label className="image-style-option" key={option}>
+                    <input
+                      type="radio"
+                      name="image-converter-style"
+                      value={option}
+                      checked={style === option}
+                      onChange={() => selectStyle(option)}
+                    />
+                    <span>{option === 'relief' ? 'Relief' : 'Extrude'}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : (
+            <label>
+              <span>Style</span>
+              <select
+                value={style}
+                onChange={(event) => selectStyle(event.target.value as Style)}
+              >
+                <option value="relief">Relief</option>
+                <option value="extrude">Extrude</option>
+              </select>
+            </label>
+          )}
           <label>
             <span>Depth</span>
             <span className="number-control">
@@ -220,25 +265,18 @@ export default function ImageConverter({
           </label>
         </div>
 
-        <div className={`converter-status status-${state}`} role={state === 'error' ? 'alert' : 'status'} aria-live="polite">
-          {state === 'processing' && <span className="spinner" aria-hidden="true" />}
-          <span>{message}</span>
-        </div>
-
-        <button
-          className="primary-button"
-          type="button"
-          disabled={!stl || state !== 'ready' || !file}
-          onClick={() => stl && file && downloadBytes(stl, stlFilename(file.name))}
-        >
-          Download STL
-        </button>
+        {!unifiedWorkspace && statusPanel}
+        {!unifiedWorkspace && downloadButton}
       </div>
 
       <div className="preview-panel">
         {mesh ? (
           <Suspense fallback={<div className="preview-placeholder">Loading 3D preview…</div>}>
-            <MeshPreview mesh={mesh} />
+            <MeshPreview
+              mesh={mesh}
+              backgroundColor={unifiedWorkspace ? 0xf4f7f6 : undefined}
+              pixelRatioCap={unifiedWorkspace ? 3 : undefined}
+            />
           </Suspense>
         ) : (
           <div className="preview-placeholder">
@@ -247,6 +285,13 @@ export default function ImageConverter({
           </div>
         )}
       </div>
+
+      {unifiedWorkspace && (
+        <div className="image-workspace-completion">
+          {statusPanel}
+          {downloadButton}
+        </div>
+      )}
     </section>
   );
 }

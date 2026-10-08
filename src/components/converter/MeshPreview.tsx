@@ -6,9 +6,16 @@ import type { IndexedMesh } from '../../engines/image';
 interface MeshPreviewProps {
   mesh: IndexedMesh;
   fitPadding?: number;
+  backgroundColor?: number;
+  pixelRatioCap?: number;
 }
 
-export default function MeshPreview({ mesh, fitPadding = 0.1 }: MeshPreviewProps) {
+export default function MeshPreview({
+  mesh,
+  fitPadding = 0.1,
+  backgroundColor = 0xe9f0ee,
+  pixelRatioCap = 2,
+}: MeshPreviewProps) {
   const host = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -16,11 +23,11 @@ export default function MeshPreview({ mesh, fitPadding = 0.1 }: MeshPreviewProps
     if (!container) return;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe9f0ee);
+    scene.background = new THREE.Color(backgroundColor);
 
     const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 10000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelRatioCap));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.append(renderer.domElement);
 
@@ -137,7 +144,7 @@ export default function MeshPreview({ mesh, fitPadding = 0.1 }: MeshPreviewProps
       renderer.forceContextLoss();
       renderer.domElement.remove();
     };
-  }, [fitPadding, mesh]);
+  }, [backgroundColor, fitPadding, mesh, pixelRatioCap]);
 
   return <div ref={host} className="preview-canvas" aria-label="Interactive 3D model preview" />;
 }
