@@ -612,6 +612,7 @@ h3 {
 }
 
 .steps {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(1.5rem, 3vw, 2.25rem);
@@ -619,27 +620,43 @@ h3 {
   list-style: none;
 }
 
+.steps::before {
+  position: absolute;
+  top: 0.75rem;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
 .steps li {
   position: relative;
   display: block;
-  padding: 1.6rem 0 0;
-  border-top: 1px solid var(--line-strong);
+  padding: 2.75rem 0 0;
 }
 
 .steps li > span {
   position: absolute;
-  top: -0.7rem;
+  z-index: 1;
+  top: 0;
   left: 0;
-  padding-right: 0.65rem;
-  color: #5f6669;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--accent-dark);
   background: var(--surface);
   font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-style: normal;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1.25;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .steps strong {
@@ -1023,6 +1040,26 @@ h3 {
 
   .steps {
     grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .steps::before {
+    display: none;
+  }
+
+  .steps li {
+    min-height: 1.5rem;
+    padding: 0 0 0 3rem;
+  }
+
+  .steps li:not(:last-child)::after {
+    position: absolute;
+    top: 1.5rem;
+    bottom: -2rem;
+    left: 0.75rem;
+    width: 1px;
+    background: var(--line);
+    content: "";
   }
 
   .content-stack {

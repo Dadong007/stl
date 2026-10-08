@@ -77,6 +77,26 @@ const inspectPage = () => page.evaluate(() => ({
   faqAnswerPaddingLeft: document.querySelector('.home-faq-list details > p, .faq-list details > p')
     ? getComputedStyle(document.querySelector('.home-faq-list details > p, .faq-list details > p')).paddingLeft
     : null,
+  stepTimeline: document.querySelector('.steps')
+    ? (() => {
+      const steps = document.querySelector('.steps');
+      const firstStep = steps.querySelector('li');
+      const number = firstStep.querySelector(':scope > span');
+      const axis = getComputedStyle(steps, '::before');
+      const connector = getComputedStyle(firstStep, '::after');
+      const numberStyles = getComputedStyle(number);
+      return {
+        axisContent: axis.content,
+        axisDisplay: axis.display,
+        axisHeight: axis.height,
+        connectorContent: connector.content,
+        connectorWidth: connector.width,
+        numberBorderRadius: numberStyles.borderRadius,
+        numberHeight: numberStyles.height,
+        numberWidth: numberStyles.width,
+      };
+    })()
+    : null,
   schemaTypes: Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
     .map((script) => JSON.parse(script.textContent ?? '{}')['@type']),
 }));
@@ -1222,6 +1242,12 @@ try {
       || results.pages[route].faqAnswerPaddingLeft !== '21px')
     || faqRoutes.some((route) => JSON.stringify(results.pages[route].faqSummaryTypography)
       !== JSON.stringify(results.pages['/'].faqSummaryTypography))
+    || toolRoutes.some((route) => results.pages[route].stepTimeline.axisContent !== '\"\"'
+      || results.pages[route].stepTimeline.axisDisplay === 'none'
+      || results.pages[route].stepTimeline.axisHeight !== '1px'
+      || results.pages[route].stepTimeline.numberBorderRadius !== '50%'
+      || results.pages[route].stepTimeline.numberHeight !== '24px'
+      || results.pages[route].stepTimeline.numberWidth !== '24px')
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
@@ -1356,7 +1382,11 @@ try {
     || results.malformedStl.message !== 'The STL file could not be converted. Check that it is a valid binary or ASCII STL model and try again.'
     || !results.malformedStl.downloadDisabled
     || results.malformedStl.hasPreview
-    || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled)
+    || Object.values(results.mobile).some((entry) => entry.hasOverflow || !entry.preview || !entry.downloadEnabled
+      || entry.stepTimeline.axisDisplay !== 'none'
+      || entry.stepTimeline.connectorContent !== '\"\"'
+      || entry.stepTimeline.connectorWidth !== '1px'
+      || entry.stepTimeline.numberBorderRadius !== '50%')
     || Object.values(results.trustMobile).some((entry) => entry.hasOverflow || entry.h1Count !== 1);
 
   await writeFile('test-output/phase-2-browser-results.json', `${JSON.stringify(results, null, 2)}\n`);
