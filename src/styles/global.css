@@ -704,7 +704,8 @@ h3 {
 .faq-list summary {
   padding: 1rem 2.25rem 1rem 0;
   cursor: pointer;
-  font-weight: 720;
+  font-weight: 620;
+  line-height: 1.45;
 }
 
 .faq-list p {

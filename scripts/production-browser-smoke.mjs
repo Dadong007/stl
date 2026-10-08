@@ -61,6 +61,19 @@ const inspectPage = () => page.evaluate(() => ({
   faqSummaryGap: document.querySelector('.home-faq-list summary, .faq-list summary')
     ? getComputedStyle(document.querySelector('.home-faq-list summary, .faq-list summary')).columnGap
     : null,
+  faqSummaryTypography: document.querySelector('.home-faq-list summary, .faq-list summary')
+    ? (() => {
+      const styles = getComputedStyle(document.querySelector('.home-faq-list summary, .faq-list summary'));
+      return {
+        color: styles.color,
+        fontFamily: styles.fontFamily,
+        fontSize: styles.fontSize,
+        fontWeight: styles.fontWeight,
+        letterSpacing: styles.letterSpacing,
+        lineHeight: styles.lineHeight,
+      };
+    })()
+    : null,
   faqAnswerPaddingLeft: document.querySelector('.home-faq-list details > p, .faq-list details > p')
     ? getComputedStyle(document.querySelector('.home-faq-list details > p, .faq-list details > p')).paddingLeft
     : null,
@@ -1207,6 +1220,8 @@ try {
     ))
     || faqRoutes.some((route) => results.pages[route].faqSummaryGap !== '11px'
       || results.pages[route].faqAnswerPaddingLeft !== '21px')
+    || faqRoutes.some((route) => JSON.stringify(results.pages[route].faqSummaryTypography)
+      !== JSON.stringify(results.pages['/'].faqSummaryTypography))
     || newRoutes.some((route) => !['WebApplication', 'BreadcrumbList', 'FAQPage'].every((type) => results.pages[route].schemaTypes.includes(type)))
     || trustRoutes.some((route) => !results.pages[route].schemaTypes.includes('BreadcrumbList'))
     || JSON.stringify(results.sitemapRoutes) !== JSON.stringify(expectedSitemapRoutes)
